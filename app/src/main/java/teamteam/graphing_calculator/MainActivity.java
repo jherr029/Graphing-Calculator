@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         graph.addSeries(series);
 
-        mLoginModule.onCreate();
+        //mLoginModule.onCreate();
 
         // This is for the button. Uncomment this when you have a layout
         // findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -67,6 +67,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mLoginModule.onActivityResult(requestCode, data);
+        mLoginModule.onActivityResult(requestCode, resultCode, data);
     }
 }

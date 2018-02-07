@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "946245378625",
+    "firebase_url": "https://graphing-calculator-d8313.firebaseio.com",
+    "project_id": "graphing-calculator-d8313",
+    "storage_bucket": "graphing-calculator-d8313.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:946245378625:android:871cc89c45a4a633",
+        "android_client_info": {
+          "package_name": "teamteam.graphing_calculator"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "946245378625-bhsg6mtcg8efd024ocq0qu1fjomihbej.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "teamteam.graphing_calculator",
+            "certificate_hash": "4f88923a5a54784a13b2bd46a9080324c5dd5aca"
+          }
+        },
+        {
+          "client_id": "946245378625-3h53bro4c2av9pnftif8r275t4hblb6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGzqI2LL_5EFfRUPpCEGTXmWDr7geFpPo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "946245378625-3h53bro4c2av9pnftif8r275t4hblb6r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
