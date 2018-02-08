@@ -135,6 +135,14 @@ public class LoginModule extends AppCompatActivity implements
     //  GoogleSignInAccount user
     protected void updateUI(FirebaseUser account) {
         if (account != null) {
+
+            String nameAndEmail = account.getDisplayName() + "\n" + account.getEmail();
+            //email.show();
+
+            Toast toast = Toast.makeText(this, nameAndEmail, Toast.LENGTH_LONG);
+
+            toast.show();
+
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
