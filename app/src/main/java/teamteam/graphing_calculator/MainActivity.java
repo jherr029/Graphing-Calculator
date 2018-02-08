@@ -54,13 +54,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onNavigationItemSelectedListener(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_sign_in:
-                // Make this activity return a bool
+                // Make this activity return a user
                 // If true (then is logged in), then set button visibility
                 startActivity(new Intent(MainActivity.this, LoginModule.class));
                 findViewById(R.id.drawer_sign_in).setVisibility(View.GONE);
                 findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
                 return true;
             case R.id.drawer_sign_out:
+                // Make this return null if successful
                 // If false (then is not logged in), then set button visibility
                 startActivity(new Intent(MainActivity.this, LoginModule.class));
                 findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
