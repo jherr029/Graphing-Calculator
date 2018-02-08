@@ -5,4 +5,32 @@
     <string name="calculate">Use Calculator</string>
     <string name="upload_graph">Upload Graph to Database</string>
     <string name="fetch_graph">Fetch Graph from Database</string>
+    <string name="menu_settings">Exit</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="et_show">Show</string>
+    <string name="clears">Clear</string>
+    <string name="clearAll">ClearAll</string>
+    <string name="btn_1">1</string>
+    <string name="btn_2">2</string>
+    <string name="btn_3">3</string>
+    <string name="btn_add">+</string>
+    <string name="btn_4">4</string>
+    <string name="btn_5">5</string>
+    <string name="btn_6">6</string>
+    <string name="btn_sub">-</string>
+    <string name="btn_7">7</string>
+    <string name="btn_8">8</string>
+    <string name="btn_9">9</string>
+    <string name="btn_mlt">*</string>
+    <string name="btn_0">0</string>
+    <string name="btn_spot">.</string>
+    <string name="btn_equal">=</string>
+    <string name="btn_div">/</string>
+    <string name="btn_square">x^2</string>
+    <string name="btn_sqrt">√x</string>
+    <string name="btn_sin">sin</string>
+    <string name="btn_cos">cos</string>
+    <string name="btn_tan">tan</string>
+    <string name="btn_cot">cot</string>
 </resources>

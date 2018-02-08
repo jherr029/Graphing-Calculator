@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/GraphingCalculator.iml" filepath="$PROJECT_DIR$/GraphingCalculator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Graphing-Calculator.iml" filepath="$PROJECT_DIR$/Graphing-Calculator.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
