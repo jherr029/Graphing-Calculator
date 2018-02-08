@@ -29,7 +29,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginModule extends AppCompatActivity implements
         View.OnClickListener {
 
-    private AppCompatActivity context;
+
+//    private AppCompatActivity context;
 
     private FirebaseAuth mAuth;
 
@@ -39,9 +40,10 @@ public class LoginModule extends AppCompatActivity implements
     private int RC_SIGN_IN = 779;
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    LoginModule(AppCompatActivity activity) {
-        context = activity;
+
+    LoginModule() {
     }
+
 
     protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
@@ -56,7 +58,7 @@ public class LoginModule extends AppCompatActivity implements
                 .requestEmail()
                 .build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(context, mGoogleSignInOptions);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, mGoogleSignInOptions);
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -115,7 +117,7 @@ public class LoginModule extends AppCompatActivity implements
 
     protected void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        context.startActivityForResult(signInIntent, RC_SIGN_IN);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     private void signOut() {
