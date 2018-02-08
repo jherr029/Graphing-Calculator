@@ -15,8 +15,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class MainActivity extends AppCompatActivity {
 
-    LoginModule mLoginModule;
-
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -24,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLoginModule = new LoginModule(this);
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView nav_view = findViewById(R.id.navigation_view);
@@ -42,27 +39,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         graphInit();
-
-        mLoginModule.onCreate();
     }
-
 
     @Override
     protected void onStart() {
         super.onStart();
-        mLoginModule.onStart();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mLoginModule.onActivityResult(requestCode, data);
     }
 
     public boolean onNavigationItemSelectedListener(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.drawer_sign_in:
-                mLoginModule.signIn();
+                startActivity(new Intent(MainActivity.this, LoginModule.class));
                 return true;
             case R.id.drawer_calculate:
                 // Start Calculator Activity
@@ -97,5 +89,4 @@ public class MainActivity extends AppCompatActivity {
 
         graph.addSeries(series);
     }
-
 }
