@@ -1,16 +1,26 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.ListView;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.*;
+public class MainActivity extends AppCompatActivity { //implements View.OnClickListener {
 
-public class MainActivity extends AppCompatActivity {
+    private LoginModule mLoginModule;
 
-    LoginModule mLoginModule;
+    private String[] mNavigation;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
 
     MainActivity() { mLoginModule = new LoginModule(this); }
 
@@ -19,6 +29,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.common_google_signin_btn_icon_dark);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        } */
+
+        mDrawerLayout = findViewById(R.id.drawer_layout);
+
+        NavigationView nav_view = findViewById(R.id.navigation_view);
+
+        // Need to make sense out of this later
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override public boolean onNavigationItemSelected(MenuItem menuItem) {
+                Snackbar.make(findViewById(R.id.content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
+                onNavigationItemSelectedListener(menuItem);
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
+
+        /*
         GraphView graph = (GraphView)findViewById(R.id.graph);
 
         DataPoint[] points = new DataPoint[100];
@@ -41,12 +74,19 @@ public class MainActivity extends AppCompatActivity {
         graph.getViewport().setScalableY(true);
 
         graph.addSeries(series);
+        */
 
         mLoginModule.onCreate();
 
         // This is for the button. Uncomment this when you have a layout
-        // findViewById(R.id.sign_in_button).setOnClickListener(this);
+        // findViewById(R.id.sign_in).setOnClickListener(this);
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
     }
 
     @Override
@@ -60,13 +100,35 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.sign_in_button) mLoginModule.signIn();
-    }
-    */
+        if (id == R.id.sign_in) mLoginModule.signIn();
+    }*/
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mLoginModule.onActivityResult(requestCode, data);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("PersonalDebug", String.format("%s =? %s",item.getItemId(), R.id.settings));
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+            case R.id.settings:
+                return true;
+            default:
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean onNavigationItemSelectedListener(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.drawer_sign_in:
+                mLoginModule.signIn();
+                return true;
+            default:
+        }
+        return false;
     }
 }

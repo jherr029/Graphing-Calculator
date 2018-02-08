@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_sign_in"
+            android:icon="@drawable/common_google_signin_btn_icon_light"
+            android:title="@string/sign_in" />
+        <item
+            android:id="@+id/drawer_scale_graph"
+            android:title="@string/scale_graph" />
+        <item
+            android:id="@+id/drawer_calculate"
+            android:title="@string/calculate" />
+    </group>
+</menu>

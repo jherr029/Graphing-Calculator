@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="nav_bar">
+        <item>Sign In with Google</item>
+        <item>Calculate</item>
+        <item>Set Axis Scale</item>
+    </string-array>
+</resources>
