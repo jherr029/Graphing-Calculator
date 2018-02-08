@@ -4,6 +4,10 @@
             android:id="@+id/drawer_sign_in"
             android:icon="@drawable/ic_icons8_google"
             android:title="@string/sign_in" />
+        <item
+            android:id="@+id/drawer_sign_out"
+            android:icon="@drawable/ic_icons8_google"
+            android:title="Sign out of Google" />
     </group>
 
     <group android:id="@+id/account">

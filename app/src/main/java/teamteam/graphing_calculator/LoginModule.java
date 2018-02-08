@@ -106,6 +106,8 @@ public class LoginModule extends AppCompatActivity implements
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
+                findViewById(R.id.drawer_sign_in).setVisibility(View.GONE);
+                findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
                 updateUI(null);
@@ -130,11 +132,15 @@ public class LoginModule extends AppCompatActivity implements
                        updateUI(null);
                     }
                 });
+        findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
+        findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
     }
 
     //  GoogleSignInAccount user
     protected void updateUI(FirebaseUser account) {
-        if (account != null) {
+        if (account != null) { // If there is someone signed in
+            findViewById(R.id.drawer_sign_in).setVisibility(View.GONE);
+            findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
 
             String nameAndEmail = account.getDisplayName() + "\n" + account.getEmail();
             //email.show();
@@ -145,6 +151,10 @@ public class LoginModule extends AppCompatActivity implements
 
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+        }
+        else {
+            findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
+            findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
         }
 
         /*
