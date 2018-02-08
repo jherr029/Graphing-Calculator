@@ -1,15 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:checkableBehavior="single">
+    <group android:id="@+id/no_account">
         <item
             android:id="@+id/drawer_sign_in"
-            android:icon="@drawable/common_google_signin_btn_icon_light"
+            android:icon="@drawable/ic_icons8_google"
             android:title="@string/sign_in" />
+    </group>
+
+    <group android:id="@+id/account">
+        <item
+            android:id="@+id/drawer_upload"
+            android:icon="@drawable/ic_file_upload_black_24dp"
+            android:title="@string/upload_graph" />
+        <item
+            android:id="@+id/drawer_fetch"
+            android:icon="@drawable/ic_file_download_black_24dp"
+            android:title="@string/fetch_graph" />
+    </group>
+
+    <group android:id="@+id/graph_operations">
         <item
             android:id="@+id/drawer_scale_graph"
+            android:icon="@drawable/ic_aspect_ratio_black_24dp"
             android:title="@string/scale_graph" />
+    </group>
+
+    <group android:id="@+id/graph_tools">
         <item
             android:id="@+id/drawer_calculate"
+            android:icon="@drawable/ic_multiline_chart_black_24dp"
             android:title="@string/calculate" />
     </group>
 </menu>

@@ -14,6 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 public class MainActivity extends AppCompatActivity { //implements View.OnClickListener {
 
     private LoginModule mLoginModule;
@@ -33,9 +37,9 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.common_google_signin_btn_icon_dark);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
             actionBar.setDisplayHomeAsUpEnabled(true);
-        } */
+        }*/
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -51,35 +55,9 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             }
         });
 
-        /*
-        GraphView graph = (GraphView)findViewById(R.id.graph);
-
-        DataPoint[] points = new DataPoint[100];
-        for (int i = 0; i < points.length; i++) {
-            points[i] = new DataPoint(i, Math.sin(i*0.5) * 20*(Math.random()*10+1));
-        }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-
-        // set manual X bounds
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(-150);
-        graph.getViewport().setMaxY(150);
-
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(4);
-        graph.getViewport().setMaxX(80);
-
-        // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
-
-        graph.addSeries(series);
-        */
+        graphInit();
 
         mLoginModule.onCreate();
-
-        // This is for the button. Uncomment this when you have a layout
-        // findViewById(R.id.sign_in).setOnClickListener(this);
 
     }
 
@@ -95,14 +73,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
         mLoginModule.onStart();
     }
-
-    /*
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if (id == R.id.sign_in) mLoginModule.signIn();
-    }*/
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -130,5 +100,30 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
             default:
         }
         return false;
+    }
+
+    private void graphInit() {
+        GraphView graph = (GraphView)findViewById(R.id.graph);
+
+        DataPoint[] points = new DataPoint[100];
+        for (int i = 0; i < points.length; i++) {
+            points[i] = new DataPoint(i, Math.sin(i*0.5) * 20*(Math.random()*10+1));
+        }
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
+
+        // set manual X bounds
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(-150);
+        graph.getViewport().setMaxY(150);
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(4);
+        graph.getViewport().setMaxX(80);
+
+        // enable scaling and scrolling
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScalableY(true);
+
+        graph.addSeries(series);
     }
 }

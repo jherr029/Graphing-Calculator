@@ -3,4 +3,6 @@
     <string name="sign_in">Sign in with Google</string>
     <string name="scale_graph">Manually Scale Graph</string>
     <string name="calculate">Use Calculator</string>
+    <string name="upload_graph">Upload Graph to Database</string>
+    <string name="fetch_graph">Fetch Graph from Database</string>
 </resources>
