@@ -9,6 +9,17 @@
     android:fitsSystemWindows="true"
     tools:context="teamteam.graphing_calculator.MainActivity">
 
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="false"
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/nav_menu">
+
+    </android.support.design.widget.NavigationView>
+
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
@@ -20,15 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <android.support.design.widget.NavigationView
-            android:id="@+id/navigation_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/drawer_header"
-            app:menu="@menu/nav_menu">
-
-        </android.support.design.widget.NavigationView>
     </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>

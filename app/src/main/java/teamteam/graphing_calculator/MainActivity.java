@@ -33,14 +33,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }*/
-
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
         NavigationView nav_view = findViewById(R.id.navigation_view);
@@ -61,12 +53,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
 
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -78,18 +64,6 @@ public class MainActivity extends AppCompatActivity { //implements View.OnClickL
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mLoginModule.onActivityResult(requestCode, data);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("PersonalDebug", String.format("%s =? %s",item.getItemId(), R.id.settings));
-        switch (item.getItemId()) {
-            case android.R.id.home:
-
-            case R.id.settings:
-                return true;
-            default:
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public boolean onNavigationItemSelectedListener(MenuItem item) {
