@@ -12,6 +12,8 @@ import android.view.View;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+//import com.jjoe64.graphview.series.;
+import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,28 +78,79 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void graphInit() {
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+    private GraphView graph;
+    private Map functions;
+    private int min_x = -10;
+    private int max_x = 10;
+    private int min_y = -10;
+    private int max_y = 10;
 
+    private void graphInit() {
+        graph = findViewById(R.id.graph);
+        functions = new HashMap();
+        /*
         DataPoint[] points = new DataPoint[100];
         for (int i = 0; i < points.length; i++) {
             points[i] = new DataPoint(i, Math.sin(i * 0.5) * 20 * (Math.random() * 10 + 1));
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
+        */
 
         // set manual X bounds
         graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(-150);
-        graph.getViewport().setMaxY(150);
+        graph.getViewport().setMinY(min_y);
+        graph.getViewport().setMaxY(max_y);
 
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(4);
-        graph.getViewport().setMaxX(80);
+        graph.getViewport().setMinX(min_x);
+        graph.getViewport().setMaxX(max_x);
 
         // enable scaling and scrolling
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
 
-        graph.addSeries(series);
+        //graph.addSeries(series);
+    }
+
+    //takes in a function in whatever format we're using, sends it to the point generator,
+    //gets back array of DataPoint, stores points as LineGraphSeries, graphs line
+    public void add_line(/* parameters TBD */){
+        //generates points from the function
+        DataPoint[] points = //insert point generation function here
+        //creates a series form the points
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
+        //puts series into the list
+        functions.put(/* function parameter */, series);
+        //adds the series to the graph
+        graph.addSeries(functions.get(/* function parameter */));
+    }
+
+    //takes in a function and removes it from the graph
+    public void remove_line(/* parameters TBD */){
+        //removes series from the graph and redraws it
+        graph.removeSeries(functions.get(/* function parameter */));
+        //removes series from the list
+        functions.remove(/* function parameter */);
+    }
+
+    //updates the boundaries of the graph and regenerates the lines
+    public void update_bounds(int minx, int maxx, int miny, int maxy){
+        //updates variables
+        min_x = minx;
+        min_y = miny;
+        max_x = maxx;
+        max_y = maxy;
+        //updates graph variables
+        graph.getViewport().setMinX(min_x);
+        graph.getViewport().setMaxX(max_x);
+        graph.getViewport().setMinY(min_y);
+        graph.getViewport().setMaxY(max_y);
+
+        //regenerates lines
+        Iterator it = functions.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            pair.getValue().resetData(/* call point generation function with pair.getKey() */);
+        }
     }
 }
