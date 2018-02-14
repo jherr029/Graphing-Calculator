@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -13,9 +14,10 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,19 +26,22 @@ public class MainActivity extends AppCompatActivity {
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
-        NavigationView nav_view = findViewById(R.id.navigation_view);
-        nav_view.bringToFront();
+        mNavigationView = findViewById(R.id.navigation_view);
+        mNavigationView.bringToFront();
 
         // Need to make sense out of this later
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                Snackbar.make(findViewById(R.id.content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
                 onNavigationItemSelectedListener(menuItem);
                 mDrawerLayout.closeDrawers();
                 return true;
             }
         });
+
+        /* Initializing Buttons */
+        findViewById(R.id.open_nav).setOnClickListener(this);
 
         graphInit();
     }
@@ -49,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.open_nav:
+                mDrawerLayout.openDrawer(mNavigationView);
+                break;
+            case R.id.open_settings:
+                break;
+        }
     }
 
     public boolean onNavigationItemSelectedListener(MenuItem item) {
@@ -74,6 +90,10 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
         return false;
+    }
+
+    private void DebugSnackbar(String text) {
+        Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_LONG).show();
     }
 
     private void graphInit() {
