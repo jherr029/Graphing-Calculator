@@ -1,6 +1,8 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.os.Debug;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -9,8 +11,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -19,18 +25,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
+    private BottomSheetBehavior sheetBehavior;
+
+    private GraphView mGraphView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* Initialize Navigation Drawer */
         mDrawerLayout = findViewById(R.id.drawer_layout);
-
         mNavigationView = findViewById(R.id.navigation_view);
-        mNavigationView.bringToFront();
 
         // Need to make sense out of this later
-        mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        NavigationView.OnNavigationItemSelectedListener nav_listener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
@@ -38,10 +47,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerLayout.closeDrawers();
                 return true;
             }
-        });
+        };
+        mNavigationView.setNavigationItemSelectedListener(nav_listener);
+
+        /* Initialize Function Sheet */
+        sheetBehavior = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
 
         /* Initializing Buttons */
         findViewById(R.id.open_nav).setOnClickListener(this);
+        findViewById(R.id.open_settings).setOnClickListener(this);
+        findViewById(R.id.snap_to_origin).setOnClickListener(this);
+        findViewById(R.id.expand_function_list).setOnClickListener(this);
+        findViewById(R.id.collapse_function_list).setOnClickListener(this);
 
         graphInit();
     }
@@ -61,8 +78,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.open_nav:
                 mDrawerLayout.openDrawer(mNavigationView);
+                mNavigationView.bringToFront();
                 break;
             case R.id.open_settings:
+                DebugSnackbar("Settings Opened");
+                break;
+            case R.id.snap_to_origin:
+                DebugSnackbar("Snapped to Origin");
+                Viewport viewport = mGraphView.getViewport();
+                viewport.setMinX(-50);
+                viewport.setMaxX(50);
+                viewport.setMinY(-50);
+                viewport.setMaxY(50);
+                break;
+            case R.id.expand_function_list:
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                break;
+            case R.id.collapse_function_list:
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }
     }
@@ -93,11 +126,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void DebugSnackbar(String text) {
-        Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_SHORT).show();
     }
 
     private void graphInit() {
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        mGraphView = (GraphView) findViewById(R.id.graph);
 
         DataPoint[] points = new DataPoint[100];
         for (int i = 0; i < points.length; i++) {
@@ -106,18 +139,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
 
         // set manual X bounds
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(-150);
-        graph.getViewport().setMaxY(150);
+        mGraphView.getViewport().setYAxisBoundsManual(true);
+        mGraphView.getViewport().setMinY(-150);
+        mGraphView.getViewport().setMaxY(150);
 
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(4);
-        graph.getViewport().setMaxX(80);
+        mGraphView.getViewport().setXAxisBoundsManual(true);
+        mGraphView.getViewport().setMinX(4);
+        mGraphView.getViewport().setMaxX(80);
 
         // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
+        mGraphView.getViewport().setScalable(true);
+        mGraphView.getViewport().setScalableY(true);
 
-        graph.addSeries(series);
+        mGraphView.addSeries(series);
     }
 }
