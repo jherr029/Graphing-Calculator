@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.Viewport;
@@ -25,7 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
-    private BottomSheetBehavior sheetBehavior;
+    private BottomSheetBehavior sheetController;
+
+    private RelativeLayout mGraphToolView;
 
     private GraphView mGraphView;
 
@@ -37,8 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* Initialize Navigation Drawer */
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mNavigationView = findViewById(R.id.navigation_view);
-
-        // Need to make sense out of this later
         NavigationView.OnNavigationItemSelectedListener nav_listener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -50,8 +51,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
         mNavigationView.setNavigationItemSelectedListener(nav_listener);
 
+
         /* Initialize Function Sheet */
-        sheetBehavior = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
+        sheetController = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
+
+
+        /* Initialize Graph Tool Menu */
+        mGraphToolView = findViewById(R.id.graph_tool_menu);
+        mGraphToolView.setVisibility(View.GONE);
+
 
         /* Initializing Buttons */
         findViewById(R.id.open_nav).setOnClickListener(this);
@@ -77,11 +85,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.open_nav:
+                if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+                    sheetController.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
                 mDrawerLayout.openDrawer(mNavigationView);
                 mNavigationView.bringToFront();
                 break;
             case R.id.open_settings:
-                DebugSnackbar("Settings Opened");
+                DebugSnackbar("Tool Menu Toggled");
+                if (mGraphToolView.getVisibility() == View.VISIBLE) {
+                    mGraphToolView.setVisibility(View.GONE);
+                } else if (mGraphToolView.getVisibility() == View.GONE) {
+                    mGraphToolView.setVisibility(View.VISIBLE);
+                }
                 break;
             case R.id.snap_to_origin:
                 DebugSnackbar("Snapped to Origin");
@@ -92,10 +108,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 viewport.setMaxY(50);
                 break;
             case R.id.expand_function_list:
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
                 break;
             case R.id.collapse_function_list:
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                sheetController.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
         }
     }
