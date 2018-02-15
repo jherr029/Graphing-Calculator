@@ -26,6 +26,14 @@
             android:id="@+id/drawer_scale_graph"
             android:icon="@drawable/ic_aspect_ratio_black_24dp"
             android:title="@string/scale_graph" />
+        <item
+            android:id="@+id/drawer_function_template"
+            android:icon="@drawable/ic_aspect_ratio_black_24dp"
+            android:title="@string/built_in_function" />
+        <item
+            android:id="@+id/drawer_customize_expression"
+            android:icon="@drawable/ic_aspect_ratio_black_24dp"
+            android:title="@string/customize_expression" />
     </group>
 
     <group android:id="@+id/graph_tools">

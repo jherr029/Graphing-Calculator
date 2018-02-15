@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private GraphView mGraphView;
 
+    private ExpressionEvaluation mFunctionParser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
+
+        mFunctionParser = new ExpressionEvaluation();
 
         /* Initializing Buttons */
         findViewById(R.id.open_nav).setOnClickListener(this);
@@ -99,11 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.snap_to_origin:
                 DebugSnackbar("Snapped to Origin");
-                Viewport viewport = mGraphView.getViewport();
-                viewport.setMinX(-50);
-                viewport.setMaxX(50);
-                viewport.setMinY(-50);
-                viewport.setMaxY(50);
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -136,6 +135,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             case R.id.drawer_calculate:
                 startActivity(new Intent(MainActivity.this, BasicCalculator.class));
+                return true;
+            case R.id.drawer_customize_expression:
+                return true;
+            case R.id.drawer_function_template:
                 return true;
             default:
         }

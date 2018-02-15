@@ -39,6 +39,7 @@
 
     </FrameLayout>
 
+    <!--
     <ListView
         android:id="@+id/function_list_view"
         android:layout_width="match_parent"
@@ -48,5 +49,33 @@
         android:divider="#808080"
         android:dividerHeight="1dp" >
     </ListView>
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/function_list_header"
+        android:background="#fff">
+
+        <EditText
+            android:id="@+id/func_1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/func_2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/func_1"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/func_3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/func_2"
+            android:inputType="text" />
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

@@ -3,6 +3,8 @@
     <string name="sign_in">Sign in with Google</string>
     <string name="sign_out">Sign out with Google</string>
     <string name="scale_graph">Manually Scale Graph</string>
+    <string name="built_in_function">Function templates</string>
+    <string name="customize_expression">Customize expression</string>
     <string name="calculate">Use Calculator</string>
     <string name="sci_calculate">Use Scientific Calculator</string>
     <string name="upload_graph">Upload Graph to Database</string>
