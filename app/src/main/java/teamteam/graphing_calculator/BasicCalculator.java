@@ -289,6 +289,8 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
             case R.id.btnMS:
             case R.id.btnMC:
             case R.id.btnMR:
+                /* TODO add memory features */
+                break;
             case R.id.btnZero:
                 calculatorContents.addInput("0");
                 break;
