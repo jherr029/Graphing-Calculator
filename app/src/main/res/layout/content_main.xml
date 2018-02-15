@@ -39,7 +39,9 @@
             android:layout_width="250dp"
             android:layout_height="300dp"
             android:layout_gravity="top|center_horizontal"
-            android:background="#fff" >
+            android:background="#fff"
+            
+            android:elevation="50dp">
 
             <TextView
                 android:id="@+id/temporary_text"
