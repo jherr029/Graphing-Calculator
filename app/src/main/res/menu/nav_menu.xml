@@ -30,8 +30,12 @@
 
     <group android:id="@+id/graph_tools">
         <item
-            android:id="@+id/drawer_calculate"
+            android:id="@+id/drawer_calculate_old"
             android:icon="@drawable/ic_multiline_chart_black_24dp"
             android:title="@string/calculate" />
+        <item
+            android:id="@+id/drawer_calculate"
+            android:icon="@drawable/ic_multiline_chart_black_24dp"
+            android:title="@string/sci_calculate" />
     </group>
 </menu>

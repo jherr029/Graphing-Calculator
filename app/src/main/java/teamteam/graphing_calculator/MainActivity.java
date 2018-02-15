@@ -130,9 +130,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
                 findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
                 return true;
-            case R.id.drawer_calculate:
+            case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
+                return true;
+            case R.id.drawer_calculate:
+                startActivity(new Intent(MainActivity.this, BasicCalculator.class));
                 return true;
             default:
         }
