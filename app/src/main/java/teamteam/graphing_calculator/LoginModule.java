@@ -194,6 +194,8 @@ public class LoginModule extends AppCompatActivity implements
     }
 
     private void signOut() {
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Log.d("LOGINMODULE", "signing out user " + mAuth.getCurrentUser().getDisplayName());
         mAuth.signOut();
 
         Log.d("LOGINMODULE", "signing out");
