@@ -17,6 +17,7 @@ public class BasicCalculatorContents {
     private String usrInput = "";
     private double calcResult;
     private Boolean dispResult = false;
+    private Boolean newInput = true;
 
     private int unclosedParens = 0;
 
@@ -55,6 +56,11 @@ public class BasicCalculatorContents {
     }
 
     public String addInput(String input) {
+        if (newInput) {
+            clear();
+            newInput = false;
+        }
+
         if (input.charAt(input.length() - 1) == '(') {
             unclosedParens += 1;
         }
@@ -120,5 +126,7 @@ public class BasicCalculatorContents {
 
     public void equals() {
         calculateResult();
+
+        newInput = true;
     }
 }
