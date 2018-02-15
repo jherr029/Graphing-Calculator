@@ -71,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
                 return true;
+            case R.id.drawer_function_template:
+                //leave for built-in functions drawing
+                return true;
+            case R.id.drawer_customize_expression:
+                //leave for user entered expressions
+                return true;
             default:
         }
         return false;
