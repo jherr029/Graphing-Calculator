@@ -41,4 +41,5 @@
     <string name="btn_cos">cos</string>
     <string name="btn_tan">tan</string>
     <string name="btn_cot">cot</string>
+    <string name="title_activity_basic_calculator">BasicCalculator</string>
 </resources>
