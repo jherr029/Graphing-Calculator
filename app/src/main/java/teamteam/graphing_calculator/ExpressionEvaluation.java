@@ -6,6 +6,11 @@ import android.os.Bundle;
 import java.util.Scanner;
 import java.util.Stack;
 
+//@ represent sin
+//# represent cos
+//$ represent tan
+//& represent sqrt
+
 public class ExpressionEvaluation extends AppCompatActivity {
 
     @Override
@@ -54,13 +59,20 @@ public class ExpressionEvaluation extends AppCompatActivity {
                 char op = ops.pop();
                 Double tmpResult = values.pop();
 
-                if(op == '+') {
+                if(op == '+')
+                {
                     tmpResult = values.pop() + tmpResult;
-                } else if(op == '-') {
+                }
+                else if(op == '-')
+                {
                     tmpResult = values.pop() - tmpResult;
-                } else if(op == '*') {
+                }
+                else if(op == '*')
+                {
                     tmpResult = values.pop() * tmpResult;
-                } else if(op == '/') {
+                }
+                else if(op == '/')
+                {
                     tmpResult = values.pop() / tmpResult;
                 }
                 values.push(tmpResult);
