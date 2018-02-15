@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.jjoe64.graphview.GraphView;
@@ -87,11 +89,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mNavigationView.bringToFront();
                 break;
             case R.id.open_settings:
-                DebugSnackbar("Tool Menu Toggled");
                 if (mGraphToolView.getVisibility() == View.VISIBLE) {
+                    mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_anim));
                     mGraphToolView.setVisibility(View.GONE);
                 } else if (mGraphToolView.getVisibility() == View.GONE) {
                     mGraphToolView.setVisibility(View.VISIBLE);
+                    mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
                 break;
             case R.id.snap_to_origin:

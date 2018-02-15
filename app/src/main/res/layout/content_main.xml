@@ -39,8 +39,7 @@
             android:layout_width="250dp"
             android:layout_height="300dp"
             android:layout_gravity="top|center_horizontal"
-            android:background="#fff"
-            
+            android:background="@drawable/soft_rectangle_background"
             android:elevation="50dp">
 
             <TextView
@@ -56,8 +55,10 @@
         <ImageButton
             android:contentDescription="@string/open_nav"
             android:id="@+id/open_nav"
+            android:layout_margin="3dp"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:background="@drawable/soft_rectangle_background"
             android:src="@drawable/ic_menu_black_24dp" />
 
         <RelativeLayout
@@ -69,16 +70,20 @@
             <ImageButton
                 android:id="@+id/open_settings"
                 android:contentDescription="@string/open_settings"
+                android:layout_margin="3dp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@drawable/soft_rectangle_background"
                 android:adjustViewBounds="false"
                 android:src="@drawable/ic_build_black_24dp" />
 
             <ImageButton
                 android:id="@+id/snap_to_origin"
                 android:contentDescription="@string/snap_to_origin"
+                android:layout_margin="3dp"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:background="@drawable/soft_rectangle_background"
                 android:layout_below="@id/open_settings"
                 android:src="@drawable/ic_home_black_24dp" />
 
@@ -87,9 +92,10 @@
         <ImageButton
             android:id="@+id/expand_function_list"
             android:contentDescription="@string/expand_function_list"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_gravity="bottom|end"
+            android:background="@drawable/rectangle_background"
             android:src="@drawable/ic_arrow_drop_up_black_24dp"
             />
 
