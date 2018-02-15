@@ -133,7 +133,7 @@ public class LoginModule extends AppCompatActivity implements
         intent.putExtra("loginStatus", loginStatus);
         setResult(RESULT_OK, intent);
 
-        Log.d("LOGINMODULE", "Sending back activity result");
+        Log.d("LOGINMODULE", "Sending back activity result of checkUserStatus");
 
         finish();
     }
@@ -177,6 +177,7 @@ public class LoginModule extends AppCompatActivity implements
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
+                finish();
                 updateUI(null);
             }
 
