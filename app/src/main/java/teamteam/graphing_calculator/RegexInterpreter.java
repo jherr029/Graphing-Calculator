@@ -9,7 +9,7 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    private static final String func_regex = "(sin[(])|(cos[(])|(tan[(])|(abs[(])|(log[(])|(ln[(])";
+    private static final String func_regex = "((sin)|(cos)|(tan)|(abs)|(log)|(ln))[(]";
     private static final String op_regex = "[-+*/]";
     private static final String term_regex = "([0-9]+|[x]|[e]|[pi])";
 
@@ -70,15 +70,16 @@ public class RegexInterpreter {
                     break;
                 case FUNC: // FIXME: Remove terminals here somehow for trig functions
                     if (top.buffer.matches(func_regex)) {
+                        removeTerminal();
                         parser.push(new Production(Rule.EXPR));
                     } else if (top.buffer.matches(func_regex+"[)]")) {
                         removeTerminal();
                         parser.pop(); // pop func, is completed function
                         if (!mFunction.isEmpty()) parser.push(new Production(Rule.OP));
-                    } else {
+                    } else if (top.buffer.matches(term_regex)){
                         parser.pop(); // pop func before pushing a term
                         parser.push(new Production(Rule.TERM));
-                    }
+                    } else removeTerminal();
                     break;
                 case OP:
                     parser.pop();
