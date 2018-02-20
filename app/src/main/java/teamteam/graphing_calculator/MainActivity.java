@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,6 +25,8 @@ import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "MainActivity";
+
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LinearLayout mGraphToolView;
 
+    private RegexInterpreter mRegexInterpreter;
     private ExpressionEvaluation mFunctionParser;
 
     @Override
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
-
+        mRegexInterpreter = new RegexInterpreter();
         mFunctionParser = new ExpressionEvaluation();
 
         /* Initializing Buttons */
@@ -104,7 +108,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.snap_to_origin:
-                extractValue(R.id.func_1);
+                boolean valid = mRegexInterpreter.isValidFunction(extractValue(R.id.func_1));
+                if (valid) DebugSnackbar("Function is valid");
+                else DebugSnackbar("Function is invalid");
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -168,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!(findViewById(id) instanceof EditText)) return "Invalid String";
         EditText view = findViewById(id);
         String value = view.getText().toString();
-        DebugSnackbar(value);
+        Log.d(TAG, "String Extracted: " + value);
         return value;
     }
 
