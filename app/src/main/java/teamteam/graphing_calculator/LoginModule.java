@@ -118,6 +118,8 @@ public class LoginModule extends AppCompatActivity implements
            if ( userStatus.equals("checkUserStatus")) {
                Log.d("getStatus", "checking user status");
                checkUserStatus();
+//               finishActivity(100);
+               finish();
            }
        }
        else {
@@ -135,6 +137,7 @@ public class LoginModule extends AppCompatActivity implements
                 signIn();
             } else if (changeStatus.equals("signOut")) {
                 signOut();
+                finish();
             }
         }
         else {
@@ -157,16 +160,19 @@ public class LoginModule extends AppCompatActivity implements
         // Maybe extend this to be safe
         if (currentUser != null)
             Log.d("signOut", "signing out user " + currentUser.getDisplayName());
+
         mAuth.signOut();
 
+//        FirebaseAuth.getInstance().signOut();
+
         Log.d("signOut", "signed out");
-        finish();
+//        finish();
 
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
                 new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-//                        updateUI(null);
+                        updateUI(null);
 //                        finish();
                     }
                 });
@@ -192,7 +198,6 @@ public class LoginModule extends AppCompatActivity implements
         setResult(RESULT_OK, intent);
 
 //        finishActivity(100);
-//        finish();
 //        Log.d("LOGINMODULE", "Sending back activity result of checkUserStatus");
 
     }
@@ -267,9 +272,16 @@ public class LoginModule extends AppCompatActivity implements
 //            Intent intent = new Intent(this, MainActivity.class);
 //            startActivity(intent);
             Log.d("LM:updateUI", "Account is null");
-            //finish();
+//            finish();
         }
     }
+
+//    protected void updateUIMod(FirebaseUser account) {
+//        if (account == null) {
+//            Log.d("LM:updt2", "");
+//            finish();
+//        }
+//    }
 
     @Override
     public void onClick(View view) {

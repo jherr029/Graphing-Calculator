@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
 
 //    NavigationView nav_view = findViewById(R.id.navigation_view);
+    boolean changeFlag = false;
 
 
     @Override
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
 
         Log.d("MA:onStart", "about to call checkUserStatus");
-//        checkUserStatus();
+        checkUserStatus();
 
     }
 
@@ -70,6 +71,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         Log.d("MA:onResume", "On Resume function");
+
+        if (changeFlag) {
+            checkUserStatus(); // this one not good
+
+            changeFlag = false;
+        }
     }
 
     @Override
@@ -155,6 +162,8 @@ public class MainActivity extends AppCompatActivity {
 
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
+
+                changeFlag = true;
 
 //                checkUserStatus();
 
