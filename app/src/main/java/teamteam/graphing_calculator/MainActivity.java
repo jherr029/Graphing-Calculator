@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
-        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
-        startActivityForResult(checkIfLoggedIn, 100);
+//        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
+//        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
+//        Log.d("MAIN", "Calling startActivityForResult from onCreate()");
 //        startActivityForResult(checkIfLoggedIn, 100);
 
         graphInit();
@@ -60,6 +60,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        Log.d("MA:onStart", "about to call checkUserStatus");
+//        checkUserStatus();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("MA:onResume", "On Resume function");
     }
 
     @Override
@@ -72,8 +82,25 @@ public class MainActivity extends AppCompatActivity {
         // maybe delete requestCode
         if ( requestCode == 100 ) {
             if ( resultCode == RESULT_OK ) {
+                Log.d("REQUEST ACCEPTED","inside onActivityResult");
 
-                boolean loginStatus = data.getBooleanExtra("loginStatus", false);
+                boolean loginStatus;
+//                boolean loginStatus = data.getBooleanExtra("loginStatus", false);
+                // So the problem is that I am not really receiving a result from the intent in
+                // the other activity which is pretty lame!!!!
+                if (data.getExtras() != null){
+                    Log.d("REQUEST ACCEPTED", "LoginStatus intent is not null \n" +
+                            "ASSUMPTION: loginstatus == true\n" +
+                            "OR loginstatus == false");
+                    loginStatus = data.getExtras().getBoolean("loginStatus");
+                }
+                else {
+                    Log.d("REQUEST ACCEPTED", "LoginStatus intent is NULL \n" +
+                            "FORCING LOGINSTATUS == FALSE");
+                    loginStatus = false;
+                }
+
+                Log.d("LOGINSTATUS", "" + loginStatus);
 
                 NavigationView nav_view = findViewById(R.id.navigation_view);
 
@@ -82,8 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 MenuItem signInItem = menu.getItem(0);
                 MenuItem signOutItem = menu.getItem(1);
 
-                if (loginStatus){
-                    Log.d("Main Status", "user is signed in");
+                if (loginStatus) {
+                    Log.d("REQUEST ACCEPTED", "user is signed in \nSign in button off\n" +
+                            "Sign out button on \n");
 
                     signInItem.setVisible(false);
                     signOutItem.setVisible(true);
@@ -91,9 +119,10 @@ public class MainActivity extends AppCompatActivity {
 //                    mDrawerSignIn.setVisibility(View.GONE);
 //                    findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
 
-                } else {
+                } else { // so does this loginstatus run even when there is nothing in loginstats???
 
-                    Log.d("Main Status", "user is signed out");
+                    Log.d("REQUEST ACCEPTED", "user is signed out \nSign in button on\n" +
+                            "Sign out button off \n");
 
                     signInItem.setVisible(true);
                     signOutItem.setVisible(false);
@@ -101,21 +130,12 @@ public class MainActivity extends AppCompatActivity {
 //                    mDrawerSignIn.setVisibility(View.VISIBLE);
 //                    findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
                 }
-
-
             }
             // FIGURE OUT HOW TO GET TRUE OR FALSE
-
         }
     }
 
     public boolean onNavigationItemSelectedListener(MenuItem item) {
-
-        // Testing
-        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
-        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
-//        startActivityForResult(checkIfLoggedIn, 100);
-//        // End Testing
 
         Intent userStatusChangeIntent = new Intent(this, LoginModule.class);
 
@@ -126,13 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
 
-//                startActivityForResult(checkIfLoggedIn, 100);
+//                checkUserStatus();
 
-                // Make this activity return a bool
-                // If true (then is logged in), then set button visibility
-//                startActivity(new Intent(this, LoginModule.class));
-//                findViewById(R.id.drawer_sign_in).setVisibility(View.GONE);
-//                findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
                 return true;
 
             case R.id.drawer_sign_out:
@@ -141,12 +156,8 @@ public class MainActivity extends AppCompatActivity {
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
 
-                startActivityForResult(checkIfLoggedIn, 100);
+//                checkUserStatus();
 
-                // If false (then is not logged in), then set button visibility
-//                startActivity(new Intent(MainActivity.this, LoginModule.class));
-//                findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
-//                findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
                 return true;
 
             case R.id.drawer_calculate:
@@ -158,6 +169,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private void checkUserStatus() {
+
+        Log.d("MainActivity", "inside checkUserStatus function\n" +
+                "starting intent");
+
+        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
+        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
+
+        startActivityForResult(checkIfLoggedIn, 100);
+
+        Log.d("MainActivity", "activity has already started");
+
     }
 
     private void graphInit() {

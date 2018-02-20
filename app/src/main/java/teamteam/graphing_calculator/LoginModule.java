@@ -41,7 +41,7 @@ public class LoginModule extends AppCompatActivity implements
     private GoogleSignInClient mGoogleSignInClient;
     //private GoogleSignInAccount userAccount;
     //private GoogleSignInOptions mGoogleSignInOptions;
-    private int RC_SIGN_IN = 779;
+    private int RC_SIGN_IN = 200;
     private static final String TAG = MainActivity.class.getSimpleName();
 
 
@@ -67,41 +67,13 @@ public class LoginModule extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
 
-            Log.d("LOGINMODULE", "savedinstancestate is null");
-
+//            Log.d("LOGINMODULE", "savedinstancestate is null");
             Bundle extras = getIntent().getExtras();
 
-            if (extras == null) {
-                Log.d("LOGINMODULE", "extras are null");
+            actionsBasedOnItent(extras);
 
-            } else {
-                Log.d("LOGINMODULE", "extras not null");
-
-                String userStatusCheck = extras.getString("userStatusCheck");
-                String userStatus = extras.getString("userStatus");
-
-                if ( userStatusCheck != null ) {
-                    if (userStatusCheck.equals("checkUserStatus")) {
-                        Log.d("LOGINMODULE", "checking user status");
-                        checkUserStatus();
-                    }
-                }
-
-                if (userStatus != null) {
-                    if (userStatus.equals("signIn")) {
-                        Log.d("LOGINMODULE", "signIn method is about to be called");
-                        signIn();
-                    } else if ( userStatus.equals("signOut")) {
-                        Log.d("LOGINMODULE", "signOut method is about to be called");
-                        signOut();
-                    }
-                }
-
-                // Might have to do a catch here
-
-            }
+//            finish();
         }
-
     }
 
     @Override
@@ -110,14 +82,97 @@ public class LoginModule extends AppCompatActivity implements
         // Returns null if no account exists
         //GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
 
-        Log.d("LOGINMODULE", "onStart()");
+//        Log.d("LOGINMODULE", "onStart()");
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-//        updateUI(account);
+        if (currentUser != null)
+            Log.d("LOGINMODULE", "onStart(): currentUser is not null");
+        else {
+            Log.d("LOGINMODULE", "onStart(): currentUser is null");
+//            finish();
+        }
+
         updateUI(currentUser);
+//        Log.d("LOGINMODULE", "finished updateUI() from onStart()");
     }
 
+    private void actionsBasedOnItent(Bundle extras) {
+        if (extras == null) {
+                Log.d("ABOI", "extras are null");
+
+            } else {
+                Log.d("ABOI", "extras not null");
+
+//                changeStatus(extras);
+                getStatus(extras);
+                changeStatus(extras);
+            }
+    }
+
+    private void getStatus(Bundle extras) {
+
+       String userStatus = extras.getString("userStatusCheck");
+
+       if (userStatus != null) {
+           if ( userStatus.equals("checkUserStatus")) {
+               Log.d("getStatus", "checking user status");
+               checkUserStatus();
+           }
+       }
+       else {
+           Log.d("getStatus","userStatus is null");
+       }
+
+    }
+
+    private void changeStatus(Bundle extras) {
+
+        String changeStatus = extras.getString("userStatus");
+
+        if (changeStatus != null) {
+            if (changeStatus.equals("signIn")) {
+                signIn();
+            } else if (changeStatus.equals("signOut")) {
+                signOut();
+            }
+        }
+        else {
+            Log.d("changeStatus", "changeStatus is null");
+        }
+
+    }
+
+    protected void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+
+        Log.d("signIn", "signIn()");
+
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void signOut() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        // Maybe extend this to be safe
+        if (currentUser != null)
+            Log.d("signOut", "signing out user " + currentUser.getDisplayName());
+        mAuth.signOut();
+
+        Log.d("signOut", "signed out");
+        finish();
+
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+//                        updateUI(null);
+//                        finish();
+                    }
+                });
+    }
+
+    // function to check if the user is signed in or not
     private void checkUserStatus(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -125,21 +180,26 @@ public class LoginModule extends AppCompatActivity implements
 
         if (currentUser != null) {
            loginStatus = true;
+           Log.d("checkUserStatus", "User - " + currentUser.getDisplayName());
         } else {
            loginStatus = false;
         }
+
+        Log.d("checkUserStatus","" + loginStatus);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("loginStatus", loginStatus);
         setResult(RESULT_OK, intent);
 
-        Log.d("LOGINMODULE", "Sending back activity result of checkUserStatus");
+//        finishActivity(100);
+//        finish();
+//        Log.d("LOGINMODULE", "Sending back activity result of checkUserStatus");
 
-        finish();
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        Log.d("firebase", "firebaseAuthWithGoogle()");
+        Log.d("firebase", "firebaseAuthWithGoogle: " + acct.getDisplayName());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
@@ -148,12 +208,13 @@ public class LoginModule extends AppCompatActivity implements
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:successful");
+                            Log.d("firebase", "\nsignInWithCredential:successful\n");
 
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+//                            finishActivity(RC_SIGN_IN);
                         } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.d("firebase", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginModule.this, "Authentication failed",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
@@ -165,19 +226,18 @@ public class LoginModule extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d("LOGINMODULE", "inside onActivityResult");
+        Log.d("LM:OnActivity", "inside");
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
 
             try {
-                Log.d("LOGINMODULE", "Inside try statement");
+                Log.d("LM:OnActivity", "Inside try statement");
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
-                Log.w(TAG, "Google sign in failed", e);
-                finish();
+                Log.d(TAG, "Google sign in failed", e);
                 updateUI(null);
             }
 
@@ -185,72 +245,31 @@ public class LoginModule extends AppCompatActivity implements
         }
     }
 
-    protected void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-
-        Log.d("LOGINMODULE", "calling startActivityForResult");
-
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    private void signOut() {
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("LOGINMODULE", "signing out user " + mAuth.getCurrentUser().getDisplayName());
-        mAuth.signOut();
-
-        Log.d("LOGINMODULE", "signing out");
-
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                       //updateUI(null);
-                        finish();
-                    }
-                });
-    }
 
     //  GoogleSignInAccount user
     protected void updateUI(FirebaseUser account) {
+//        Log.d("LOGINEMUDLE", "inside updateUI()");
+
         if (account != null) { // If there is someone signed in
 
             String nameAndEmail = account.getDisplayName() + "\n" + account.getEmail();
             //email.show();
-
             Toast toast = Toast.makeText(this, nameAndEmail, Toast.LENGTH_LONG);
-
             toast.show();
 
-            Intent intent = new Intent(this, MainActivity.class);
+//            Intent intent = new Intent(this, MainActivity.class);
+            Log.d("LM:updateUI", "successful");
             finish();
             //startActivity(intent);
         }
 
         else {
-            Intent intent = new Intent(this, MainActivity.class);
+//            Intent intent = new Intent(this, MainActivity.class);
 //            startActivity(intent);
-            Log.w("LOGINMODULEERROR", "Account is null");
+            Log.d("LM:updateUI", "Account is null");
             //finish();
         }
-
-        /*
-        userAccount = user;
-        if (user == null) Toast.makeText(context, "Account is null", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(context, userAccount.getEmail(), Toast.LENGTH_SHORT).show();
-        */
     }
-
-    /*
-    protected void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            updateUI(account);
-        } catch (ApiException e) {
-            Log.w(TAG, "signInResult:failed code="+ e.getStatusCode());
-            updateUI(null);
-        }
-    }
-    */
 
     @Override
     public void onClick(View view) {
@@ -260,31 +279,4 @@ public class LoginModule extends AppCompatActivity implements
                 break;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
