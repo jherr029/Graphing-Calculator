@@ -11,19 +11,26 @@ import java.util.Stack;
 //$ represent tan
 //& represent sqrt
 
-public class ExpressionEvaluation {
+public class ExpressionEvaluation extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_expression_evaluation);
+    }
 
     //Dijkstra double stack calculation
-    public static void Prefix_Evaluation(String[] args) {
+    public static double Prefix_Evaluation(String arg) {
         Stack<Character> ops = new Stack<Character>();
         Stack<Double> values = new Stack<Double>();
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Prefix expression:");
+        //Scanner sc = new Scanner(System.in);
+        //System.out.println("Prefix expression:");
 
-        String expression = sc.nextLine();
-        char[] ch = expression.toCharArray();
-        sc.close();
+        //String expression = sc.nextLine();
+        //char[] ch = expression.toCharArray();
+        char[] ch = arg.toCharArray();
+        //sc.close();
 
         for(int i = 0; i < ch.length; i++)
         {
@@ -78,6 +85,7 @@ public class ExpressionEvaluation {
             }
         }
 
-        System.out.println("Results:" + values.pop());
+        //System.out.println("Results:" + values.pop());
+        return values.pop();
     }
 }
