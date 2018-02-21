@@ -183,8 +183,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
        Menu menu = nav_view.getMenu();
 
-       MenuItem signInItem = menu.getItem(0);
+       MenuItem signInItem  = menu.getItem(0);
        MenuItem signOutItem = menu.getItem(1);
+       MenuItem uploadItem  = menu.getItem(2);
+       MenuItem downItem    = menu.getItem(3);
 
        if (loginStatus) {
            Log.d("TGLBTN", "user is signed in\n" +
@@ -193,6 +195,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
            signInItem.setVisible(false);
            signOutItem.setVisible(true);
+           uploadItem.setVisible(true);
+           downItem.setVisible(true);
 
        } else {
            Log.d("TGLBTN", "user is signed out\n" +
@@ -201,6 +205,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
            signInItem.setVisible(true);
            signOutItem.setVisible(false);
+           uploadItem.setVisible(false);
+           downItem.setVisible(false);
        }
 
 
