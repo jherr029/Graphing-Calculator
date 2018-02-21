@@ -123,48 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if ( resultCode == RESULT_OK ) {
                 Log.d("REQUEST ACCEPTED","inside onActivityResult");
 
-                boolean loginStatus;
-//                boolean loginStatus = data.getBooleanExtra("loginStatus", false);
-                // So the problem is that I am not really receiving a result from the intent in
-                // the other activity which is pretty lame!!!!
-                if (data.getExtras() != null){
-                    Log.d("REQUEST ACCEPTED", "LoginStatus intent is not null \n" +
-                            "ASSUMPTION: loginstatus == true\n" +
-                            "OR loginstatus == false");
-                    loginStatus = data.getExtras().getBoolean("loginStatus");
-                }
-                else {
-                    Log.d("REQUEST ACCEPTED", "LoginStatus intent is NULL \n" +
-                            "FORCING LOGINSTATUS == FALSE");
-                    loginStatus = false;
-                }
-
-                Log.d("LOGINSTATUS", "" + loginStatus);
-
-                NavigationView nav_view = findViewById(R.id.navigation_view);
-
-                Menu menu = nav_view.getMenu();
-
-                MenuItem signInItem = menu.getItem(0);
-                MenuItem signOutItem = menu.getItem(1);
-
-                if (loginStatus) {
-                    Log.d("REQUEST ACCEPTED", "user is signed in \nSign in button off\n" +
-                            "Sign out button on \n");
-
-                    signInItem.setVisible(false);
-                    signOutItem.setVisible(true);
-
-
-                } else { // so does this loginstatus run even when there is nothing in loginstats???
-
-                    Log.d("REQUEST ACCEPTED", "user is signed out \nSign in button on\n" +
-                            "Sign out button off \n");
-
-                    signInItem.setVisible(true);
-                    signOutItem.setVisible(false);
-
-                }
+                dynamicButtonAction(data);
             }
         }
     }
@@ -187,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGraphToolView.setVisibility(View.VISIBLE);
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
+
                 break;
             case R.id.snap_to_origin:
                 extractValue(R.id.func_1);
@@ -200,6 +160,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void dynamicButtonAction(Intent data)  {
+
+        boolean loginStatus;
+
+        if (data.getExtras() != null) {
+            Log.d("DBA", "LoginStatus intent is not null\n" +
+                    "Assumption: loginStatus == true" +
+                    "OR loginStatus == false");
+
+            loginStatus = data.getExtras().getBoolean("loginStatus");
+        } else {
+            Log.d("DBA", "loginStatus intent is null" +
+                    "FORCING loginStatus == false");
+
+            loginStatus = false;
+        }
+
+        Log.d("LoginStatus", "" + loginStatus);
+
+        toggleButtons(loginStatus);
+
+    }
+
+    public void toggleButtons(boolean loginStatus) {
+       NavigationView nav_view = findViewById(R.id.navigation_view);
+
+       Menu menu = nav_view.getMenu();
+
+       MenuItem signInItem = menu.getItem(0);
+       MenuItem signOutItem = menu.getItem(1);
+
+       if (loginStatus) {
+           Log.d("TGLBTN", "user is signed in\n" +
+                   "Sign in button off" +
+                   "Sing out button on");
+
+           signInItem.setVisible(false);
+           signOutItem.setVisible(true);
+
+       } else {
+           Log.d("TGLBTN", "user is signed out\n" +
+                   "Sign in button on" +
+                   "Sign out button off");
+
+           signInItem.setVisible(true);
+           signOutItem.setVisible(false);
+       }
+
+
+    }
+
     public boolean onNavigationItemSelectedListener(MenuItem item) {
 
         Intent userStatusChangeIntent = new Intent(this, LoginModule.class);
@@ -210,6 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
+
+                activityActions.main();
 
 //                checkUserStatus();
 
