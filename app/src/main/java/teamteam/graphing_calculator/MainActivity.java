@@ -81,11 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.expand_function_list).setOnClickListener(this);
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
 
-//        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
-//        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
-//        Log.d("MAIN", "Calling startActivityForResult from onCreate()");
-//        startActivityForResult(checkIfLoggedIn, 100);
-
         graphInit();
     }
 
