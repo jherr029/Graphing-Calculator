@@ -11,14 +11,14 @@ public class RegexInterpreter {
 
     private static final String func_regex = "((sin)|(cos)|(tan)|(abs)|(log)|(ln))[(]";
     private static final String op_regex = "[-+*/]";
-    private static final String term_regex = "([0-9]+|[x]|[e]|[pi])";
+    private static final String term_regex = "(([0-9]+([.][0-9]+)?)|[x]|[e]|[pi])";
 
     /**
      * CFG for functions **
      * expr -> (expr) | func op expr | func
      * func -> sin(expr) | cos(expr) | tan(expr) | abs(expr) | log(expr) | ln(expr) | term
      * op   -> + | - | * | /
-     * term -> [0-9]+ | x | e | pi
+     * term -> [0-9]+(.[0-9]+)? | x | e | pi
      */
 
     private String mFunction = "";
@@ -93,7 +93,7 @@ public class RegexInterpreter {
                     break;
                 case TERM:
                     removeTerminal();
-                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+")) {
+                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]")) {
                         if (top.buffer.matches(term_regex)) {
                             parser.pop(); // pop term
                             parser.push(new Production(Rule.OP));
