@@ -31,6 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!-- Graphing Settings Menu -->
         <LinearLayout
             android:id="@+id/graph_tool_menu"
             android:layout_marginTop="5dp"
@@ -39,7 +40,7 @@
             android:layout_width="250dp"
             android:layout_height="300dp"
             android:layout_gravity="top|center_horizontal"
-            android:background="@drawable/soft_rectangle_background"
+            android:background="@drawable/soft_rectangle_background_flat"
             android:elevation="6dp">
 
             <LinearLayout
@@ -107,7 +108,7 @@
 
         </LinearLayout>
 
-
+        <!-- Open Nav Menu Button -->
         <ImageButton
             android:contentDescription="@string/open_nav"
             android:id="@+id/open_nav"
@@ -117,6 +118,7 @@
             android:background="@drawable/soft_rectangle_background"
             android:src="@drawable/ic_menu_black_24dp" />
 
+        <!-- Right Aligned Buttons -->
         <RelativeLayout
             android:id="@+id/right_aligned_buttons"
             android:layout_width="wrap_content"

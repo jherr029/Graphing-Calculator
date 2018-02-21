@@ -57,16 +57,39 @@
         android:layout_below="@id/function_list_header"
         android:background="#fff">
 
-        <EditText
-            android:id="@+id/func_1"
+        <FrameLayout
+            android:id="@+id/test_func_layout"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:inputType="text" />
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="@drawable/rectangle_background"
+                android:layout_gravity="center_vertical"
+                android:text="1" />
+            <EditText
+                android:id="@+id/func_1"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:inputType="text" />
+            <ImageView
+                android:id="@+id/error_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:src="@drawable/ic_error_black_24dp" />
+        </FrameLayout>
+
         <EditText
             android:id="@+id/func_2"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_below="@id/func_1"
+            android:layout_below="@id/test_func_layout"
             android:inputType="text" />
         <EditText
             android:id="@+id/func_3"

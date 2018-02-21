@@ -7,6 +7,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,25 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    private final TextWatcher mFunctionWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (mRegexInterpreter.isValidFunction(s.toString())) {
+                // graph the function, remove any error icons
+                findViewById(R.id.error_1).setVisibility(View.INVISIBLE);
+            }
+            else {
+                // dont graph or remove function, display error icon
+                findViewById(R.id.error_1).setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -68,12 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mRegexInterpreter = new RegexInterpreter();
         mFunctionParser = new ExpressionEvaluation();
 
-        /* Initializing Buttons */
-        findViewById(R.id.open_nav).setOnClickListener(this);
-        findViewById(R.id.open_settings).setOnClickListener(this);
-        findViewById(R.id.snap_to_origin).setOnClickListener(this);
-        findViewById(R.id.expand_function_list).setOnClickListener(this);
-        findViewById(R.id.collapse_function_list).setOnClickListener(this);
+        initListeners();
 
         graphInit();
     }
@@ -157,6 +173,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_SHORT).show();
     }
 
+    private void initListeners() {
+        /* Initializing Buttons */
+        findViewById(R.id.open_nav).setOnClickListener(this);
+        findViewById(R.id.open_settings).setOnClickListener(this);
+        findViewById(R.id.snap_to_origin).setOnClickListener(this);
+        findViewById(R.id.expand_function_list).setOnClickListener(this);
+        findViewById(R.id.collapse_function_list).setOnClickListener(this);
+
+        /* Initializing EditText Listeners */
+        EditText textField = findViewById(R.id.func_1);
+        textField.addTextChangedListener(mFunctionWatcher);
+    }
+
     /** Use this function to get Strings from user input fields
      * @param id (e.g. R.id.func_1)
      * @valid_ids func_1 : top function field
@@ -171,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *         int/double to use them properly.
      */
     private String extractValue(int id) {
-        if (!(findViewById(id) instanceof EditText)) return "Invalid String";
+        if (!(findViewById(id) instanceof EditText)) return "View provided is not of type EditText";
         EditText view = findViewById(id);
         String value = view.getText().toString();
         Log.d(TAG, "String Extracted: " + value);
