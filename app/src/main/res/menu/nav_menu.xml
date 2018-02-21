@@ -7,7 +7,7 @@
         <item
             android:id="@+id/drawer_sign_out"
             android:icon="@drawable/ic_icons8_google"
-            android:title="Sign out of Google" />
+            android:title="@string/sign_out" />
     </group>
 
     <group android:id="@+id/account">
@@ -26,12 +26,24 @@
             android:id="@+id/drawer_scale_graph"
             android:icon="@drawable/ic_aspect_ratio_black_24dp"
             android:title="@string/scale_graph" />
+        <item
+            android:id="@+id/drawer_function_template"
+            android:icon="@drawable/ic_aspect_ratio_black_24dp"
+            android:title="@string/built_in_function" />
+        <item
+            android:id="@+id/drawer_customize_expression"
+            android:icon="@drawable/ic_aspect_ratio_black_24dp"
+            android:title="@string/customize_expression" />
     </group>
 
     <group android:id="@+id/graph_tools">
         <item
-            android:id="@+id/drawer_calculate"
+            android:id="@+id/drawer_calculate_old"
             android:icon="@drawable/ic_multiline_chart_black_24dp"
             android:title="@string/calculate" />
+        <item
+            android:id="@+id/drawer_calculate"
+            android:icon="@drawable/ic_multiline_chart_black_24dp"
+            android:title="@string/sci_calculate" />
     </group>
 </menu>

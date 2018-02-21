@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/function_bottom_sheet"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    tools:context="teamteam.graphing_calculator.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/function_list_header"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="top"
+        android:background="@color/colorPrimaryDark" >
+
+        <ImageButton
+            android:contentDescription="@string/collapse_function_list"
+            android:id="@+id/collapse_function_list"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:background="@color/colorPrimary"
+            android:src="@drawable/ic_arrow_drop_down_black_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start|center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="#f2f2f2"
+            android:text="Function List" />
+
+    </FrameLayout>
+
+    <!--
+    <ListView
+        android:id="@+id/function_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/function_list_header"
+        android:background="#fff"
+        android:divider="#808080"
+        android:dividerHeight="1dp" >
+    </ListView>
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/function_list_header"
+        android:background="#fff">
+
+        <EditText
+            android:id="@+id/func_1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/func_2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/func_1"
+            android:inputType="text" />
+        <EditText
+            android:id="@+id/func_3"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/func_2"
+            android:inputType="text" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
