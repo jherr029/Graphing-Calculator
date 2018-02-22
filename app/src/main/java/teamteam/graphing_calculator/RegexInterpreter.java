@@ -9,7 +9,7 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln))[(]";
+    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln)|(sqrt))[(]";
     private static final String op_regex = "[-+*/^]";
     private static final String term_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
 
@@ -91,6 +91,15 @@ public class RegexInterpreter {
                     parser.pop();
                     if (top.buffer.matches(op_regex)) {
                         removeTerminal();
+                        parser.push(new Production(Rule.EXPR));
+                    }
+                    else if (top.buffer.matches(term_regex)) {
+                        parser.push(new Production(Rule.TERM));
+                    }
+                    else if (top.buffer.matches("[(]")) {
+                        parser.push(new Production(Rule.EXPR));
+                    }
+                    else if (!top.buffer.matches("[)]")) {
                         parser.push(new Production(Rule.EXPR));
                     }
                     break;
