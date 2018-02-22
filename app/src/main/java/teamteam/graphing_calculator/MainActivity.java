@@ -12,31 +12,46 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-    private final TextWatcher mFunctionWatcher = new TextWatcher() {
+
+    private class FunctionWatcher implements TextWatcher {
+        private EditText mEditText;
+        private ImageView mErrorIcon;
+
+        private String prevFunction;
+        public FunctionWatcher(FrameLayout layout) {
+            this.mEditText = (EditText)layout.getChildAt(1);
+            this.mErrorIcon = (ImageView)layout.getChildAt(2);
+        }
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            prevFunction = mEditText.toString();
+        }
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (mRegexInterpreter.isValidFunction(s.toString())) {
+            if (s.toString() == "") mErrorIcon.setVisibility(View.INVISIBLE);
+            else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 // graph the function, remove any error icons
-                findViewById(R.id.error_1).setVisibility(View.INVISIBLE);
+                //graph.remove_line(prevFunction);
+                //graph.add_line(s.toString());
+                mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else {
                 // dont graph or remove function, display error icon
-                findViewById(R.id.error_1).setVisibility(View.VISIBLE);
+                mErrorIcon.setVisibility(View.VISIBLE);
             }
         }
     };
@@ -177,9 +192,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.expand_function_list).setOnClickListener(this);
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
 
-        /* Initializing EditText Listeners */
+        /* Initializing EditText Listeners, these are just temporary. */
         EditText textField = findViewById(R.id.func_1);
-        textField.addTextChangedListener(mFunctionWatcher);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        textField = findViewById(R.id.func_2);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        textField = findViewById(R.id.func_3);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
     }
 
     /** Use this function to get Strings from user input fields
