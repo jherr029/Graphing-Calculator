@@ -169,14 +169,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void update(View view){
-        //System.out.println("Button press");
+        String nminx = extractValue(R.id.minX);
+        String nmaxx = extractValue(R.id.maxX);
+        String nminy = extractValue(R.id.minY);
+        String nmaxy = extractValue(R.id.maxY);
+
+        if(nminx.equals("") || nmaxx.equals("") || nminy.equals("") || nmaxy.equals("")){
+            return;
+        }
+
         graph.reset(extractValue(R.id.func_1),
                     extractValue(R.id.func_2),
                     extractValue(R.id.func_3),
-                    Integer.parseInt(extractValue(R.id.maxX)),
-                    Integer.parseInt(extractValue(R.id.minX)),
-                    Integer.parseInt(extractValue(R.id.maxY)),
-                    Integer.parseInt(extractValue(R.id.minY))
+                    Integer.parseInt(nmaxx),
+                    Integer.parseInt(nminx),
+                    Integer.parseInt(nmaxy),
+                    Integer.parseInt(nminy)
         );
     }
 
