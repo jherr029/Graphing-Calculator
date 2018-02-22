@@ -10,22 +10,58 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.Viewport;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
-//import com.jjoe64.graphview.series.;
-import java.util.*;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String TAG = "MainActivity";
+
+    private class FunctionWatcher implements TextWatcher {
+        private EditText mEditText;
+        private ImageView mErrorIcon;
+
+        private String prevFunction;
+        public FunctionWatcher(FrameLayout layout) {
+            this.mEditText = (EditText)layout.getChildAt(1);
+            this.mErrorIcon = (ImageView)layout.getChildAt(2);
+            prevFunction = "";
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.toString() == "") mErrorIcon.setVisibility(View.INVISIBLE);
+            else if (mRegexInterpreter.isValidFunction(s.toString())) {
+                // graph the function, remove any error icons
+                Log.d(TAG, "prevFunction: " + prevFunction);
+                Log.d(TAG, "newFunction: " + s.toString());
+                if (!prevFunction.isEmpty()) graph.remove_line(prevFunction);
+                prevFunction = mEditText.getText().toString();
+                graph.add_line(s.toString());
+                mErrorIcon.setVisibility(View.INVISIBLE);
+            }
+            else {
+                // dont graph or remove function, display error icon
+                mErrorIcon.setVisibility(View.VISIBLE);
+            }
+        }
+    };
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -34,11 +70,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private LinearLayout mGraphToolView;
 
+    private RegexInterpreter mRegexInterpreter;
     private ExpressionEvaluation mFunctionParser;
 
 //    NavigationView nav_view = findViewById(R.id.navigation_view);
     boolean changeFlag = false;
 
+    private GraphHandler graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,17 +109,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
-
+        mRegexInterpreter = new RegexInterpreter();
         mFunctionParser = new ExpressionEvaluation();
 
-        /* Initializing Buttons */
-        findViewById(R.id.open_nav).setOnClickListener(this);
-        findViewById(R.id.open_settings).setOnClickListener(this);
-        findViewById(R.id.snap_to_origin).setOnClickListener(this);
-        findViewById(R.id.expand_function_list).setOnClickListener(this);
-        findViewById(R.id.collapse_function_list).setOnClickListener(this);
+        initListeners();
 
-        graphInit();
+        //Initialize graph handler
+        this.graph = new GraphHandler(this);
     }
 
     @Override
@@ -144,7 +178,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
             case R.id.snap_to_origin:
-                extractValue(R.id.func_1);
+                boolean valid = mRegexInterpreter.isValidFunction(extractValue(R.id.func_1));
+                if (valid) DebugSnackbar("Function is valid");
+                else DebugSnackbar("Function is invalid");
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -274,6 +310,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_SHORT).show();
     }
 
+    private void initListeners() {
+        /* Initializing Buttons */
+        findViewById(R.id.open_nav).setOnClickListener(this);
+        findViewById(R.id.open_settings).setOnClickListener(this);
+        findViewById(R.id.snap_to_origin).setOnClickListener(this);
+        findViewById(R.id.expand_function_list).setOnClickListener(this);
+        findViewById(R.id.collapse_function_list).setOnClickListener(this);
+
+        /* Initializing EditText Listeners, these are just temporary. */
+        EditText textField = findViewById(R.id.func_1);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        textField = findViewById(R.id.func_2);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        textField = findViewById(R.id.func_3);
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+    }
+
     /** Use this function to get Strings from user input fields
      * @param id (e.g. R.id.func_1)
      * @valid_ids func_1 : top function field
@@ -288,87 +341,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *         int/double to use them properly.
      */
     private String extractValue(int id) {
-        if (!(findViewById(id) instanceof EditText)) return "Invalid String";
+        if (!(findViewById(id) instanceof EditText)) return "View provided is not of type EditText";
         EditText view = findViewById(id);
         String value = view.getText().toString();
-        DebugSnackbar(value);
+        Log.d(TAG, "String Extracted: " + value);
         return value;
     }
 
-    private GraphView graph;
-    private Map functions;
-    private int min_x = -10;
-    private int max_x = 10;
-    private int min_y = -10;
-    private int max_y = 10;
+    public void update(View view){
+        String nminx = extractValue(R.id.minX);
+        String nmaxx = extractValue(R.id.maxX);
+        String nminy = extractValue(R.id.minY);
+        String nmaxy = extractValue(R.id.maxY);
 
-    private void graphInit() {
-        graph = findViewById(R.id.graph);
-        functions = new HashMap();
-        /*
-        DataPoint[] points = new DataPoint[100];
-        for (int i = 0; i < points.length; i++) {
-            points[i] = new DataPoint(i, Math.sin(i * 0.5) * 20 * (Math.random() * 10 + 1));
+        if(nminx.equals("") || nmaxx.equals("") || nminy.equals("") || nmaxy.equals("")){
+            return;
         }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        */
 
-        // set manual X bounds
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(min_y);
-        graph.getViewport().setMaxY(max_y);
-
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(min_x);
-        graph.getViewport().setMaxX(max_x);
-
-        // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
-
-        //graph.addSeries(series);
+        graph.reset(extractValue(R.id.func_1),
+                    extractValue(R.id.func_2),
+                    extractValue(R.id.func_3),
+                    Integer.parseInt(nmaxx),
+                    Integer.parseInt(nminx),
+                    Integer.parseInt(nmaxy),
+                    Integer.parseInt(nminy)
+        );
     }
 
-    //takes in a function in whatever format we're using, sends it to the point generator,
-    //gets back array of DataPoint, stores points as LineGraphSeries, graphs line
-    //public void add_line(/* parameters TBD */){
-        //generates points from the function
-        //DataPoint[] points = //insert point generation function here
-        //creates a series form the points
-        //LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        //puts series into the list
-        //functions.put(/* function parameter */, series);
-        //adds the series to the graph
-        //graph.addSeries(functions.get(/* function parameter */));
-    //}
-
-    //takes in a function and removes it from the graph
-    //public void remove_line(/* parameters TBD */){
-        //removes series from the graph and redraws it
-        //graph.removeSeries(functions.get(/* function parameter */));
-        //removes series from the list
-        //functions.remove(/* function parameter */);
-    //}
-
-    /*
-    //updates the boundaries of the graph and regenerates the lines
-    public void update_bounds(int minx, int maxx, int miny, int maxy){
-        //updates variables
-        min_x = minx;
-        min_y = miny;
-        max_x = maxx;
-        max_y = maxy;
-        //updates graph variables
-        graph.getViewport().setMinX(min_x);
-        graph.getViewport().setMaxX(max_x);
-        graph.getViewport().setMinY(min_y);
-        graph.getViewport().setMaxY(max_y);
-
-        //regenerates lines
-        Iterator it = functions.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            pair.getValue().resetData(/* call point generation function with pair.getKey() );*/
-       // }
-    //}
 }
