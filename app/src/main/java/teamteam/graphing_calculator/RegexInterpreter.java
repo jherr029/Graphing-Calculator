@@ -9,14 +9,14 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    private static final String func_regex = "((sin)|(cos)|(tan)|(abs)|(log)|(ln))[(]";
+    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln))[(]";
     private static final String op_regex = "[-+*/^]";
-    private static final String term_regex = "(([0-9]+([.][0-9]+)?)|[x]|[e])";
+    private static final String term_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
 
     /**
      * CFG for functions **
-     * expr -> (expr) | func op expr | func
-     * func -> sin(expr) | cos(expr) | tan(expr) | abs(expr) | log(expr) | ln(expr) | term
+     * expr -> [-]?(expr) | func op expr | func
+     * func -> sin(expr) | cos(expr) | tan(expr) | abs(expr) | log(expr) | ln(expr) | (^[-]?)term
      * op   -> + | - | * | / | ^
      * term -> [0-9]+([.][0-9]+)? | x | e | pi
      */
@@ -39,7 +39,8 @@ public class RegexInterpreter {
 
         Log.d(TAG, "Read Function: " + function);
 
-        mFunction = function;
+        // mFunction is
+        mFunction = function.replaceAll("\\s+", "");
 
         // All we really have to check is if it passes an FSM
         return DFA();
@@ -59,10 +60,13 @@ public class RegexInterpreter {
 
             switch (top.ruleType) {
                 case EXPR:
-                    if (top.buffer.matches("[(]")) { // '(' in '(expr)', push new expr
+                    if (top.buffer.matches("-")) {
+                        removeTerminal();
+                    }
+                    else if (top.buffer.matches("-?[(]")) { // '(' in '(expr)', push new expr
                         removeTerminal();
                         parser.push(new Production(Rule.EXPR));
-                    } else if (top.buffer.matches("[(][)]")) { // ')' in '(expr)', pop expr
+                    } else if (top.buffer.matches("-?[(][)]")) { // ')' in '(expr)', pop expr
                         removeTerminal();
                         parser.pop();
                         if (!mFunction.isEmpty()) parser.push(new Production(Rule.OP));
@@ -93,7 +97,7 @@ public class RegexInterpreter {
                     break;
                 case TERM:
                     removeTerminal();
-                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]?/23")) {
+                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]?")) {
                         if (top.buffer.matches(term_regex)) {
                             parser.pop(); // pop term
                             parser.push(new Production(Rule.OP));

@@ -12,51 +12,34 @@
     app:behavior_peekHeight="0dp"
     tools:context="teamteam.graphing_calculator.MainActivity">
 
+    <!-- Function List Header -->
     <FrameLayout
         android:id="@+id/function_list_header"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="48dp"
         android:layout_gravity="top"
-        android:background="@color/colorPrimaryDark" >
+        android:background="@drawable/rectangle_background" >
 
         <ImageButton
             android:contentDescription="@string/collapse_function_list"
             android:id="@+id/collapse_function_list"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="end"
-            android:background="@color/colorPrimary"
+            android:background="@drawable/rectangle_background"
             android:src="@drawable/ic_arrow_drop_down_black_24dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="start|center_vertical"
-            android:layout_marginStart="10dp"
-            android:textColor="#f2f2f2"
-            android:text="Function List" />
 
     </FrameLayout>
 
-    <!--
-    <ListView
-        android:id="@+id/function_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/function_list_header"
-        android:background="#fff"
-        android:divider="#808080"
-        android:dividerHeight="1dp" >
-    </ListView>
-    -->
-
+    <!-- List Of Functions -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/function_list_header"
         android:background="#fff">
 
+        <!-- Test Function Layout -->
         <FrameLayout
             android:id="@+id/test_func_layout"
             android:orientation="horizontal"

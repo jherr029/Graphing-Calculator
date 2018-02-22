@@ -10,7 +10,7 @@
     android:descendantFocusability="blocksDescendants"
     tools:context="teamteam.graphing_calculator.MainActivity">
 
-
+    <!-- Navigation View -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
@@ -20,12 +20,14 @@
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/nav_menu"/>
 
+    <!-- Main Content -->
     <FrameLayout
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Graph View -->
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
             android:layout_width="match_parent"
@@ -147,11 +149,12 @@
 
         </RelativeLayout>
 
+        <!-- Expand Function List -->
         <ImageButton
             android:id="@+id/expand_function_list"
             android:contentDescription="@string/expand_function_list"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="bottom|end"
             android:background="@drawable/rectangle_background"
             android:src="@drawable/ic_arrow_drop_up_black_24dp"
