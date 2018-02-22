@@ -167,4 +167,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DebugSnackbar(value);
         return value;
     }
+
+    public void update(View view){
+        //System.out.println("Button press");
+        graph.reset(extractValue(R.id.func_1),
+                    extractValue(R.id.func_2),
+                    extractValue(R.id.func_3),
+                    Integer.parseInt(extractValue(R.id.maxX)),
+                    Integer.parseInt(extractValue(R.id.minX)),
+                    Integer.parseInt(extractValue(R.id.maxY)),
+                    Integer.parseInt(extractValue(R.id.minY))
+        );
+    }
+
 }

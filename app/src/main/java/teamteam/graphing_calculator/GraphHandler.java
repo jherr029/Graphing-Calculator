@@ -7,7 +7,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.lang.Math;
+import java.lang.Math.*;
 
 
 public class GraphHandler {
@@ -16,10 +16,10 @@ public class GraphHandler {
     private GraphView graph;
     private ExpressionEvaluation parser;
     private Map functions;
-    private int min_x = -10;
-    private int max_x = 10;
-    private int min_y = -10;
-    private int max_y = 10;
+    private int min_x = 0;
+    private int max_x = 50;
+    private int min_y = 0;
+    private int max_y = 50;
 
     public GraphHandler (Activity act) {
 
@@ -27,13 +27,6 @@ public class GraphHandler {
         graph = this.mainact.findViewById(R.id.graph);
         functions = new HashMap();
         parser = new ExpressionEvaluation();
-        /*
-        DataPoint[] points = new DataPoint[100];
-        for (int i = 0; i < points.length; i++) {
-            points[i] = new DataPoint(i, Math.sin(i * 0.5) * 20 * (Math.random() * 10 + 1));
-        }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
-        */
 
         // set manual X bounds
         graph.getViewport().setYAxisBoundsManual(true);
@@ -48,7 +41,6 @@ public class GraphHandler {
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
 
-        //graph.addSeries(series);
     }
 
     private DataPoint[] gen_data (String func){
@@ -62,10 +54,12 @@ public class GraphHandler {
         DataPoint[] points = new DataPoint[100];
 
         double step = (double)Math.abs(max_x - min_x)/100;
+
         for(int i = 0; i < 100; i++){
             double x_val = min_x + (i * step);
-            points[i] = new DataPoint(x_val,
-                    parser.Prefix_Evaluation(formfunc.replaceAll("x", Double.toString(x_val))));
+            String finalfunc = formfunc.replaceAll("x", Double.toString(x_val));
+            double y_val = parser.Prefix_Parser(finalfunc);
+            points[i] = new DataPoint(x_val, y_val);
         }
 
         return points;
@@ -103,12 +97,34 @@ public class GraphHandler {
         graph.getViewport().setMinY(min_y);
         graph.getViewport().setMaxY(max_y);
 
+        graph.onDataChanged(true,false);
+
         //regenerates lines
         Iterator it = functions.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             ((LineGraphSeries<DataPoint>)pair.getValue()).resetData(gen_data((String)pair.getKey()));
         }
+    }
+
+    public void reset(String func1, String func2, String func3, int nmaxx, int nminx, int nmaxy, int nminy){
+        Iterator it = functions.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry pair = (Map.Entry)it.next();
+            graph.removeSeries((LineGraphSeries<DataPoint>)pair.getValue());
+            it.remove();
+        }
+        if(!func1.equals("")){
+            add_line(func1);
+        }
+        if(!func2.equals("")){
+            add_line(func2);
+        }
+        if(!func3.equals("")){
+            add_line(func3);
+        }
+        update_bounds(nminx, nmaxx, nminy, nmaxy);
+
     }
 
 }
