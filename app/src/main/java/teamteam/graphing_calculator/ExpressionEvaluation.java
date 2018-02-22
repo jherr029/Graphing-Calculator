@@ -13,48 +13,65 @@ import java.util.Stack;
 
 public class ExpressionEvaluation extends AppCompatActivity {
 
-    private static double result = 0.0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expression_evaluation);
     }
 
-    //Dijkstra double stack calculation
-    public static double Prefix_Parser(String arg) {
-        /*
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Prefix expression:");
 
         String expression = sc.nextLine();
         sc.close();
 
-        Double result = 0.0;
+        Double[] result = new Double[]{0.0};
         if (Prefix_Evaluation(expression, result)) {
-            System.out.println("Results: " + result);
-        } else {
+            System.out.println("Results: " + result[0]);
+        }
+        else {
             System.out.println("ERROR");
         }
-        */
-        Prefix_Evaluation(arg, 0.0);
-        return result;
     }
 
-    public static boolean Prefix_Evaluation(String expression, Double t) {
+    public static boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
-        //System.out.println(expression);
+        System.out.println(expression);
 
         int posFRP = -1;
         while ((posFRP = expression.indexOf(')')) != -1) {
             int posLLP = expression.lastIndexOf('(', posFRP);
-            Double subResult = 0.0;
+            Double[] subResult = new Double[]{0.0};
             if (!Prefix_Evaluation(expression.substring(posLLP+1, posFRP), subResult)) {
                 return false;
             }
-            expression = expression.substring(0, posLLP) + subResult + expression.substring(posFRP+1, expression.length());
+            expression = expression.substring(0, posLLP) + subResult[0] + expression.substring(posFRP+1, expression.length());
         }
+        System.out.println("After: " + expression);
+        boolean check = false;
+        do {
+            check = false;
+            int pos = -1;
+            // If expression start by +, then get the substring after +
+            if (expression.charAt(0) == '+') {
+                expression = expression.substring(1);
+                check = true;
+            }
+            // Replace -- or ++ to be +
+            else if (((posFRP = expression.indexOf("--",0)) != -1) || ((posFRP = expression.indexOf("++",0)) != -1)) {
+                expression = expression.substring(0, posFRP) + '+' + expression.substring(posFRP+2);
+                check = true;
+            }
+            // Replace +- or -+ to be +
+            else if (((posFRP = expression.indexOf("+-")) != -1) || ((posFRP = expression.indexOf("-+")) != -1)) {
+                expression = expression.substring(0, posFRP) + '-' + expression.substring(posFRP+2);
+                check = true;
+            }
+        } while (check);
 
+        // Check the first char is + or not
+        System.out.println("After2: " + expression);
         // Split expression by +, -, *, /
         Stack<Character> ops = new Stack<Character>();
         Stack<String> values = new Stack<String>();
@@ -62,7 +79,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
         int a = 0;
         for (int i = 0; i < expression.length(); ++i) {
             Character c = expression.charAt(i);
-            if (c == '+' || c == '-' || c == '*' || c == '/') {
+            if (c == '+' || c == '*' || c == '/' || (c == '-' && i != 0 && Character.isDigit(expression.charAt(i-1)))) {
                 ops.push(expression.charAt(i));
                 values.push(expression.substring(a,i));
                 a = i+1;
@@ -81,6 +98,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
             System.out.println(expression + " - values - " + s);
         }
         */
+
 
         // Calculate sin, cos, ^, ...
         Stack<String> temp_values = new Stack<String>();
@@ -105,14 +123,23 @@ public class ExpressionEvaluation extends AppCompatActivity {
                 temp_values.push(""+Math.pow(Double.valueOf(temp_value.substring(0, b)), Double.valueOf(temp_value.substring(b+1))));
             }
             else if ((b = temp_value.indexOf("sqrt")) != -1) {
-                temp_values.push(""+Math.sqrt(Double.valueOf(temp_value.substring(b+4))));
+                Double temp = Double.valueOf(temp_value.substring(b+4));
+                if (temp < 0) {
+                    return false;
+                }
+                temp_values.push(""+Math.sqrt(temp));
             }
             else if ((b = temp_value.indexOf("log_")) != -1) {
                 // log_a_b
                 a = temp_value.indexOf('_', b+4);
                 //System.out.println("a - " + temp_value.substring(b+4, a));
                 //System.out.println("b - " + temp_value.substring(a+1));
-                temp_values.push(""+(Math.log(Double.valueOf(temp_value.substring(a+1))) / Math.log(Double.valueOf(temp_value.substring(b+4, a)))));
+                Double base = Double.valueOf(temp_value.substring(b+4, a));
+                Double temp = Double.valueOf(temp_value.substring(a+1));
+                if (base < 0 || temp <= 0) {
+                    return false;
+                }
+                temp_values.push(""+(Math.log(temp) / Math.log(base)));
             }
             else if ((b = temp_value.indexOf("lg")) != -1) {
                 // lg = log_10
@@ -186,100 +213,8 @@ public class ExpressionEvaluation extends AppCompatActivity {
         if (values.empty()) {
             return false;
         }
-        result = Double.valueOf(values.pop());
+        result[0] = Double.valueOf(values.pop());
+        System.out.println(expression + " : " + result[0]);
         return true;
     }
 }
-/*
-package teamteam.graphing_calculator;
-
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import java.util.Scanner;
-import java.util.Stack;
-
-//@ represent sin
-//# represent cos
-//$ represent tan
-//& represent sqrt
-
-public class ExpressionEvaluation extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_expression_evaluation);
-    }
-
-    //Dijkstra double stack calculation
-    public static double Prefix_Evaluation(String arg) {
-        Stack<Character> ops = new Stack<Character>();
-        Stack<Double> values = new Stack<Double>();
-
-        //Scanner sc = new Scanner(System.in);
-        //System.out.println("Prefix expression:");
-
-        //String expression = sc.nextLine();
-        //char[] ch = expression.toCharArray();
-        char[] ch = arg.toCharArray();
-        //sc.close();
-
-        for(int i = 0; i < ch.length; i++)
-        {
-            if(ch[i] == '+')
-            {
-                ops.push(ch[i]);
-            }
-            else if(ch[i] == '-')
-            {
-                ops.push(ch[i]);
-            }
-            else if(ch[i] == '*')
-            {
-                ops.push(ch[i]);
-            }
-            else if(ch[i] == '/')
-            {
-                ops.push(ch[i]);
-            }
-            //if left parenthesis, do nothing
-            else if(ch[i] == '(')
-            {
-            }
-            //if right parenthesis, pop the operands and operator, calculate the result and push it into stack
-            else if(ch[i] == ')')
-            {
-                char op = ops.pop();
-                Double tmpResult = values.pop();
-
-                if(op == '+')
-                {
-                    tmpResult = values.pop() + tmpResult;
-                }
-                else if(op == '-')
-                {
-                    tmpResult = values.pop() - tmpResult;
-                }
-                else if(op == '*')
-                {
-                    tmpResult = values.pop() * tmpResult;
-                }
-                else if(op == '/')
-                {
-                    tmpResult = values.pop() / tmpResult;
-                }
-                values.push(tmpResult);
-            }
-            else
-            //push all operands into stack
-            {
-                values.push(Double.parseDouble(Character.toString(ch[i])));
-            }
-        }
-
-        //System.out.println("Results:" + values.pop());
-        return values.pop();
-    }
-}
-*/

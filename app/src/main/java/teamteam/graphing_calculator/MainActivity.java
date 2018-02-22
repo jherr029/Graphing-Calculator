@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public FunctionWatcher(FrameLayout layout) {
             this.mEditText = (EditText)layout.getChildAt(1);
             this.mErrorIcon = (ImageView)layout.getChildAt(2);
+            prevFunction = "";
         }
 
         @Override
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            prevFunction = mEditText.toString();
+
         }
 
         @Override
@@ -45,8 +46,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (s.toString() == "") mErrorIcon.setVisibility(View.INVISIBLE);
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 // graph the function, remove any error icons
-                //graph.remove_line(prevFunction);
-                //graph.add_line(s.toString());
+                Log.d(TAG, "prevFunction: " + prevFunction);
+                Log.d(TAG, "newFunction: " + s.toString());
+                if (!prevFunction.isEmpty()) graph.remove_line(prevFunction);
+                prevFunction = mEditText.getText().toString();
+                graph.add_line(s.toString());
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else {

@@ -62,8 +62,7 @@ public class RegexInterpreter {
                 case EXPR:
                     if (top.buffer.matches("-")) {
                         removeTerminal();
-                    }
-                    else if (top.buffer.matches("-?[(]")) { // '(' in '(expr)', push new expr
+                    } else if (top.buffer.matches("-?[(]")) { // '(' in '(expr)', push new expr
                         removeTerminal();
                         parser.push(new Production(Rule.EXPR));
                     } else if (top.buffer.matches("-?[(][)]")) { // ')' in '(expr)', pop expr

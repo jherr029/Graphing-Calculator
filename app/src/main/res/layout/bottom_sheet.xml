@@ -66,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
+                android:visibility="invisible"
                 android:src="@drawable/ic_error_black_24dp" />
         </FrameLayout>
 
@@ -94,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
+                android:visibility="invisible"
                 android:src="@drawable/ic_error_black_24dp" />
         </FrameLayout>
 
@@ -122,6 +124,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
+                android:visibility="invisible"
                 android:src="@drawable/ic_error_black_24dp" />
         </FrameLayout>
 

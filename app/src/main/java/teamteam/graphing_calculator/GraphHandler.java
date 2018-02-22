@@ -58,8 +58,8 @@ public class GraphHandler {
         for(int i = 0; i < 100; i++){
             double x_val = min_x + (i * step);
             String finalfunc = formfunc.replaceAll("x", Double.toString(x_val));
-            double y_val = parser.Prefix_Parser(finalfunc);
-            points[i] = new DataPoint(x_val, y_val);
+            Double[] y_val = new Double[]{0.0}; parser.Prefix_Evaluation(finalfunc, y_val);
+            points[i] = new DataPoint(x_val, y_val[0]);
         }
 
         return points;
