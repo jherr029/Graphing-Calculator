@@ -1,11 +1,10 @@
 package teamteam.graphing_calculator;
 
+import android.icu.text.LocaleDisplayNames;
 import android.util.Log;
 import java.util.Stack;
 
 /** Created by makloooo on 2/16/18 */
-
-// Adding excess closing parenthesis crashes the app
 
 public class RegexInterpreter {
 
@@ -39,9 +38,9 @@ public class RegexInterpreter {
 
     public boolean isValidFunction(String function) {
 
-        Log.d(TAG, "Read Function: " + function);
+        Log.d(TAG, "*** New Function : " + function + " ***");
 
-        // mFunction is
+        // Remove all whitespace in function
         mFunction = function.replaceAll("\\s+", "");
 
         // All we really have to check is if it passes an FSM
@@ -54,7 +53,7 @@ public class RegexInterpreter {
         Stack<Production> parser = new Stack<>();
         parser.push(new Production(Rule.EXPR));
 
-        DFAMainLoop: while (!mFunction.isEmpty()) {
+        DFAMainLoop : while (!mFunction.isEmpty() && !parser.isEmpty()) {
             Production top = parser.peek();
             top.buffer += mFunction.charAt(0);
             Log.d(TAG, top.ruleType.toString() + " -> \'" + top.buffer
@@ -104,8 +103,7 @@ public class RegexInterpreter {
                     }
                     else if (!top.buffer.matches("[)]")) {
                         parser.push(new Production(Rule.EXPR));
-                    }
-                    */
+                    } */
                     /* No acceptance of implicit multiplication */
                     else if (top.buffer.matches(term_regex) ||
                              top.buffer.matches("[(]") ||
@@ -130,12 +128,14 @@ public class RegexInterpreter {
                     return false; // Something obviously went wrong.
             }
         }
-        if (parser.isEmpty()) return true; //If there are still things on the stack, is false.
-        Log.d(TAG, "Things left on the stack:");
+        //If both resources don't empty at the same time, is false.
+        if (parser.isEmpty() && mFunction.isEmpty()) return true;
+        Log.d(TAG, "Productions left on the stack:");
         while (!parser.isEmpty()) {
             Log.d(TAG, parser.peek().ruleType.toString());
             parser.pop();
         }
+        Log.d(TAG, "Function left to be parsed: " + mFunction);
         return false;
     }
 

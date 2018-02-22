@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void checkUserStatus() {
-
         Log.d("MainActivity", "inside checkUserStatus function\n" +
                 "starting intent");
 
