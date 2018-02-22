@@ -123,14 +123,23 @@ public class ExpressionEvaluation extends AppCompatActivity {
                 temp_values.push(""+Math.pow(Double.valueOf(temp_value.substring(0, b)), Double.valueOf(temp_value.substring(b+1))));
             }
             else if ((b = temp_value.indexOf("sqrt")) != -1) {
-                temp_values.push(""+Math.sqrt(Double.valueOf(temp_value.substring(b+4))));
+                Double temp = Double.valueOf(temp_value.substring(b+4));
+                if (temp < 0) {
+                    return false;
+                }
+                temp_values.push(""+Math.sqrt(temp));
             }
             else if ((b = temp_value.indexOf("log_")) != -1) {
                 // log_a_b
                 a = temp_value.indexOf('_', b+4);
                 //System.out.println("a - " + temp_value.substring(b+4, a));
                 //System.out.println("b - " + temp_value.substring(a+1));
-                temp_values.push(""+(Math.log(Double.valueOf(temp_value.substring(a+1))) / Math.log(Double.valueOf(temp_value.substring(b+4, a)))));
+                Double base = Double.valueOf(temp_value.substring(b+4, a));
+                Double temp = Double.valueOf(temp_value.substring(a+1));
+                if (base < 0 || temp <= 0) {
+                    return false;
+                }
+                temp_values.push(""+(Math.log(temp) / Math.log(base)));
             }
             else if ((b = temp_value.indexOf("lg")) != -1) {
                 // lg = log_10
