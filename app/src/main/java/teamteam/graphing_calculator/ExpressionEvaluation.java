@@ -19,36 +19,59 @@ public class ExpressionEvaluation extends AppCompatActivity {
         setContentView(R.layout.activity_expression_evaluation);
     }
 
-    //Dijkstra double stack calculation
-    public static void Prefix_Parser(String[] args) {
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Prefix expression:");
 
         String expression = sc.nextLine();
         sc.close();
 
-        Double result = 0.0;
+        Double[] result = new Double[]{0.0};
         if (Prefix_Evaluation(expression, result)) {
-            System.out.println("Results: " + result);
-        } else {
+            System.out.println("Results: " + result[0]);
+        }
+        else {
             System.out.println("ERROR");
         }
     }
 
-    public static boolean Prefix_Evaluation(String expression, Double result) {
+    public static boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
         System.out.println(expression);
 
         int posFRP = -1;
         while ((posFRP = expression.indexOf(')')) != -1) {
             int posLLP = expression.lastIndexOf('(', posFRP);
-            Double subResult = 0.0;
+            Double[] subResult = new Double[]{0.0};
             if (!Prefix_Evaluation(expression.substring(posLLP+1, posFRP), subResult)) {
                 return false;
             }
-            expression = expression.substring(0, posLLP) + subResult + expression.substring(posFRP+1, expression.length());
+            expression = expression.substring(0, posLLP) + subResult[0] + expression.substring(posFRP+1, expression.length());
         }
+        System.out.println("After: " + expression);
+        boolean check = false;
+        do {
+            check = false;
+            int pos = -1;
+            // If expression start by +, then get the substring after +
+            if (expression.charAt(0) == '+') {
+                expression = expression.substring(1);
+                check = true;
+            }
+            // Replace -- or ++ to be +
+            else if (((posFRP = expression.indexOf("--",0)) != -1) || ((posFRP = expression.indexOf("++",0)) != -1)) {
+                expression = expression.substring(0, posFRP) + '+' + expression.substring(posFRP+2);
+                check = true;
+            }
+            // Replace +- or -+ to be +
+            else if (((posFRP = expression.indexOf("+-")) != -1) || ((posFRP = expression.indexOf("-+")) != -1)) {
+                expression = expression.substring(0, posFRP) + '-' + expression.substring(posFRP+2);
+                check = true;
+            }
+        } while (check);
 
+        // Check the first char is + or not
+        System.out.println("After2: " + expression);
         // Split expression by +, -, *, /
         Stack<Character> ops = new Stack<Character>();
         Stack<String> values = new Stack<String>();
@@ -56,7 +79,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
         int a = 0;
         for (int i = 0; i < expression.length(); ++i) {
             Character c = expression.charAt(i);
-            if (c == '+' || c == '-' || c == '*' || c == '/') {
+            if (c == '+' || c == '*' || c == '/' || (c == '-' && i != 0 && Character.isDigit(expression.charAt(i-1)))) {
                 ops.push(expression.charAt(i));
                 values.push(expression.substring(a,i));
                 a = i+1;
@@ -75,6 +98,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
             System.out.println(expression + " - values - " + s);
         }
         */
+
 
         // Calculate sin, cos, ^, ...
         Stack<String> temp_values = new Stack<String>();
@@ -180,7 +204,8 @@ public class ExpressionEvaluation extends AppCompatActivity {
         if (values.empty()) {
             return false;
         }
-        result = Double.valueOf(values.pop());
+        result[0] = Double.valueOf(values.pop());
+        System.out.println(expression + " : " + result[0]);
         return true;
     }
 }
