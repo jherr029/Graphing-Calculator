@@ -23,7 +23,7 @@ public class RegexInterpreter {
 
     private String mFunction = "";
 
-    private enum Rule {EXPR, FUNC, OP, TERM}
+    private enum Rule {EXPR, FUNC, OP, TERM, NACPT}
 
     private class Production {
         Rule ruleType;
@@ -52,7 +52,7 @@ public class RegexInterpreter {
         Stack<Production> parser = new Stack<>();
         parser.push(new Production(Rule.EXPR));
 
-        while (!mFunction.isEmpty()) {
+        DFAMainLoop: while (!mFunction.isEmpty()) {
             Production top = parser.peek();
             top.buffer += mFunction.charAt(0);
             Log.d(TAG, top.ruleType.toString() + " -> \'" + top.buffer
@@ -93,6 +93,7 @@ public class RegexInterpreter {
                         removeTerminal();
                         parser.push(new Production(Rule.EXPR));
                     }
+                    /*  Uncomment this to allow implicit multiplication
                     else if (top.buffer.matches(term_regex)) {
                         parser.push(new Production(Rule.TERM));
                     }
@@ -101,6 +102,14 @@ public class RegexInterpreter {
                     }
                     else if (!top.buffer.matches("[)]")) {
                         parser.push(new Production(Rule.EXPR));
+                    }
+                    */
+                    /* No acceptance of implicit multiplication */
+                    else if (top.buffer.matches(term_regex) ||
+                             top.buffer.matches("[(]") ||
+                             !top.buffer.matches("[)]")) {
+                        parser.push(new Production(Rule.NACPT));
+                        break DFAMainLoop;
                     }
                     break;
                 case TERM:
