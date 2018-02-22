@@ -10,15 +10,15 @@ public class RegexInterpreter {
     private static final String TAG = "RegexInterpreter";
 
     private static final String func_regex = "((sin)|(cos)|(tan)|(abs)|(log)|(ln))[(]";
-    private static final String op_regex = "[-+*/]";
-    private static final String term_regex = "(([0-9]+([.][0-9]+)?)|[x]|[e]|[pi])";
+    private static final String op_regex = "[-+*/^]";
+    private static final String term_regex = "(([0-9]+([.][0-9]+)?)|[x]|[e])";
 
     /**
      * CFG for functions **
      * expr -> (expr) | func op expr | func
      * func -> sin(expr) | cos(expr) | tan(expr) | abs(expr) | log(expr) | ln(expr) | term
-     * op   -> + | - | * | /
-     * term -> [0-9]+(.[0-9]+)? | x | e | pi
+     * op   -> + | - | * | / | ^
+     * term -> [0-9]+([.][0-9]+)? | x | e | pi
      */
 
     private String mFunction = "";
@@ -59,10 +59,10 @@ public class RegexInterpreter {
 
             switch (top.ruleType) {
                 case EXPR:
-                    if (top.buffer.matches("[(]")) {
+                    if (top.buffer.matches("[(]")) { // '(' in '(expr)', push new expr
                         removeTerminal();
                         parser.push(new Production(Rule.EXPR));
-                    } else if (top.buffer.matches("[(][)]")) {
+                    } else if (top.buffer.matches("[(][)]")) { // ')' in '(expr)', pop expr
                         removeTerminal();
                         parser.pop();
                         if (!mFunction.isEmpty()) parser.push(new Production(Rule.OP));
@@ -93,7 +93,7 @@ public class RegexInterpreter {
                     break;
                 case TERM:
                     removeTerminal();
-                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]")) {
+                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]?/23")) {
                         if (top.buffer.matches(term_regex)) {
                             parser.pop(); // pop term
                             parser.push(new Production(Rule.OP));
