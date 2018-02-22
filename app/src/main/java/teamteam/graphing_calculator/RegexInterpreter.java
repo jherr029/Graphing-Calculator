@@ -5,6 +5,8 @@ import java.util.Stack;
 
 /** Created by makloooo on 2/16/18 */
 
+// Adding excess closing parenthesis crashes the app
+
 public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";

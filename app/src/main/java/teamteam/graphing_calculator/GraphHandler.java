@@ -45,10 +45,13 @@ public class GraphHandler {
 
     private DataPoint[] gen_data (String func){
 
+        /*
         String formfunc = func.replaceAll("sin","@");
         formfunc = formfunc.replaceAll("cos", "#");
         formfunc = formfunc.replaceAll("tan", "$");
         formfunc = formfunc.replaceAll("sqrt", "&");
+        */
+        String formfunc = func;
 
         //generates points from the function
         DataPoint[] points = new DataPoint[100];

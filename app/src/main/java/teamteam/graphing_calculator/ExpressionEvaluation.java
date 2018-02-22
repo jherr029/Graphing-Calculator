@@ -6,11 +6,6 @@ import android.os.Bundle;
 import java.util.Scanner;
 import java.util.Stack;
 
-//@ represent sin
-//# represent cos
-//$ represent tan
-//& represent sqrt
-
 public class ExpressionEvaluation extends AppCompatActivity {
 
     @Override
