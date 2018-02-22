@@ -7,6 +7,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RegexInterpreter mRegexInterpreter;
     private ExpressionEvaluation mFunctionParser;
 
+//    NavigationView nav_view = findViewById(R.id.navigation_view);
+    boolean changeFlag = false;
+
     private GraphHandler graph;
 
     @Override
@@ -79,6 +85,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* Initialize Navigation Drawer */
         mDrawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView nav_view = findViewById(R.id.navigation_view);
+        nav_view.bringToFront();
+
         mNavigationView = findViewById(R.id.navigation_view);
         NavigationView.OnNavigationItemSelectedListener nav_listener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -112,11 +121,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onStart() {
         super.onStart();
+
+        Log.d("MA:onStart", "about to call checkUserStatus");
+        checkUserStatus();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("MA:onResume", "On Resume function");
+
+        if (changeFlag) {
+            checkUserStatus(); // this one not good
+
+            changeFlag = false;
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d("MainActivity", "Inside onActivityResult");
+
+        // If user is signed in, replace sign in button with sign out button
+        // maybe delete requestCode
+        if ( requestCode == 100 ) {
+            if ( resultCode == RESULT_OK ) {
+                Log.d("REQUEST ACCEPTED","inside onActivityResult");
+
+                dynamicButtonAction(data);
+            }
+        }
     }
 
     @Override
@@ -137,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGraphToolView.setVisibility(View.VISIBLE);
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
+
                 break;
             case R.id.snap_to_origin:
                 boolean valid = mRegexInterpreter.isValidFunction(extractValue(R.id.func_1));
@@ -152,22 +191,90 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public void dynamicButtonAction(Intent data)  {
+
+        boolean loginStatus;
+
+        if (data.getExtras() != null) {
+            Log.d("DBA", "LoginStatus intent is not null\n" +
+                    "Assumption: loginStatus == true" +
+                    "OR loginStatus == false");
+
+            loginStatus = data.getExtras().getBoolean("loginStatus");
+        } else {
+            Log.d("DBA", "loginStatus intent is null" +
+                    "FORCING loginStatus == false");
+
+            loginStatus = false;
+        }
+
+        Log.d("LoginStatus", "" + loginStatus);
+
+        toggleButtons(loginStatus);
+
+    }
+
+    public void toggleButtons(boolean loginStatus) {
+       NavigationView nav_view = findViewById(R.id.navigation_view);
+
+       Menu menu = nav_view.getMenu();
+
+       MenuItem signInItem  = menu.getItem(0);
+       MenuItem signOutItem = menu.getItem(1);
+       MenuItem uploadItem  = menu.getItem(2);
+       MenuItem downItem    = menu.getItem(3);
+
+       if (loginStatus) {
+           Log.d("TGLBTN", "user is signed in\n" +
+                   "Sign in button off" +
+                   "Sing out button on");
+
+           signInItem.setVisible(false);
+           signOutItem.setVisible(true);
+           uploadItem.setVisible(true);
+           downItem.setVisible(true);
+
+       } else {
+           Log.d("TGLBTN", "user is signed out\n" +
+                   "Sign in button on" +
+                   "Sign out button off");
+
+           signInItem.setVisible(true);
+           signOutItem.setVisible(false);
+           uploadItem.setVisible(false);
+           downItem.setVisible(false);
+       }
+
+
+    }
+
     public boolean onNavigationItemSelectedListener(MenuItem item) {
+
+        Intent userStatusChangeIntent = new Intent(this, LoginModule.class);
+
         switch (item.getItemId()) {
             case R.id.drawer_sign_in:
-                // Make this activity return a user
-                // If true (then is logged in), then set button visibility
-                startActivity(new Intent(MainActivity.this, LoginModule.class));
-                findViewById(R.id.drawer_sign_in).setVisibility(View.GONE);
-                findViewById(R.id.drawer_sign_out).setVisibility(View.VISIBLE);
-                return true;
+                Log.d("DRAWER",  "Sign in pressed");
+
+                userStatusChangeIntent.putExtra("userStatus", "signIn");
+                startActivity(userStatusChangeIntent);
+
+//                activityActions.main();
+
+//                checkUserStatus();
+
+               return true;
+
             case R.id.drawer_sign_out:
-                // Make this return null if successful
-                // If false (then is not logged in), then set button visibility
-                startActivity(new Intent(MainActivity.this, LoginModule.class));
-                findViewById(R.id.drawer_sign_in).setVisibility(View.VISIBLE);
-                findViewById(R.id.drawer_sign_out).setVisibility(View.GONE);
+                Log.d("DRAWER", "Sign out pressed");
+
+                userStatusChangeIntent.putExtra("userStatus", "signOut");
+                startActivity(userStatusChangeIntent);
+
+                changeFlag = true;
+
                 return true;
+
             case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
@@ -181,7 +288,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             default:
         }
+
         return false;
+    }
+
+    private void checkUserStatus() {
+
+        Log.d("MainActivity", "inside checkUserStatus function\n" +
+                "starting intent");
+
+        Intent checkIfLoggedIn = new Intent( this, LoginModule.class);
+        checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
+
+        startActivityForResult(checkIfLoggedIn, 100);
+
+        Log.d("MainActivity", "activity has already started");
+
     }
 
     private void DebugSnackbar(String text) {
