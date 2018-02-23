@@ -45,7 +45,9 @@ public class LoginModule extends AppCompatActivity implements
     private static final String TAG = MainActivity.class.getSimpleName();
 
 
-    LoginModule() { }
+    LoginModule() {
+
+    }
 
 
     protected void onCreate(Bundle savedInstanceState) {

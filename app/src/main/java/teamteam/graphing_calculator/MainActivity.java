@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -16,10 +17,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import java.security.Key;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -113,6 +118,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFunctionParser = new ExpressionEvaluation();
 
         initListeners();
+
+
+        EditText editText = (EditText)  findViewById(R.id.editText);
+        Keyboard keyboard = (Keyboard) findViewById(R.id.keyboard);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        editText.setTextIsSelectable(true);
+
+        InputConnection ic = editText.onCreateInputConnection(new EditorInfo());
+        keyboard.setInputConnection(ic);
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
