@@ -12,7 +12,12 @@ public class RegexInterpreter {
 
     private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln)|(sqrt))[(]";
     private static final String op_regex = "[-+*/^]";
-    private static final String term_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
+    private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
+    private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e])";
+
+    enum GraphType {CARTESIAN, PARAMETRIC, POLAR}
+    public GraphType mGraphType = GraphType.CARTESIAN;
+    private String term_regex;
 
     /**
      * CFG for functions **
@@ -42,6 +47,13 @@ public class RegexInterpreter {
 
         // Remove all whitespace in function
         mFunction = function.replaceAll("\\s+", "");
+
+        switch (mGraphType) {
+            case CARTESIAN: term_regex = cartesian_regex; break;
+            case PARAMETRIC: break;
+            case POLAR: term_regex = polar_regex; break;
+            default: return false;
+        }
 
         // All we really have to check is if it passes an FSM
         return DFA();
@@ -147,4 +159,8 @@ public class RegexInterpreter {
         }
     }
 
+    public void changeGraphType(GraphType newGraphType) {
+        mGraphType = newGraphType;
+        Log.d(TAG, "GraphType is now " + mGraphType.toString());
+    }
 }

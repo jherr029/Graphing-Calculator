@@ -35,14 +35,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.mErrorIcon = (ImageView)layout.getChildAt(2);
             prevFunction = "";
         }
-
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         @Override
         public void afterTextChanged(Editable s) {
@@ -65,15 +61,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-
     private BottomSheetBehavior sheetController;
-
     private LinearLayout mGraphToolView;
 
     private RegexInterpreter mRegexInterpreter;
-    private ExpressionEvaluation mFunctionParser;
 
-//    NavigationView nav_view = findViewById(R.id.navigation_view);
     boolean changeFlag = false;
 
     private GraphHandler graph;
@@ -110,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGraphToolView.setVisibility(View.GONE);
 
         mRegexInterpreter = new RegexInterpreter();
-        mFunctionParser = new ExpressionEvaluation();
 
         initListeners();
 
@@ -175,12 +166,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGraphToolView.setVisibility(View.VISIBLE);
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
-
+                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
                 break;
             case R.id.snap_to_origin:
-                boolean valid = mRegexInterpreter.isValidFunction(extractValue(R.id.func_1));
-                if (valid) DebugSnackbar("Function is valid");
-                else DebugSnackbar("Function is invalid");
+                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
