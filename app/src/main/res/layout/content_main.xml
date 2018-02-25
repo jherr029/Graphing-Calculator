@@ -109,6 +109,17 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/switch_to_cartesian"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Switch to Cartesian" />
+            <Button
+                android:id="@+id/switch_to_polar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Switch to Polar" />
+
+            <Button
                 android:id="@+id/button2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

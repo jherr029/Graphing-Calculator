@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        Log.d(TAG, view.getId() + "|" + R.id.switch_to_cartesian);
         switch (view.getId()) {
             case R.id.open_nav:
                 if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -166,10 +167,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGraphToolView.setVisibility(View.VISIBLE);
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
-                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
                 break;
             case R.id.snap_to_origin:
+                DebugSnackbar("Snapped to Origin");
+                break;
+            case R.id.switch_to_cartesian:
+                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                DebugSnackbar("Now Validating Cartesian Functions");
+                break;
+            case R.id.switch_to_polar:
                 mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                DebugSnackbar("Now Validating Polar Functions");
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -305,6 +313,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.snap_to_origin).setOnClickListener(this);
         findViewById(R.id.expand_function_list).setOnClickListener(this);
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
+        findViewById(R.id.switch_to_cartesian).setOnClickListener(this);
+        findViewById(R.id.switch_to_polar).setOnClickListener(this);
 
         /* Initializing EditText Listeners, these are just temporary. */
         EditText textField = findViewById(R.id.func_1);
