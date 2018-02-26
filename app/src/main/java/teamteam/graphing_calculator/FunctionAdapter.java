@@ -1,9 +1,11 @@
 package teamteam.graphing_calculator;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,22 +25,28 @@ import static android.content.ContentValues.TAG;
 
 public class FunctionAdapter extends BaseAdapter {
 
+    private static final String TAG = "FunctionAdapter";
+
     private MainActivity mContext;
     private LayoutInflater mInflater;
-    private ArrayList<String> mFunctionList;
+
+    private class Input {
+        String display = "";
+        String complete = "";
+    }
+    // Pair<Input, Complete>
+    private ArrayList<Input> mFunctionList; // Holds User Input Strings
 
     private RegexInterpreter mRegexInterpreter;
 
     // To listen for text input and graph updating.
     private class FunctionWatcher implements TextWatcher {
-        private EditText mEditText;
         private ImageView mErrorIcon;
+        private int mIndex;
 
-        private String prevFunction;
-        public FunctionWatcher(FrameLayout layout) {
-            this.mEditText = (EditText)layout.getChildAt(1);
+        public FunctionWatcher(FrameLayout layout, int index) {
             this.mErrorIcon = (ImageView)layout.getChildAt(2);
-            prevFunction = "";
+            this.mIndex = index;
         }
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -47,26 +55,29 @@ public class FunctionAdapter extends BaseAdapter {
 
         @Override
         public void afterTextChanged(Editable s) {
-            if (s.toString().isEmpty()) mErrorIcon.setVisibility(View.INVISIBLE);
+            String prevFunction = mFunctionList.get(mIndex).complete;
+            if (s.toString().isEmpty()) {
+                mContext.graph.remove_line(prevFunction);
+                mErrorIcon.setVisibility(View.INVISIBLE);
+            }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 // graph the function, remove any error icons
-                // Log.d(TAG, "prevFunction: " + prevFunction);
-                // Log.d(TAG, "newFunction: " + s.toString());
+                Log.d(TAG, "prevFunction: " + prevFunction);
+                Log.d(TAG, "newFunction: " + s.toString());
                 if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
-                prevFunction = mEditText.getText().toString();
+                mFunctionList.get(mIndex).complete = s.toString();
                 mContext.graph.add_line(s.toString());
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
-            else {
-                // dont graph or remove function, display error icon
-                mErrorIcon.setVisibility(View.VISIBLE);
-            }
+            else mErrorIcon.setVisibility(View.VISIBLE);
+            mFunctionList.get(mIndex).display = s.toString(); // Update Input List
         }
     }
 
-    FunctionAdapter(MainActivity activity, ArrayList<String> functions) {
+    FunctionAdapter(MainActivity activity) {
         mContext = activity;
-        mFunctionList = functions;
+        mFunctionList = new ArrayList<>();
+        mFunctionList.add(new Input()); mFunctionList.add(new Input());
         mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRegexInterpreter = new RegexInterpreter();
     }
@@ -78,7 +89,7 @@ public class FunctionAdapter extends BaseAdapter {
 
     @Override
     public String getItem(int position) {
-        return mFunctionList.get(position);
+        return mFunctionList.get(position).display;
     }
 
     @Override
@@ -97,16 +108,22 @@ public class FunctionAdapter extends BaseAdapter {
         final boolean end_function = (position == mFunctionList.size()-1);
 
         functionIndex.setText(String.valueOf(position+1));
-        functionText.addTextChangedListener(new FunctionWatcher((FrameLayout)functionText.getParent()));
+        functionText.addTextChangedListener(
+                new FunctionWatcher((FrameLayout)functionText.getParent(), position));
         functionText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus && end_function) {
-                    mFunctionList.add("");
+                    mFunctionList.add(new Input());
                 }
             }
         });
-        functionText.setText(mFunctionList.get(position));
+        if (end_function) { // Fade last function
+            Drawable fade = mContext.getBaseContext()
+                                    .getDrawable(R.drawable.rectangle_gradient_fade);
+            functionView.setForeground(fade);
+        }
+        functionText.setText(mFunctionList.get(position).display);
 
         return functionView;
     }

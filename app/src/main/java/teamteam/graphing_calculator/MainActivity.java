@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     boolean changeFlag = false;
 
-    public ArrayList<String> mFunctionList;
     public GraphHandler graph;
 
     @Override
@@ -284,11 +283,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         EditText textField = findViewById(R.id.func);
         textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent())); */
 
-        mFunctionList = new ArrayList<String>();
-        mFunctionList.add("");
-        mFunctionList.add("");
         ListView functionListView = findViewById(R.id.function_list_view);
-        functionListView.setAdapter(new FunctionAdapter(this, mFunctionList));
+        functionListView.setAdapter(new FunctionAdapter(this));
     }
 
     /** Use this function to get Strings from user input fields
