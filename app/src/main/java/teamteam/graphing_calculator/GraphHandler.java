@@ -16,10 +16,10 @@ public class GraphHandler {
     private GraphView graph;
     private ExpressionEvaluation parser;
     private Map functions;
-    private int min_x = 0;
-    private int max_x = 50;
-    private int min_y = 0;
-    private int max_y = 50;
+    private int min_x = -10;
+    private int max_x = 10;
+    private int min_y = -15;
+    private int max_y = 15;
 
     public GraphHandler (Activity act) {
 

@@ -1,6 +1,7 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -8,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,55 +20,23 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-
-    private class FunctionWatcher implements TextWatcher {
-        private EditText mEditText;
-        private ImageView mErrorIcon;
-
-        private String prevFunction;
-        public FunctionWatcher(FrameLayout layout) {
-            this.mEditText = (EditText)layout.getChildAt(1);
-            this.mErrorIcon = (ImageView)layout.getChildAt(2);
-            prevFunction = "";
-        }
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s.toString() == "") mErrorIcon.setVisibility(View.INVISIBLE);
-            else if (mRegexInterpreter.isValidFunction(s.toString())) {
-                // graph the function, remove any error icons
-                Log.d(TAG, "prevFunction: " + prevFunction);
-                Log.d(TAG, "newFunction: " + s.toString());
-                if (!prevFunction.isEmpty()) graph.remove_line(prevFunction);
-                prevFunction = mEditText.getText().toString();
-                graph.add_line(s.toString());
-                mErrorIcon.setVisibility(View.INVISIBLE);
-            }
-            else {
-                // dont graph or remove function, display error icon
-                mErrorIcon.setVisibility(View.VISIBLE);
-            }
-        }
-    };
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private BottomSheetBehavior sheetController;
     private LinearLayout mGraphToolView;
 
-    private RegexInterpreter mRegexInterpreter;
-
     boolean changeFlag = false;
 
-    private GraphHandler graph;
+    public ArrayList<String> mFunctionList;
+    public GraphHandler graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,18 +62,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         /* Initialize Function Sheet */
         sheetController = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
+        sheetController.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
 
         /* Initialize Graph Tool Menu */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
-        mRegexInterpreter = new RegexInterpreter();
-
         initListeners();
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
-        graph.update_bounds(-10,10,-15,15); // this is hard-coded, but its fine
     }
 
     @Override
@@ -171,11 +147,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
-                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                //mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
                 DebugSnackbar("Now Validating Cartesian Functions");
                 break;
             case R.id.switch_to_polar:
-                mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                //mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
                 DebugSnackbar("Now Validating Polar Functions");
                 break;
             case R.id.expand_function_list:
@@ -304,9 +280,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.switch_to_cartesian).setOnClickListener(this);
         findViewById(R.id.switch_to_polar).setOnClickListener(this);
 
-        /* Initializing EditText Listeners, these are just temporary. */
+        /* Initializing EditText Listeners, these are just temporary.
         EditText textField = findViewById(R.id.func);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent())); */
+
+        mFunctionList = new ArrayList<String>();
+        mFunctionList.add("");
+        mFunctionList.add("");
+        ListView functionListView = findViewById(R.id.function_list_view);
+        functionListView.setAdapter(new FunctionAdapter(this, mFunctionList));
     }
 
     /** Use this function to get Strings from user input fields

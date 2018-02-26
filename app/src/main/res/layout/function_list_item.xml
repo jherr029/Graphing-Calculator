@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/func_layout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/function_index"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@drawable/rectangle_background"
+        android:layout_gravity="center_vertical"
+        android:text="#" />
+    <EditText
+        android:id="@+id/func"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:padding="12dp"
+        android:background="@android:color/transparent"
+        android:inputType="text"
+        android:text="Function" />
+    <ImageView
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_error_black_24dp" />
+</FrameLayout>

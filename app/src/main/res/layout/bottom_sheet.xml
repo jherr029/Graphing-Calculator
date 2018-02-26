@@ -130,38 +130,12 @@
 
          -->
 
-        <FrameLayout
-            android:id="@+id/func_layout"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:background="@drawable/rectangle_background"
-                android:layout_gravity="center_vertical"
-                android:text="1" />
-            <EditText
-                android:id="@+id/func"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:inputType="text" />
-            <ImageView
-                android:id="@+id/error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                android:visibility="invisible"
-                android:src="@drawable/ic_error_black_24dp" />
-        </FrameLayout>
-
         <ListView
+            android:id="@+id/function_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:divider="#666666" >
         </ListView>
 
     </LinearLayout>
