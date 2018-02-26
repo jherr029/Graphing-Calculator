@@ -110,7 +110,7 @@ public class GraphHandler {
         }
     }
 
-    public void reset(String func1, String func2, String func3, int nmaxx, int nminx, int nmaxy, int nminy){
+    public void reset(String func1, int nmaxx, int nminx, int nmaxy, int nminy){
         Iterator it = functions.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
@@ -119,12 +119,6 @@ public class GraphHandler {
         }
         if(!func1.equals("")){
             add_line(func1);
-        }
-        if(!func2.equals("")){
-            add_line(func2);
-        }
-        if(!func3.equals("")){
-            add_line(func3);
         }
         update_bounds(nminx, nmaxx, nminy, nmaxy);
 

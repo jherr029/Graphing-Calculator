@@ -92,10 +92,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
         mNavigationView.setNavigationItemSelectedListener(nav_listener);
 
-
         /* Initialize Function Sheet */
         sheetController = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
-
 
         /* Initialize Graph Tool Menu */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
@@ -107,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
+        graph.update_bounds(-10,10,-15,15); // this is hard-coded, but its fine
     }
 
     @Override
@@ -252,26 +251,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.drawer_sign_in:
                 Log.d("DRAWER",  "Sign in pressed");
-
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
-
-//                activityActions.main();
-
-//                checkUserStatus();
-
                return true;
-
             case R.id.drawer_sign_out:
                 Log.d("DRAWER", "Sign out pressed");
-
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
-
                 changeFlag = true;
-
                 return true;
-
             case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
@@ -317,17 +305,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.switch_to_polar).setOnClickListener(this);
 
         /* Initializing EditText Listeners, these are just temporary. */
-        EditText textField = findViewById(R.id.func_1);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
-        textField = findViewById(R.id.func_2);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
-        textField = findViewById(R.id.func_3);
+        EditText textField = findViewById(R.id.func);
         textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
     }
 
     /** Use this function to get Strings from user input fields
-     * @param id (e.g. R.id.func_1)
-     * @valid_ids func_1 : top function field
+     * @param id (e.g. R.id.func)
+     * @valid_ids func : top function field
      *            func_2 : middle function field
      *            func_3 : bottom function field
      *            min_X
@@ -356,14 +340,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        graph.reset(extractValue(R.id.func_1),
-                    extractValue(R.id.func_2),
-                    extractValue(R.id.func_3),
+        graph.reset(extractValue(R.id.func),
                     Integer.parseInt(nmaxx),
                     Integer.parseInt(nminx),
                     Integer.parseInt(nmaxy),
                     Integer.parseInt(nminy)
         );
     }
-
 }
