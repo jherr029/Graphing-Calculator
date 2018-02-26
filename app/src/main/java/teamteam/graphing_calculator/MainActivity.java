@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BottomSheetBehavior sheetController;
     private LinearLayout mGraphToolView;
 
+    private FunctionAdapter mFunctionAdapter;
+
     boolean changeFlag = false;
 
     public GraphHandler graph;
@@ -79,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         initListeners();
 
+        mFunctionAdapter = new FunctionAdapter(this);
+
         //Initialize graph handler
         this.graph = new GraphHandler(this);
     }
@@ -90,17 +94,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("MA:onStart", "about to call checkUserStatus");
         checkUserStatus();
 
+        ListView functionListView = findViewById(R.id.function_list_view);
+        functionListView.setAdapter(mFunctionAdapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.d("MA:onResume", "On Resume function");
-
         if (changeFlag) {
             checkUserStatus(); // this one not good
-
             changeFlag = false;
         }
     }
@@ -278,13 +281,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
         findViewById(R.id.switch_to_cartesian).setOnClickListener(this);
         findViewById(R.id.switch_to_polar).setOnClickListener(this);
-
-        /* Initializing EditText Listeners, these are just temporary.
-        EditText textField = findViewById(R.id.func);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent())); */
-
-        ListView functionListView = findViewById(R.id.function_list_view);
-        functionListView.setAdapter(new FunctionAdapter(this));
     }
 
     /** Use this function to get Strings from user input fields

@@ -62,8 +62,8 @@ public class FunctionAdapter extends BaseAdapter {
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 // graph the function, remove any error icons
-                Log.d(TAG, "prevFunction: " + prevFunction);
-                Log.d(TAG, "newFunction: " + s.toString());
+                // Log.d(TAG, "prevFunction: " + prevFunction);
+                // Log.d(TAG, "newFunction: " + s.toString());
                 if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
                 mFunctionList.get(mIndex).complete = s.toString();
                 mContext.graph.add_line(s.toString());
@@ -105,25 +105,25 @@ public class FunctionAdapter extends BaseAdapter {
         TextView functionIndex = functionView.findViewById(R.id.function_index);
         EditText functionText = functionView.findViewById(R.id.func);
 
-        final boolean end_function = (position == mFunctionList.size()-1);
-
         functionIndex.setText(String.valueOf(position+1));
         functionText.addTextChangedListener(
                 new FunctionWatcher((FrameLayout)functionText.getParent(), position));
         functionText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus && end_function) {
-                    mFunctionList.add(new Input());
+                if (hasFocus && (position == mFunctionList.size()-1)) {
+                    FrameLayout panel = (FrameLayout)v.getParent();
+                    panel.setForeground(null); // Unfade this panel
+                    mFunctionList.add(new Input()); // Add next input
                 }
             }
         });
-        if (end_function) { // Fade last function
+        if (position == mFunctionList.size()-1) { // Fade last panel
             Drawable fade = mContext.getBaseContext()
                                     .getDrawable(R.drawable.rectangle_gradient_fade);
             functionView.setForeground(fade);
         }
-        functionText.setText(mFunctionList.get(position).display);
+        functionText.setText(mFunctionList.get(position).display); // set EditText to user's input
 
         return functionView;
     }
