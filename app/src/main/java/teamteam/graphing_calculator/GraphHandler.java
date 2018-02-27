@@ -123,5 +123,4 @@ public class GraphHandler {
         update_bounds(nminx, nmaxx, nminy, nmaxy);
 
     }
-
 }

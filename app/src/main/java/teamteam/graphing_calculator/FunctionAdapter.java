@@ -1,5 +1,7 @@
 package teamteam.graphing_calculator;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -9,10 +11,13 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -62,8 +67,6 @@ public class FunctionAdapter extends BaseAdapter {
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 // graph the function, remove any error icons
-                // Log.d(TAG, "prevFunction: " + prevFunction);
-                // Log.d(TAG, "newFunction: " + s.toString());
                 if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
                 mFunctionList.get(mIndex).complete = s.toString();
                 mContext.graph.add_line(s.toString());
@@ -98,32 +101,81 @@ public class FunctionAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, final ViewGroup parent) {
+
         // Get view for row item
-        View functionView = mInflater.inflate(R.layout.function_list_item, parent, false);
+        final View functionView = mInflater.inflate(R.layout.function_list_item, parent, false);
 
+        // Get Refs
         TextView functionIndex = functionView.findViewById(R.id.function_index);
-        EditText functionText = functionView.findViewById(R.id.func);
+        final EditText functionText = functionView.findViewById(R.id.func);
+        ImageButton functionDelete = functionView.findViewById(R.id.function_delete);
 
+        // Set function label
         functionIndex.setText(String.valueOf(position+1));
+
+        // Create Text Listeners
         functionText.addTextChangedListener(
                 new FunctionWatcher((FrameLayout)functionText.getParent(), position));
         functionText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus && (position == mFunctionList.size()-1)) {
-                    FrameLayout panel = (FrameLayout)v.getParent();
-                    panel.setForeground(null); // Unfade this panel
-                    mFunctionList.add(new Input()); // Add next input
+                if (hasFocus) {
+                    if (position == mFunctionList.size()-1) {
+                        functionView.setForeground(null); // Unfade this panel
+                        mFunctionList.add(new Input()); // Add layout input
+                    }
                 }
             }
         });
-        if (position == mFunctionList.size()-1) { // Fade last panel
+
+        // If last panel, fade it
+        if (position == mFunctionList.size()-1) {
             Drawable fade = mContext.getBaseContext()
                                     .getDrawable(R.drawable.rectangle_gradient_fade);
             functionView.setForeground(fade);
         }
-        functionText.setText(mFunctionList.get(position).display); // set EditText to user's input
+
+        // set EditText to user's input
+        functionText.setText(mFunctionList.get(position).display);
+
+        // Set listeners and define delete panel action
+        functionDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an animation listener to set to Gone when done
+                functionView.animate()
+                        .translationX(functionView.getWidth())
+                        .alpha(0.0f)
+                        .setDuration(300)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                functionView.setVisibility(View.GONE);
+
+                                /** FIXME: Most of the time, if you delete the first function
+                                 *  FIXME: with multiple functions graphed, the first function
+                                 *  FIXME: will remain on the graph despite being correctly
+                                 *  FIXME: removed from both mFunctionList and graph.functions
+                                 */
+                                mContext.graph.remove_line(mFunctionList.get(position).complete);
+                                mFunctionList.remove(position);
+
+                                FrameLayout layout;
+                                if (position > 0) layout = (FrameLayout)parent.getChildAt(position-1);
+                                else layout = (FrameLayout)parent.getChildAt(0);
+                                EditText next = (EditText)layout.getChildAt(1);
+                                next.requestFocus();
+                                //next.setSelection(next.getText().length());
+
+                                // Make sure always at least two panels in list view
+                                while (mFunctionList.size() < 2) mFunctionList.add(new Input());
+                                notifyDataSetChanged();
+                            }
+                });
+            }
+        });
 
         return functionView;
     }
