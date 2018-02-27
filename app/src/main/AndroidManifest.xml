@@ -32,6 +32,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ExpressionEvaluation" />
+        <activity android:name=".GraphingCalculator"/>
     </application>
 
 </manifest>

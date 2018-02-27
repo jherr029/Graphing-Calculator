@@ -45,4 +45,12 @@
     <string name="btn_tan">tan</string>
     <string name="btn_cot">cot</string>
     <string name="title_activity_basic_calculator">BasicCalculator</string>
+
+    <!--TODO remove me later KEYBOARD VALUES-->
+    <string name="log">REMOVEME</string>
+    <string name="decimal_power">DCMPWR</string>
+    <string name="appr">appr</string>
+    <string name="decimal_point">dcmpnt</string>
+    <string name="trig">trig</string>
+
 </resources>

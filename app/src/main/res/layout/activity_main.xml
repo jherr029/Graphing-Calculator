@@ -1,18 +1,52 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="teamteam.graphing_calculator.MainActivity">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <include layout="@layout/content_main"/>
+    <android.support.design.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="teamteam.graphing_calculator.MainActivity">
 
-    <include layout="@layout/bottom_sheet"/>
+        <include layout="@layout/content_main"/>
 
+        <include layout="@layout/bottom_sheet"/>
+    </android.support.design.widget.CoordinatorLayout>
 
+    <!--<EditText-->
+        <!--android:id="@+id/edit_text_0"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:drawableRight="@drawable/hex"-->
+        <!--android:inputType="text"-->
+        <!--/>-->
 
+    <!--&lt;!&ndash;TODO drawable/text&ndash;&gt;-->
 
+    <!--<EditText-->
+        <!--android:id="@+id/edit_text_1"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/edit_text_0"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:drawableRight="@drawable/txt"-->
+        <!--android:inputType="text"-->
+        <!--/>-->
 
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        />
 
-</android.support.design.widget.CoordinatorLayout>
-
+</RelativeLayout>

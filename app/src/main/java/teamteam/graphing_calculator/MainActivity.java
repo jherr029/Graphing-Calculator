@@ -1,6 +1,7 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.inputmethodservice.KeyboardView;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -10,12 +11,14 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -29,6 +32,7 @@ import java.security.Key;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+    GraphingCalculator mKeyboard;
 
     private class FunctionWatcher implements TextWatcher {
         private EditText mEditText;
@@ -87,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        setContentView(R.layout.keyboard_view);
 
         /* Initialize Navigation Drawer */
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -118,15 +123,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFunctionParser = new ExpressionEvaluation();
 
         initListeners();
+//      Keyboard
+
+//      TODO MAYBE MODIFY
+        mKeyboard = new GraphingCalculator(this, R.id.keyboard_view, R.xml.keyboard_layout);
+        mKeyboard.registerEditText(R.id.func_1);
+        mKeyboard.registerEditText(R.id.func_2);
+        mKeyboard.registerEditText(R.id.func_3);
+//        mKeyboard.registerEditText(R.id.edit_text_1);
+
+//        mKeyboard = new GraphingCalculator(this, R.xml.keyboard_layout);
+//        KeyboardView mKeyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
+//        mKeyboardView.setKeyboard(mKeyboard);
+//        mKeyboardView.setPreviewEnabled(false);
 
 
-        EditText editText = (EditText)  findViewById(R.id.editText);
-        Keyboard keyboard = (Keyboard) findViewById(R.id.keyboard);
-        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        editText.setTextIsSelectable(true);
 
-        InputConnection ic = editText.onCreateInputConnection(new EditorInfo());
-        keyboard.setInputConnection(ic);
+//      End of Keyboard
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
@@ -152,6 +165,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             changeFlag = false;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+       if (mKeyboard.isKeyboardVisible())
+           mKeyboard.hideKeyboard();
     }
 
     @Override

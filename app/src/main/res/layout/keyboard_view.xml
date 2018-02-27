@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--TODO maybe get rid of the relativeLayout-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <!--TODO change to alignParentBOttom and drawable/hex-->
+
+    <EditText
+        android:id="@+id/edit_text_0"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:drawableRight="@drawable/hex"
+        android:inputType="text"
+        />
+
+    <!--TODO drawable/text-->
+
+    <EditText
+        android:id="@+id/edit_text_1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text_0"
+        android:layout_centerHorizontal="true"
+        android:drawableRight="@drawable/txt"
+        android:inputType="text"
+        />
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        />
+
+        <!--TODO maybe include these back in the keyboardView-->
+        <!--PROBABLY WONT WORK BECAUSE THIS IS KEYBOARD STUFF-->
+        <!--android:keyPreviewLayout="@layout/keyboard_preview"-->
+        <!--android:background="@color/colorAccent"-->
+
+</RelativeLayout>
+
+
+<!--TODO New files are
+res/layout/keyboard_preview.xml
+res/layout/keyboard_view.xml
+res/xml/keys_layout.xml
+res/xml/method.xmk
+java/myInputServiceMethod
+
+
+old files are. DELETE LATER
+res/xml/keyboard_layout.xml
+java/calcKeyboard.java
+-->
