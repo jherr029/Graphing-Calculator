@@ -15,11 +15,12 @@
     <string name="expand_function_list">Expands Function List</string>
     <string name="collapse_function_list">Collapses Function List</string>
 
+    <string name="projector_mode">Projector Mode</string>
+
     <string name="minX_value">-10</string>
     <string name="maxX_value">10</string>
     <string name="minY_value">-15</string>
     <string name="maxY_value">15</string>
-
 
     <string name="menu_settings">Exit</string>
     <string name="action_settings">Settings</string>

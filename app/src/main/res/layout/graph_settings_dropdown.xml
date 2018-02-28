@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/graph_tool_menu"
+    android:layout_marginTop="6dp"
+    android:padding="8dp"
+    android:orientation="vertical"
+    android:layout_width="270dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|center_horizontal"
+    android:background="@drawable/soft_rectangle_background_flat"
+    android:elevation="6dp">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/soft_rectangle_background_button_flat"
+        android:fontFamily="sans-serif"
+        android:textAllCaps="false"
+        android:text="@string/projector_mode" /> <!-- Projector Mode Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Grid" />
+            </LinearLayout> <!-- Grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_upload_black_24dp" />
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_download_black_24dp" />
+            </LinearLayout> <!-- Graph Type -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Arrows" />
+            </LinearLayout> <!-- Arrows -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_upload_black_24dp" />
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_download_black_24dp" />
+            </LinearLayout> <!-- Arrow Type -->
+        </LinearLayout> <!-- Left Half of Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Axis Numbers" />
+            </LinearLayout> <!-- Axis Numbers Checkbox -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Minor Gridlines" />
+            </LinearLayout> <!-- Minor Gridlines Checkbox -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp" >
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:background="@drawable/soft_rectangle_background_button"
+                    android:textAllCaps="false"
+                    android:text="Zoom Square"/>
+            </LinearLayout> <!-- Zoom Square -->
+        </LinearLayout> <!-- Right Half of Section -->
+    </LinearLayout> <!-- Section 1: Grid/Arrow/Axis#/MinorGridLine/... -->
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_margin="6dp"
+        android:background="@color/colorOutline" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Grid" />
+            </LinearLayout> <!-- Grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_upload_black_24dp" />
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_download_black_24dp" />
+            </LinearLayout> <!-- Graph Type -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Arrows" />
+            </LinearLayout> <!-- Arrows -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_upload_black_24dp" />
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_margin="6dp"
+                    android:src="@drawable/ic_file_download_black_24dp" />
+            </LinearLayout> <!-- Arrow Type -->
+        </LinearLayout> <!-- Left Half of Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="6dp"
+            android:orientation="vertical" >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Axis Numbers" />
+            </LinearLayout> <!-- Axis Numbers Checkbox -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp" >
+                <CheckBox
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/soft_rectangle_background_flat" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Minor Gridlines" />
+            </LinearLayout> <!-- Minor Gridlines Checkbox -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp" >
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:background="@drawable/soft_rectangle_background_button"
+                    android:textAllCaps="false"
+                    android:text="Zoom Square"/>
+            </LinearLayout> <!-- Zoom Square -->
+        </LinearLayout> <!-- Right Half of Section -->
+    </LinearLayout> <!-- TODO - Section 2: X-Axis, Y-Axis -->
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_margin="6dp"
+        android:background="@color/colorOutline" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:layout_margin="6dp"
+            android:background="@drawable/soft_rectangle_background_button_flat"
+            android:textAllCaps="false"
+            android:text="Radians" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:layout_margin="6dp"
+            android:background="@drawable/soft_rectangle_background_button_flat"
+            android:textAllCaps="false"
+            android:text="Degrees" />
+    </LinearLayout> <!-- Section 3: Radians/Degrees Buttons -->
+
+    <!--
+    <LinearLayout
+        android:id="@+id/minX_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="minX:" />
+        <EditText
+            android:id="@+id/minX"
+            android:padding="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="numberSigned"
+            android:text="@string/minX_value" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/maxX_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="maxX:"/>
+        <EditText
+            android:id="@+id/maxX"
+            android:padding="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="numberSigned"
+            android:text="@string/maxX_value" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/minY_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="minY:"/>
+        <EditText
+            android:id="@+id/minY"
+            android:padding="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="numberSigned"
+            android:text="@string/minY_value" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="maxY:"/>
+        <EditText
+            android:id="@+id/maxY"
+            android:padding="0dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:inputType="numberSigned"
+            android:text="@string/maxY_value" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/switch_to_cartesian"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch to Cartesian" />
+    <Button
+        android:id="@+id/switch_to_polar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Switch to Polar" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="update"
+        android:text="Update" />
+
+    -->
+</LinearLayout>
