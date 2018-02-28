@@ -1,38 +1,28 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
-import android.inputmethodservice.KeyboardView;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import java.security.Key;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
-    GraphingCalculator mKeyboard;
+    MathKeyboard mMathKeyboard;
 
     private class FunctionWatcher implements TextWatcher {
         private EditText mEditText;
@@ -114,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         /* Initialize Function Sheet */
         sheetController = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
 
-
         /* Initialize Graph Tool Menu */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
@@ -123,23 +112,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFunctionParser = new ExpressionEvaluation();
 
         initListeners();
-//      Keyboard
 
+//      MathKeyboard
 //      TODO MAYBE MODIFY
-        mKeyboard = new GraphingCalculator(this, R.id.keyboard_view, R.xml.keyboard_layout);
-        mKeyboard.registerEditText(R.id.func_1);
-        mKeyboard.registerEditText(R.id.func_2);
-        mKeyboard.registerEditText(R.id.func_3);
-//        mKeyboard.registerEditText(R.id.edit_text_1);
-
-//        mKeyboard = new GraphingCalculator(this, R.xml.keyboard_layout);
-//        KeyboardView mKeyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
-//        mKeyboardView.setKeyboard(mKeyboard);
-//        mKeyboardView.setPreviewEnabled(false);
-
-
-
-//      End of Keyboard
+        mMathKeyboard = new MathKeyboard(this, R.id.keyboard_view, R.xml.keyboard_layout);
+        mMathKeyboard.registerEditText(R.id.func_1);
+        mMathKeyboard.registerEditText(R.id.func_2);
+        mMathKeyboard.registerEditText(R.id.func_3);
+//      End of keyboard
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
@@ -169,8 +149,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-       if (mKeyboard.isKeyboardVisible())
-           mKeyboard.hideKeyboard();
+       if (mMathKeyboard.isKeyboardVisible())
+           mMathKeyboard.hideKeyboard();
     }
 
     @Override
@@ -291,10 +271,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
-
-//                activityActions.main();
-
-//                checkUserStatus();
 
                return true;
 

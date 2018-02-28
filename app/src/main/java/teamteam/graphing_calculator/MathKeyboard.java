@@ -1,8 +1,8 @@
 package teamteam.graphing_calculator;
 
 import android.app.Activity;
-import android.inputmethodservice.*;
-import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
+import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
@@ -18,12 +18,14 @@ import static android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
  * Created by cero on 2/25/18.
  */
 
-public class GraphingCalculator {
+public class MathKeyboard {
     private KeyboardView mKeyboardView;
     private Activity mHostActivity;
 
-    private KeyboardView.OnKeyboardActionListener mOnKeyboardActionListener =
-            new KeyboardView.OnKeyboardActionListener() {
+    private static final String tagKeyboard = "keyboard";
+
+    private OnKeyboardActionListener mOnKeyboardActionListener =
+            new OnKeyboardActionListener() {
 
         public final static int CodeDelete      = -5;
         public final static int CodeCancelt     = -3;
@@ -36,21 +38,34 @@ public class GraphingCalculator {
         public final static int CodeClear       = 55006;
 
         @Override
-        public void onPress(int primaryCode) {
-
-        }
-
-        @Override
-        public void onRelease(int primaryCode) {
-
-        }
-
-        @Override
         public void onKey(int primaryCode, int[] keyCodes) {
+
+            Log.d(tagKeyboard, "onKey");
+
+//          Problem is this place
             View focusCurrent = mHostActivity.getWindow().getCurrentFocus();
 
-            if(focusCurrent == null || focusCurrent.getClass() != EditText.class)
-                return;
+            if (focusCurrent != null) {
+                Log.d(tagKeyboard,"focusCurrent is not null");
+            }
+
+            if (focusCurrent.getClass() != EditText.class) {
+
+                Log.d(tagKeyboard,"" + focusCurrent.getClass());
+                Log.d(tagKeyboard,"" + EditText.class);
+                Log.d(tagKeyboard,"but this is not correct");
+            }
+
+//          TODO figure out why the value is null
+//          What is wrong is that the class types dont match
+//          however its not really an issue
+//          TODO reactivating the keyobard after its been hidden is an issue
+            if(focusCurrent == null || focusCurrent.getClass() != EditText.class) {
+                Log.d(tagKeyboard,"something is null");
+//                return;
+            }
+
+            Log.d(tagKeyboard,"has been pressed");
 
             EditText editText = (EditText) focusCurrent;
             Editable editable = editText.getText();
@@ -90,6 +105,16 @@ public class GraphingCalculator {
                 editable.insert(start, Character.toString((char) primaryCode));
             }
         }
+        @Override
+        public void onPress(int primaryCode) {
+            Log.d(tagKeyboard,"onPress " + primaryCode);
+        }
+
+        @Override
+        public void onRelease(int primaryCode) {
+
+        }
+
 
         @Override
         public void onText(CharSequence text) {
@@ -117,20 +142,24 @@ public class GraphingCalculator {
         }
     };
 
-    public GraphingCalculator(Activity host, int viewId, int layoutId) {
+    public MathKeyboard(Activity host, int viewId, int layoutId) {
         mHostActivity = host;
+
+        Log.d(tagKeyboard, "KEYBOARD HAS BEEN CREATED");
 
         mKeyboardView = (KeyboardView) mHostActivity.findViewById(viewId);
 
         if (mHostActivity == null) {
            Log.d("NULL", "NULLLLLLLLL");
+        } else {
+            Log.d(tagKeyboard, "mHostActivity is not null");
         }
 
         if (layoutId == 0) {
            Log.d("NULL", "NULLLLLLLLL 00000000");
         }
 
-        mKeyboardView.setKeyboard(new Keyboard(mHostActivity, layoutId));
+        mKeyboardView.setKeyboard(new android.inputmethodservice.Keyboard(mHostActivity, layoutId));
         mKeyboardView.setPreviewEnabled(false);
         mKeyboardView.setOnKeyboardActionListener(mOnKeyboardActionListener);
 
@@ -159,6 +188,8 @@ public class GraphingCalculator {
 
     public void registerEditText(int resid) {
 
+        Log.d(tagKeyboard,"registerEditText");
+
         final EditText editText = (EditText) mHostActivity.findViewById(resid);
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -174,11 +205,13 @@ public class GraphingCalculator {
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
+                Log.d(tagKeyboard, "setOnTouchListener");
+
                 EditText editText = (EditText) v;
 
                 int inType = editText.getInputType();
-                editText.setInputType(InputType.TYPE_NULL);
-                editText.onTouchEvent(event);
+                editText.setInputType(InputType.TYPE_NULL); editText.onTouchEvent(event);
                 editText.setInputType(inType);
 
                 return true;
