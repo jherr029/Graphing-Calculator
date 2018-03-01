@@ -129,6 +129,8 @@ public class MathKeyboard {
 //               TODO add parenthesis to the sqrt root and shift cursor to the left of last )
             } else if (primaryCode == CodePi) {
                 editable.insert(start,"𝜋");
+            } else if (primaryCode == CodeFunctions) {
+
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
             }

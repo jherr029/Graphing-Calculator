@@ -1,6 +1,8 @@
 package teamteam.graphing_calculator;
 
 import android.app.Activity;
+import android.util.Log;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -74,6 +76,8 @@ public class GraphHandler {
         functions.put(func, series);
         //adds the series to the graph
         graph.addSeries((LineGraphSeries<DataPoint>)functions.get(func));
+//        Log.d("TESTING", ""+ graph.getViewport().getMaxY(false));
+//        System.out.println(Double.toString(graph.getViewport().getMaxY(false)));
     }
 
     //takes in a function and removes it from the graph
