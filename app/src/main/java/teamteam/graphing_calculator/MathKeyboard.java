@@ -36,6 +36,17 @@ public class MathKeyboard {
         public final static int CodeAllRight    = 55004;
         public final static int CodeNext        = 55005;
         public final static int CodeClear       = 55006;
+        public final static int CodePowerOf2    = 60001;
+        public final static int CodePowerOfX    = 60002;
+        public final static int CodeFunctions   = 60003;
+        public final static int CodeAbsolute    = 60004;
+        public final static int CodeComma       = 60005;
+        public final static int CodeLTE         = 60006;
+        public final static int CodeGTE         = 60007;
+        public final static int CodeSquareRt    = 60008;
+        public final static int CodePi          = 60009;
+        public final static int CodeABC         = 60007;
+
 
         @Override
         public void onKey(int primaryCode, int[] keyCodes) {
@@ -101,6 +112,23 @@ public class MathKeyboard {
 
                 if (focusNew != null)
                     focusCurrent.requestFocus();
+            } else if (primaryCode == CodePowerOf2) {
+                editable.insert(start, "x²");
+            } else if (primaryCode == CodePowerOfX) {
+                editable.insert(start, "xⁿ");
+            } else if (primaryCode == CodeAbsolute) {
+                editable.insert(start, "|x|");
+            } else if (primaryCode == CodeComma) {
+                editable.insert(start, ",");
+            } else if (primaryCode == CodeLTE) {
+                editable.insert(start,"≤" );
+            } else if (primaryCode == CodeGTE) {
+                editable.insert(start, "≥");
+            } else if (primaryCode == CodeSquareRt) {
+               editable.insert(start,"√" );
+//               TODO add parenthesis to the sqrt root and shift cursor to the left of last )
+            } else if (primaryCode == CodePi) {
+                editable.insert(start,"𝜋");
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
             }
