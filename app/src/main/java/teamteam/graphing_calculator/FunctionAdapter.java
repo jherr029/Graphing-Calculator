@@ -38,7 +38,7 @@ public class FunctionAdapter extends BaseAdapter {
     // Pair<Input, Complete>
     private ArrayList<Input> mFunctionList; // Holds User Input Strings
 
-    private RegexInterpreter mRegexInterpreter;
+    public RegexInterpreter mRegexInterpreter;
 
     // To listen for text input and graph updating.
     private class FunctionWatcher implements TextWatcher {

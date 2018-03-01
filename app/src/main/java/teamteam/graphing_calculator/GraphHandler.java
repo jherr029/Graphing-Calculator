@@ -1,6 +1,8 @@
 package teamteam.graphing_calculator;
 
 import android.app.Activity;
+import android.widget.EditText;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -16,10 +18,11 @@ public class GraphHandler {
     private GraphView graph;
     private ExpressionEvaluation parser;
     private Map functions;
-    private int min_x = -10;
-    private int max_x = 10;
-    private int min_y = -15;
-    private int max_y = 15;
+
+    public int min_x = -10;
+    public int max_x = 10;
+    public int min_y = -15;
+    public int max_y = 15;
 
     public GraphHandler (Activity act) {
 
@@ -40,7 +43,6 @@ public class GraphHandler {
         // enable scaling and scrolling
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
-
     }
 
     private DataPoint[] gen_data (String func){

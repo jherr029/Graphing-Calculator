@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
+        initFields();
     }
 
     @Override
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ListView functionListView = findViewById(R.id.function_list_view);
         functionListView.setAdapter(mFunctionAdapter);
+
+        // TODO: Add continuity for graph settings
     }
 
     @Override
@@ -127,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        Log.d(TAG, view.getId() + "|" + R.id.switch_to_cartesian);
         switch (view.getId()) {
             case R.id.open_nav:
                 if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -146,15 +148,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.snap_to_origin:
+                // Non-functional
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
-                //mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                mFunctionAdapter.mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                findViewById(R.id.switch_to_cartesian).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                findViewById(R.id.switch_to_polar).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
                 DebugSnackbar("Now Validating Cartesian Functions");
                 break;
             case R.id.switch_to_polar:
-                //mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                mFunctionAdapter.mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                findViewById(R.id.switch_to_cartesian).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
+                findViewById(R.id.switch_to_polar).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
                 DebugSnackbar("Now Validating Polar Functions");
+                break;
+            case R.id.use_degrees:
+                // Switch to using degrees
+                findViewById(R.id.use_radians).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
+                findViewById(R.id.use_degrees).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                break;
+            case R.id.use_radians:
+                // Switch to reading radians
+                findViewById(R.id.use_radians).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                findViewById(R.id.use_degrees).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -279,8 +304,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.snap_to_origin).setOnClickListener(this);
         findViewById(R.id.expand_function_list).setOnClickListener(this);
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
+
         findViewById(R.id.switch_to_cartesian).setOnClickListener(this);
         findViewById(R.id.switch_to_polar).setOnClickListener(this);
+
+        findViewById(R.id.use_radians).setOnClickListener(this);
+        findViewById(R.id.use_degrees).setOnClickListener(this);
+    }
+
+    private void initFields() {
+        EditText field = findViewById(R.id.minX); field.setText(String.valueOf(graph.min_x));
+        field = findViewById(R.id.maxX); field.setText(String.valueOf(graph.max_x));
+        field = findViewById(R.id.minY); field.setText(String.valueOf(graph.min_y));
+        field = findViewById(R.id.maxY); field.setText(String.valueOf(graph.max_y));
     }
 
     /** Use this function to get Strings from user input fields

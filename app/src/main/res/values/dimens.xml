@@ -1,3 +1,10 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="settings_menu_padding">8dp</dimen>
+    <dimen name="settings_menu_width">270dp</dimen>
+    <dimen name="settings_large_button_height">36dp</dimen>
+    <dimen name="settings_small_button_height">24dp</dimen>
+    <dimen name="checkbox_side">12dp</dimen>
+
+    <dimen name="bound_input_length">48dp</dimen>
 </resources>
