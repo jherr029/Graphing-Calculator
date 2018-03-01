@@ -1,69 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyHeight="5%p"
-    android:verticalGap="1px"
-    android:horizontalGap="1px">
+    android:keyHeight="5%p">
 
-    <Row>
-        <Key android:codes="120" android:keyLabel="x" android:keyWidth="8.8%p"
+    <Row android:keyWidth="9%p">
+        <Key android:codes="120" android:keyLabel="x"
             android:keyEdgeFlags="left"/>
-        <Key android:codes="121" android:keyLabel="y" android:keyWidth="8.8%p"/>
-        <Key android:codes="60001" android:keyLabel="x²" android:keyWidth="9%p"/>
-        <Key android:codes="60002" android:keyLabel="xⁿ" android:keyWidth="8.9%p" />
+        <Key android:codes="121" android:keyLabel="y" />
+        <Key android:codes="60001" android:keyLabel="x²" />
+        <Key android:codes="60002" android:keyLabel="xⁿ" />
 
-        <Key android:codes="55" android:keyLabel="7" android:keyWidth="8.8%p"
+        <Key android:codes="55" android:keyLabel="7"
             android:horizontalGap="5%p"/>
-        <Key android:codes="56" android:keyLabel="8" android:keyWidth="9%p" />
-        <Key android:codes="57" android:keyLabel="9" android:keyWidth="8.9%p" />
-        <Key android:codes="47" android:keyLabel="÷" android:keyWidth="8.9%p" />
+        <Key android:codes="56" android:keyLabel="8"  />
+        <Key android:codes="57" android:keyLabel="9"  />
+        <Key android:codes="47" android:keyLabel="÷"  />
 
         <Key android:codes="60003" android:keyLabel="functions" android:horizontalGap="5%p"
             android:keyWidth="18%p" android:keyEdgeFlags="right"/>
     </Row>
 
-    <Row>
+    <Row android:keyWidth="9%p">
         <Key android:codes="40" android:keyLabel="(" android:keyEdgeFlags="left"/>
         <Key android:codes="41" android:keyLabel=")"/>
         <Key android:codes="60" android:keyLabel="lt"/>
-        <Key android:codes="62" android:keyLabel=">" android:horizontalGap="5%p"/>
+        <Key android:codes="62" android:keyLabel=">" />
 
-        <Key android:codes="52" android:keyLabel="4" />
+        <Key android:codes="52" android:keyLabel="4" android:horizontalGap="5%p"/>
         <Key android:codes="53" android:keyLabel="5" />
         <Key android:codes="54" android:keyLabel="6" />
-        <Key android:codes="42" android:keyLabel="×" android:horizontalGap="5%p" />
+        <Key android:codes="42" android:keyLabel="×" />
 
-        <Key android:codes="55002" android:keyLabel="←"
+        <Key android:codes="55002" android:keyLabel="←" android:horizontalGap="5%p"
             android:isRepeatable="true" />
         <Key android:codes="55003" android:keyLabel="→"
             android:isRepeatable="true"  android:keyEdgeFlags="right"/>
     </Row>
 
-    <Row>
+    <Row android:keyWidth="9%p">
         <Key android:codes="60004" android:keyLabel="|x|" android:keyEdgeFlags="left" />
         <Key android:codes="60005" android:keyLabel=","/>
         <Key android:codes="60006" android:keyLabel="≤"/>
-        <Key android:codes="60007" android:keyLabel="≥" android:horizontalGap="5%p"/>
+        <Key android:codes="60007" android:keyLabel="≥"/>
 
-        <Key android:codes="49" android:keyLabel="1" />
+        <Key android:codes="49" android:keyLabel="1" android:horizontalGap="5%p"/>
         <Key android:codes="50" android:keyLabel="2" />
         <Key android:codes="51" android:keyLabel="3" />
-        <Key android:codes="45" android:keyLabel="-" android:horizontalGap="5%p" />
+        <Key android:codes="45" android:keyLabel="-" />
 
-        <Key android:codes="-5" android:keyLabel="⌫" />
+        <Key android:codes="-5" android:keyLabel="⌫" android:horizontalGap="5%p"/>
         <Key android:codes="55006" android:keyLabel="CLR" android:keyEdgeFlags="right"/>
     </Row>
 
-    <Row>
-        <Key android:codes="66000" android:keyLabel="ABC" android:keyWidth="17.8%p"
+    <Row android:keyWidth="9%p">
+        <Key android:codes="66000" android:keyLabel="ABC" android:keyWidth="18%p"
             android:keyEdgeFlags="left" />
-        <Key android:codes="60008" android:keyLabel="√" android:keyWidth="9%p"/>
-        <Key android:codes="60009" android:keyLabel="𝜋" android:keyWidth="8.8%p"/>
+        <Key android:codes="60008" android:keyLabel="√" />
+        <Key android:codes="60009" android:keyLabel="𝜋" />
 
-        <Key android:codes="50" android:keyLabel="0" android:keyWidth="8.8%p"
+        <Key android:codes="50" android:keyLabel="0"
             android:horizontalGap="5%p"/>
-        <Key android:codes="46" android:keyLabel="." android:keyWidth="9%p" />
-        <Key android:codes="61" android:keyLabel="=" android:keyWidth="8.9%p"/>
-        <Key android:codes="43" android:keyLabel="+" android:keyWidth="8.9%p"/>
+        <Key android:codes="46" android:keyLabel="."  />
+        <Key android:codes="61" android:keyLabel="=" />
+        <Key android:codes="43" android:keyLabel="+" />
 
         <Key android:codes="55006" android:keyIcon="@drawable/sym_keyboard_return"
             android:keyEdgeFlags="right" android:keyWidth="18%p"

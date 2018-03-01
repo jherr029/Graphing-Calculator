@@ -28,6 +28,10 @@
         android:orientation="vertical">
 
         <!-- Graph View -->
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <!-- Graphing Settings Menu -->
         <LinearLayout
@@ -163,10 +167,6 @@
             android:src="@drawable/ic_arrow_drop_up_black_24dp"
             />
 
-        <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     </FrameLayout>
 
