@@ -10,10 +10,11 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln)|(sqrt))[(]";
+    // abs, e, π
+    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(log)|(ln)|(sqrt))[(]";
     private static final String op_regex = "[-+*/^]";
-    private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
-    private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e])";
+    private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e]|[π])";
+    private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e]|[π])";
 
     enum GraphType {CARTESIAN, PARAMETRIC, POLAR}
     public GraphType mGraphType = GraphType.CARTESIAN;

@@ -152,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
-                mFunctionAdapter.mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                mFunctionAdapter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                graph.change_type("Cartesian");
                 findViewById(R.id.switch_to_cartesian).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_selected);
                 findViewById(R.id.switch_to_polar).setBackgroundResource(
@@ -160,7 +161,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 DebugSnackbar("Now Validating Cartesian Functions");
                 break;
             case R.id.switch_to_polar:
-                mFunctionAdapter.mRegexInterpreter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                mFunctionAdapter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                graph.change_type("Polar");
                 findViewById(R.id.switch_to_cartesian).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_flat);
                 findViewById(R.id.switch_to_polar).setBackgroundResource(
@@ -350,11 +352,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        graph.reset(extractValue(R.id.func),
+
+        graph.reset(mFunctionAdapter.getFunctions(),
                     Integer.parseInt(nmaxx),
                     Integer.parseInt(nminx),
                     Integer.parseInt(nmaxy),
                     Integer.parseInt(nminy)
         );
+
+        onClick(findViewById(R.id.open_settings));
     }
 }

@@ -9,7 +9,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="top|center_horizontal"
     android:background="@drawable/soft_rectangle_background_flat"
-    android:elevation="6dp">
+    android:elevation="6dp" >
 
     <Button
         android:layout_width="match_parent"

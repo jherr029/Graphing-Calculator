@@ -175,4 +175,19 @@ public class FunctionAdapter extends BaseAdapter {
 
         return functionView;
     }
+
+    public void changeGraphType(RegexInterpreter.GraphType graphType) {
+        mRegexInterpreter.changeGraphType(graphType);
+        mFunctionList.clear();
+        while (mFunctionList.size() < 2) mFunctionList.add(new Input());
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<String> getFunctions() {
+        ArrayList<String> completeFunctions = new ArrayList<>();
+        for (int i = 0; i < mFunctionList.size(); ++i) {
+            completeFunctions.add(mFunctionList.get(i).complete);
+        }
+        return completeFunctions;
+    }
 }
