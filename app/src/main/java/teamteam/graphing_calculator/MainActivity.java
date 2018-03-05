@@ -1,6 +1,8 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.graphics.Path;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
@@ -16,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.animation.PathInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -149,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.snap_to_origin:
                 // Non-functional
+                startDemo();
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
@@ -361,5 +365,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         );
 
         onClick(findViewById(R.id.open_settings));
+    }
+
+    private void startDemo() {
+        ImageView icon = findViewById(R.id.demo_image);
+        icon.setBackgroundResource(R.drawable.demo_anim_list);
+        AnimationDrawable iconSwitcher = (AnimationDrawable)icon.getBackground();
+
+        iconSwitcher.start();
+
+        if (icon.getAlpha() == 0) {
+            icon.animate()
+                    .setDuration(2000)
+                    .translationY(400f)
+                    .rotation(icon.getRotation()+720)
+                    .alpha(1);
+        }
+        else if (icon.getAlpha() == 1) {
+            icon.animate()
+                    .setDuration(2000)
+                    .translationY(-400f)
+                    .rotation(icon.getRotation()+720)
+                    .alpha(0);
+        }
     }
 }

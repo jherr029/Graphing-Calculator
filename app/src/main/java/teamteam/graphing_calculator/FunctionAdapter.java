@@ -102,6 +102,11 @@ public class FunctionAdapter extends BaseAdapter {
         // Get view for row item
         final View functionView = mInflater.inflate(R.layout.function_list_item, parent, false);
 
+        functionView.setAlpha(0);
+        functionView.animate()
+                .setDuration(500)
+                .alpha(1);
+
         // Get Refs
         TextView functionIndex = functionView.findViewById(R.id.function_index);
         final EditText functionText = functionView.findViewById(R.id.func);
@@ -150,11 +155,6 @@ public class FunctionAdapter extends BaseAdapter {
                                 super.onAnimationEnd(animation);
                                 functionView.setVisibility(View.GONE);
 
-                                /** FIXME: Most of the time, if you delete the first function
-                                 *  FIXME: with multiple functions graphed, the first function
-                                 *  FIXME: will remain on the graph despite being correctly
-                                 *  FIXME: removed from both mFunctionList and graph.functions
-                                 */
                                 mContext.graph.remove_line(mFunctionList.get(position).complete);
                                 mFunctionList.remove(position);
 
