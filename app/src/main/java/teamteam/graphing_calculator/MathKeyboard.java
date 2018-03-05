@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import java.util.Stack;
+
 import static android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
 
 /**
@@ -21,6 +23,8 @@ import static android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS;
 public class MathKeyboard {
     private KeyboardView mKeyboardView;
     private Activity mHostActivity;
+    private Boolean trigUsedFlag;
+    Stack<Character> functionStack = new Stack();
 
     private static final String tagKeyboard = "keyboard";
 
@@ -39,11 +43,10 @@ public class MathKeyboard {
         public final static int CodePowerOf2    = 60001;
         public final static int CodePowerOfX    = 60002;
         public final static int CodeFunctions   = 60003;
-        public final static int CodeAbsolute    = 60004;
+        public final static int CodeSquareRt    = 60004;
         public final static int CodeComma       = 60005;
         public final static int CodeLTE         = 60006;
         public final static int CodeGTE         = 60007;
-        public final static int CodeSquareRt    = 60008;
         public final static int CodePi          = 60009;
         public final static int CodeABC         = 60007;
 
@@ -86,8 +89,31 @@ public class MathKeyboard {
             if (primaryCode == CodeCancelt) {
                 hideKeyboard();
             } else if (primaryCode == CodeDelete) {
-                if (editable != null && start > 0)
-                    editable.delete(start - 1, start);
+
+                if (functionStack.empty()) {
+                   editable.delete(start - 1, start);
+                } else {
+
+                    Log.d("keyboard stack", " " + functionStack.peek());
+
+                    if (editable != null && start > 0 && trigUsedFlag
+                            && functionStack.peek() != '(') {
+                        editable.delete(start - 1, start);
+
+                    } else if (editable != null && start > 0 && trigUsedFlag
+                            && functionStack.peek() == '(') {
+
+                        start = start + 1;
+
+                        editable.delete(start - 6, start);
+
+                        trigUsedFlag = false;
+                    }
+
+                    functionStack.pop();
+
+                }
+
             } else if (primaryCode == CodeClear) {
                 if ( editable != null)
                     editable.clear();
@@ -103,36 +129,45 @@ public class MathKeyboard {
                 editText.setSelection(editText.length());
             } else if (primaryCode == CodePrev) {
                 View focusNew = editText.focusSearch(View.FOCUS_BACKWARD);
-
                 if (focusNew != null)
                     focusNew.requestFocus();
-
             } else if (primaryCode == CodeNext) {
                 View focusNew = editText.focusSearch(View.FOCUS_FORWARD);
-
                 if (focusNew != null)
                     focusCurrent.requestFocus();
             } else if (primaryCode == CodePowerOf2) {
                 editable.insert(start, "x²");
+
+                if (trigUsedFlag) {
+                    functionStack.push('x');
+                    functionStack.push('^');
+                }
+
             } else if (primaryCode == CodePowerOfX) {
                 editable.insert(start, "xⁿ");
-            } else if (primaryCode == CodeAbsolute) {
-                editable.insert(start, "|x|");
+
+                if (trigUsedFlag) {
+                    functionStack.push('x');
+                    functionStack.push('^');
+                }
+            } else if (primaryCode == CodeSquareRt) {
+                editable.insert(start, "√");
             } else if (primaryCode == CodeComma) {
                 editable.insert(start, ",");
             } else if (primaryCode == CodeLTE) {
                 editable.insert(start,"≤" );
             } else if (primaryCode == CodeGTE) {
                 editable.insert(start, "≥");
-            } else if (primaryCode == CodeSquareRt) {
-               editable.insert(start,"√" );
-//               TODO add parenthesis to the sqrt root and shift cursor to the left of last )
             } else if (primaryCode == CodePi) {
                 editable.insert(start,"𝜋");
             } else if (primaryCode == CodeFunctions) {
 
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
+
+                if (trigUsedFlag) {
+                    functionStack.push((char)primaryCode);
+                }
             }
         }
         @Override
@@ -148,7 +183,22 @@ public class MathKeyboard {
 
         @Override
         public void onText(CharSequence text) {
+            Log.d(tagKeyboard, "" + text);
+            View focusCurrent = mHostActivity.getWindow().getCurrentFocus();
 
+            EditText editText = (EditText) focusCurrent;
+            Editable editable = editText.getText();
+            int start = editText.getSelectionStart();
+
+            editable.insert(start, text);
+
+            start = editText.getSelectionStart();
+
+            editText.setSelection(start - 1);
+
+            trigUsedFlag = true;
+
+            functionStack.push('(');
         }
 
         @Override

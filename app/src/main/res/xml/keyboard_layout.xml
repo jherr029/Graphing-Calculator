@@ -16,6 +16,7 @@
         <Key android:codes="47" android:keyLabel="÷"  />
 
         <Key android:codes="60003" android:keyLabel="functions" android:horizontalGap="5%p"
+            android:popupKeyboard="@xml/popup" android:popupCharacters="\\;sin();"
             android:keyWidth="18%p" android:keyEdgeFlags="right"/>
     </Row>
 
@@ -37,7 +38,7 @@
     </Row>
 
     <Row android:keyWidth="9%p">
-        <Key android:codes="60004" android:keyLabel="|x|" android:keyEdgeFlags="left" />
+        <Key android:codes="60004" android:keyLabel="√" android:keyEdgeFlags="left" />
         <Key android:codes="60005" android:keyLabel=","/>
         <Key android:codes="60006" android:keyLabel="≤"/>
         <Key android:codes="60007" android:keyLabel="≥"/>
@@ -52,9 +53,10 @@
     </Row>
 
     <Row android:keyWidth="9%p">
-        <Key android:codes="66000" android:keyLabel="ABC" android:keyWidth="18%p"
+        <Key android:codes="66000" android:keyLabel="sin" android:keyOutputText="sin( )"
             android:keyEdgeFlags="left" />
-        <Key android:codes="60008" android:keyLabel="√" />
+        <Key android:codes="66001" android:keyLabel="cos" android:keyOutputText="cos( )" />
+        <Key android:codes="60008" android:keyLabel="tan" android:keyOutputText="tan( )" />
         <Key android:codes="60009" android:keyLabel="𝜋" />
 
         <Key android:codes="50" android:keyLabel="0"
