@@ -40,7 +40,7 @@
         android:orientation="vertical"
         android:background="#fff">
 
-        <!-- Test Function Layout -->
+        <!-- Temporary Function Layout
         <FrameLayout
             android:id="@+id/func_layout_1"
             android:orientation="horizontal"
@@ -127,6 +127,16 @@
                 android:visibility="invisible"
                 android:src="@drawable/ic_error_black_24dp" />
         </FrameLayout>
+
+         -->
+
+        <ListView
+            android:id="@+id/function_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp"
+            android:divider="#666666" >
+        </ListView>
 
     </LinearLayout>
 

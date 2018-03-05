@@ -1,5 +1,6 @@
 package teamteam.graphing_calculator;
 
+import android.icu.text.LocaleDisplayNames;
 import android.util.Log;
 import java.util.Stack;
 
@@ -9,9 +10,15 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(lg)|(log)|(ln)|(sqrt))[(]";
+    // abs, e, π
+    private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(log)|(ln)|(sqrt))[(]";
     private static final String op_regex = "[-+*/^]";
-    private static final String term_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e])";
+    private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e]|[π])";
+    private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e]|[π])";
+
+    enum GraphType {CARTESIAN, PARAMETRIC, POLAR}
+    public GraphType mGraphType = GraphType.CARTESIAN;
+    private String term_regex;
 
     /**
      * CFG for functions **
@@ -23,7 +30,7 @@ public class RegexInterpreter {
 
     private String mFunction = "";
 
-    private enum Rule {EXPR, FUNC, OP, TERM}
+    private enum Rule {EXPR, FUNC, OP, TERM, NACPT}
 
     private class Production {
         Rule ruleType;
@@ -37,10 +44,17 @@ public class RegexInterpreter {
 
     public boolean isValidFunction(String function) {
 
-        Log.d(TAG, "Read Function: " + function);
+        Log.d(TAG, "*** New Function : " + function + " ***");
 
-        // mFunction is
+        // Remove all whitespace in function
         mFunction = function.replaceAll("\\s+", "");
+
+        switch (mGraphType) {
+            case CARTESIAN: term_regex = cartesian_regex; break;
+            case PARAMETRIC: break;
+            case POLAR: term_regex = polar_regex; break;
+            default: return false;
+        }
 
         // All we really have to check is if it passes an FSM
         return DFA();
@@ -52,7 +66,7 @@ public class RegexInterpreter {
         Stack<Production> parser = new Stack<>();
         parser.push(new Production(Rule.EXPR));
 
-        while (!mFunction.isEmpty()) {
+        DFAMainLoop : while (!mFunction.isEmpty() && !parser.isEmpty()) {
             Production top = parser.peek();
             top.buffer += mFunction.charAt(0);
             Log.d(TAG, top.ruleType.toString() + " -> \'" + top.buffer
@@ -93,6 +107,7 @@ public class RegexInterpreter {
                         removeTerminal();
                         parser.push(new Production(Rule.EXPR));
                     }
+                    /*  Uncomment this to allow implicit multiplication
                     else if (top.buffer.matches(term_regex)) {
                         parser.push(new Production(Rule.TERM));
                     }
@@ -101,6 +116,13 @@ public class RegexInterpreter {
                     }
                     else if (!top.buffer.matches("[)]")) {
                         parser.push(new Production(Rule.EXPR));
+                    } */
+                    /* No acceptance of implicit multiplication */
+                    else if (top.buffer.matches(term_regex) ||
+                             top.buffer.matches("[(]") ||
+                             !top.buffer.matches("[)]")) {
+                        parser.push(new Production(Rule.NACPT));
+                        break DFAMainLoop;
                     }
                     break;
                 case TERM:
@@ -119,12 +141,14 @@ public class RegexInterpreter {
                     return false; // Something obviously went wrong.
             }
         }
-        if (parser.isEmpty()) return true; //If there are still things on the stack, is false.
-        Log.d(TAG, "Things left on the stack:");
+        //If both resources don't empty at the same time, is false.
+        if (parser.isEmpty() && mFunction.isEmpty()) return true;
+        Log.d(TAG, "Productions left on the stack:");
         while (!parser.isEmpty()) {
             Log.d(TAG, parser.peek().ruleType.toString());
             parser.pop();
         }
+        Log.d(TAG, "Function left to be parsed: " + mFunction);
         return false;
     }
 
@@ -136,4 +160,8 @@ public class RegexInterpreter {
         }
     }
 
+    public void changeGraphType(GraphType newGraphType) {
+        mGraphType = newGraphType;
+        Log.d(TAG, "GraphType is now " + mGraphType.toString());
+    }
 }

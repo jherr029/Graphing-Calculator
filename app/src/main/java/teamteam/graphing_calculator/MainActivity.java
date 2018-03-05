@@ -1,6 +1,7 @@
 package teamteam.graphing_calculator;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -18,64 +19,25 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     MathKeyboard mMathKeyboard;
 
-    private class FunctionWatcher implements TextWatcher {
-        private EditText mEditText;
-        private ImageView mErrorIcon;
-
-        private String prevFunction;
-        public FunctionWatcher(FrameLayout layout) {
-            this.mEditText = (EditText)layout.getChildAt(1);
-            this.mErrorIcon = (ImageView)layout.getChildAt(2);
-            prevFunction = "";
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (s.toString() == "") mErrorIcon.setVisibility(View.INVISIBLE);
-            else if (mRegexInterpreter.isValidFunction(s.toString())) {
-                // graph the function, remove any error icons
-                Log.d(TAG, "prevFunction: " + prevFunction);
-                Log.d(TAG, "newFunction: " + s.toString());
-                if (!prevFunction.isEmpty()) graph.remove_line(prevFunction);
-                prevFunction = mEditText.getText().toString();
-                graph.add_line(s.toString());
-                mErrorIcon.setVisibility(View.INVISIBLE);
-            }
-            else {
-                // dont graph or remove function, display error icon
-                mErrorIcon.setVisibility(View.VISIBLE);
-            }
-        }
-    };
-
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-
     private BottomSheetBehavior sheetController;
-
     private LinearLayout mGraphToolView;
 
-    private RegexInterpreter mRegexInterpreter;
-    private ExpressionEvaluation mFunctionParser;
+    private FunctionAdapter mFunctionAdapter;
 
-//    NavigationView nav_view = findViewById(R.id.navigation_view);
     boolean changeFlag = false;
 
-    private GraphHandler graph;
+    public GraphHandler graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,18 +62,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         };
         mNavigationView.setNavigationItemSelectedListener(nav_listener);
 
-
         /* Initialize Function Sheet */
         sheetController = BottomSheetBehavior.from(findViewById(R.id.function_bottom_sheet));
+        sheetController.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                    sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
 
         /* Initialize Graph Tool Menu */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
-        mRegexInterpreter = new RegexInterpreter();
-        mFunctionParser = new ExpressionEvaluation();
-
         initListeners();
+
+        mFunctionAdapter = new FunctionAdapter(this);
 
 //      MathKeyboard
 //      TODO MAYBE MODIFY
@@ -123,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
+        initFields();
     }
 
     @Override
@@ -132,17 +104,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d("MA:onStart", "about to call checkUserStatus");
         checkUserStatus();
 
+        ListView functionListView = findViewById(R.id.function_list_view);
+        functionListView.setAdapter(mFunctionAdapter);
+
+        // TODO: Add continuity for graph settings
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         Log.d("MA:onResume", "On Resume function");
-
         if (changeFlag) {
             checkUserStatus(); // this one not good
-
             changeFlag = false;
         }
     }
@@ -188,12 +161,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGraphToolView.setVisibility(View.VISIBLE);
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_anim));
                 }
-
                 break;
             case R.id.snap_to_origin:
-                boolean valid = mRegexInterpreter.isValidFunction(extractValue(R.id.func_1));
-                if (valid) DebugSnackbar("Function is valid");
-                else DebugSnackbar("Function is invalid");
+                // Non-functional
+                DebugSnackbar("Snapped to Origin");
+                break;
+            case R.id.switch_to_cartesian:
+                mFunctionAdapter.changeGraphType(RegexInterpreter.GraphType.CARTESIAN);
+                graph.change_type("Cartesian");
+                findViewById(R.id.switch_to_cartesian).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                findViewById(R.id.switch_to_polar).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
+                DebugSnackbar("Now Validating Cartesian Functions");
+                break;
+            case R.id.switch_to_polar:
+                mFunctionAdapter.changeGraphType(RegexInterpreter.GraphType.POLAR);
+                graph.change_type("Polar");
+                findViewById(R.id.switch_to_cartesian).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
+                findViewById(R.id.switch_to_polar).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                DebugSnackbar("Now Validating Polar Functions");
+                break;
+            case R.id.use_degrees:
+                // Switch to using degrees
+                findViewById(R.id.use_radians).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
+                findViewById(R.id.use_degrees).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                break;
+            case R.id.use_radians:
+                // Switch to reading radians
+                findViewById(R.id.use_radians).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_selected);
+                findViewById(R.id.use_degrees).setBackgroundResource(
+                        R.drawable.soft_rectangle_background_button_flat);
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -268,22 +271,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
             case R.id.drawer_sign_in:
                 Log.d("DRAWER",  "Sign in pressed");
-
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
-
                return true;
-
             case R.id.drawer_sign_out:
                 Log.d("DRAWER", "Sign out pressed");
-
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
-
                 changeFlag = true;
-
                 return true;
-
             case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
@@ -302,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void checkUserStatus() {
-
         Log.d("MainActivity", "inside checkUserStatus function\n" +
                 "starting intent");
 
@@ -327,18 +322,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.expand_function_list).setOnClickListener(this);
         findViewById(R.id.collapse_function_list).setOnClickListener(this);
 
-        /* Initializing EditText Listeners, these are just temporary. */
-        EditText textField = findViewById(R.id.func_1);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
-        textField = findViewById(R.id.func_2);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
-        textField = findViewById(R.id.func_3);
-        textField.addTextChangedListener(new FunctionWatcher((FrameLayout)textField.getParent()));
+        findViewById(R.id.switch_to_cartesian).setOnClickListener(this);
+        findViewById(R.id.switch_to_polar).setOnClickListener(this);
+
+        findViewById(R.id.use_radians).setOnClickListener(this);
+        findViewById(R.id.use_degrees).setOnClickListener(this);
+    }
+
+    private void initFields() {
+        EditText field = findViewById(R.id.minX); field.setText(String.valueOf(graph.min_x));
+        field = findViewById(R.id.maxX); field.setText(String.valueOf(graph.max_x));
+        field = findViewById(R.id.minY); field.setText(String.valueOf(graph.min_y));
+        field = findViewById(R.id.maxY); field.setText(String.valueOf(graph.max_y));
     }
 
     /** Use this function to get Strings from user input fields
-     * @param id (e.g. R.id.func_1)
-     * @valid_ids func_1 : top function field
+     * @param id (e.g. R.id.func)
+     * @valid_ids func : top function field
      *            func_2 : middle function field
      *            func_3 : bottom function field
      *            min_X
@@ -367,14 +367,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        graph.reset(extractValue(R.id.func_1),
-                    extractValue(R.id.func_2),
-                    extractValue(R.id.func_3),
+
+        graph.reset(mFunctionAdapter.getFunctions(),
                     Integer.parseInt(nmaxx),
                     Integer.parseInt(nminx),
                     Integer.parseInt(nmaxy),
                     Integer.parseInt(nminy)
         );
-    }
 
+        onClick(findViewById(R.id.open_settings));
+    }
 }
