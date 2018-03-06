@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_blur_circular_black_24dp"
-            android:alpha="0" />
+            android:alpha="1" />
 
         <!-- Graph View -->
         <com.jjoe64.graphview.GraphView

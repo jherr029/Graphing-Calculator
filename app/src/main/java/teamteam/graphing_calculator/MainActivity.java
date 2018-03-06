@@ -375,18 +375,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iconSwitcher.start();
 
         if (icon.getAlpha() == 0) {
-            icon.animate()
+            icon.startAnimation(AnimationUtils.loadAnimation(this,R.anim.demo_anim));
+            /*icon.animate()
                     .setDuration(2000)
                     .translationY(400f)
                     .rotation(icon.getRotation()+720)
-                    .alpha(1);
+                    .alpha(1); */
         }
         else if (icon.getAlpha() == 1) {
-            icon.animate()
+            icon.startAnimation(AnimationUtils.loadAnimation(this,R.anim.demo_anim_follow));
+            /* icon.animate()
                     .setDuration(2000)
                     .translationY(-400f)
                     .rotation(icon.getRotation()+720)
-                    .alpha(0);
+                    .alpha(0); */
         }
     }
 }

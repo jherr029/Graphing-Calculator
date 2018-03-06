@@ -102,11 +102,6 @@ public class FunctionAdapter extends BaseAdapter {
         // Get view for row item
         final View functionView = mInflater.inflate(R.layout.function_list_item, parent, false);
 
-        functionView.setAlpha(0);
-        functionView.animate()
-                .setDuration(500)
-                .alpha(1);
-
         // Get Refs
         TextView functionIndex = functionView.findViewById(R.id.function_index);
         final EditText functionText = functionView.findViewById(R.id.func);
