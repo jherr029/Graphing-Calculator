@@ -12,7 +12,7 @@ public class RegexInterpreter {
 
     // abs, e, π
     private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(log)|(ln)|(sqrt))[(]";
-    private static final String op_regex = "[-+*/^]";
+    static final String op_regex = "[-+*/^]";
     private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e]|[π])";
     private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e]|[π])";
 

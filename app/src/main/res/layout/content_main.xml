@@ -33,6 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!-- Edit Coefficients Menu -->
+        <include layout="@layout/edit_coefficients_dropdown" />
+
         <!-- Graph Settings Menu -->
         <include layout="@layout/graph_settings_dropdown"/>
 

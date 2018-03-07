@@ -36,10 +36,28 @@
         <menu>
             <item
                 android:id="@+id/example_point_slope_form"
-                android:title="Point Slope Form" />
+                android:title="Lines: Slope Intercept Form" />
             <item
                 android:id="@+id/example_parabolic_curve"
-                android:title="Parabolic Curve" />
+                android:title="Polynomial: Parabolic Curve" />
+            <item
+                android:id="@+id/example_cubic_curve"
+                android:title="Polynomial: Cubic Curve" />
+            <item
+                android:id="@+id/example_sin_wave"
+                android:title="Polar: Sine Wave" />
+            <item
+                android:id="@+id/example_cos_wave"
+                android:title="Polar: Cosine Wave" />
+            <item
+                android:id="@+id/example_logarithmic_curve"
+                android:title="Logarithm: Logarithmic Curve" />
+            <item
+                android:id="@+id/example_natural_log"
+                android:title="Logarithm: Natural Log" />
+            <item
+                android:id="@+id/example_exponential"
+                android:title="Exponential: Exponential" />
         </menu>
     </item>
 </menu>

@@ -10,20 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,9 +24,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private BottomSheetBehavior sheetController;
-    private LinearLayout mGraphToolView;
+    protected LinearLayout mGraphToolView;
 
-    private FunctionAdapter mFunctionAdapter;
+    protected BuiltInFunctionHandler mBuiltInFunctionHandler;
+    protected FunctionAdapter mFunctionAdapter;
 
     boolean changeFlag = false;
 
@@ -76,13 +69,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        /* Initialize Graph Tool Menu */
+        /* Initialize Dropdown Menus */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
         initListeners();
 
         mFunctionAdapter = new FunctionAdapter(this);
+        mBuiltInFunctionHandler = new BuiltInFunctionHandler(this);
 
         //Initialize graph handler
         this.graph = new GraphHandler(this);
@@ -143,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mNavigationView.bringToFront();
                 break;
             case R.id.open_settings:
+                mBuiltInFunctionHandler.closeWindow();
                 if (mGraphToolView.getVisibility() == View.VISIBLE) {
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_anim));
                     mGraphToolView.setVisibility(View.GONE);
@@ -193,24 +188,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.collapse_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 break;
-        }
-    }
-
-    private void setFunctions(int resId) {
-        // Will probably kill run-time a bit
-        ArrayList<String> functions = new ArrayList<>();
-        switch (resId) {
-            case R.id.example_point_slope_form:
-                functions.add("3*x+2");
+            case R.id.plot_built_in:
+                mBuiltInFunctionHandler.plotFunctions();
                 break;
-            case R.id.example_parabolic_curve:
-                functions.add("x^2");
-                break;
-            default:
-                return;
         }
-        mFunctionAdapter.setFunctions(functions);
-        graph.setFunctions(functions);
     }
 
     public void dynamicButtonAction(Intent data)  {
@@ -294,10 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, BasicCalculator.class));
                 return true;
             default:
-                setFunctions(item.getItemId());
+                return mBuiltInFunctionHandler.setFunctions(item.getItemId());
         }
-
-        return false;
     }
 
     private void checkUserStatus() {
@@ -313,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void DebugSnackbar(String text) {
+    protected void DebugSnackbar(String text) {
         Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -330,6 +309,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.use_radians).setOnClickListener(this);
         findViewById(R.id.use_degrees).setOnClickListener(this);
+
+        findViewById(R.id.plot_built_in).setOnClickListener(this);
     }
 
     private void initFields() {
@@ -338,6 +319,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         field = findViewById(R.id.minY); field.setText(String.valueOf(graph.min_y));
         field = findViewById(R.id.maxY); field.setText(String.valueOf(graph.max_y));
     }
+
+    /* Graph Stuff */
 
     /** Use this function to get Strings from user input fields
      * @param id (e.g. R.id.func)

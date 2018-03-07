@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/edit_coefficients_popout"
+    android:layout_marginTop="6dp"
+    android:orientation="vertical"
+    android:layout_width="@dimen/settings_menu_width"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|center_horizontal"
+    android:background="@drawable/soft_rectangle_background_flat"
+    android:padding="@dimen/settings_menu_padding" >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_small_button_height"
+        android:gravity="center"
+        android:text="Set Coefficients" />
+
+    <TextView
+        android:id="@+id/edited_built_in_function"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_small_button_height"
+        android:gravity="center"
+        android:fontFamily="@string/settings_math_font"
+        android:textSize="@dimen/math_font_size"
+        android:text="y = a*x + b" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="6dp"
+        android:background="@color/colorOutline" /> <!-- Separator -->
+
+    <LinearLayout
+        android:id="@+id/coefficient_a"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/coefficient_input_size"
+        android:paddingStart="@dimen/settings_menu_padding"
+        android:paddingEnd="@dimen/settings_menu_padding" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/math_font_size"
+            android:fontFamily="@string/settings_math_font"
+            android:text="a = " />
+        <EditText
+            android:id="@+id/coefficient_a_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal" />
+    </LinearLayout> <!-- Coefficient 'a' -->
+    <LinearLayout
+        android:id="@+id/coefficient_b"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/coefficient_input_size"
+        android:paddingStart="@dimen/settings_menu_padding"
+        android:paddingEnd="@dimen/settings_menu_padding" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/math_font_size"
+            android:fontFamily="@string/settings_math_font"
+            android:text="b = " />
+        <EditText
+            android:id="@+id/coefficient_b_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal" />
+    </LinearLayout> <!-- Coefficient 'b' -->
+    <LinearLayout
+        android:id="@+id/coefficient_c"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/coefficient_input_size"
+        android:paddingStart="@dimen/settings_menu_padding"
+        android:paddingEnd="@dimen/settings_menu_padding" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/math_font_size"
+            android:fontFamily="@string/settings_math_font"
+            android:text="c = " />
+        <EditText
+            android:id="@+id/coefficient_c_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal" />
+    </LinearLayout> <!-- Coefficient 'c' -->
+    <LinearLayout
+        android:id="@+id/coefficient_d"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/coefficient_input_size"
+        android:paddingStart="@dimen/settings_menu_padding"
+        android:paddingEnd="@dimen/settings_menu_padding" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="@dimen/math_font_size"
+            android:fontFamily="@string/settings_math_font"
+            android:text="d = " />
+        <EditText
+            android:id="@+id/coefficient_d_value"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="numberSigned|numberDecimal" />
+    </LinearLayout> <!-- Coefficient 'd' -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_margin="6dp"
+        android:background="@color/colorOutline" /> <!-- Separator -->
+
+    <Button
+        android:id="@+id/plot_built_in"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/settings_small_button_height"
+        android:background="@drawable/soft_rectangle_background_button"
+        android:textAllCaps="false"
+        android:text="Plot Function" />
+</LinearLayout>

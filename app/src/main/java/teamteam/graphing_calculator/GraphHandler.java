@@ -23,10 +23,10 @@ public class GraphHandler {
     private ExpressionEvaluation parser;
     private Map functions;
 
-    public int min_x = -30;
-    public int max_x = 30;
-    public int min_y = -45;
-    public int max_y = 45;
+    public int min_x = -10;
+    public int max_x = 10;
+    public int min_y = -15;
+    public int max_y = 15;
     private String gtype = "Cartesian";
 
     public GraphHandler (Activity act) {

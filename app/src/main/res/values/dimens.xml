@@ -5,6 +5,9 @@
     <dimen name="settings_large_button_height">36dp</dimen>
     <dimen name="settings_small_button_height">24dp</dimen>
     <dimen name="checkbox_side">12dp</dimen>
+    <dimen name="math_font_size">18dp</dimen>
+
+    <dimen name="coefficient_input_size">48dp</dimen>
 
     <dimen name="bound_input_length">48dp</dimen>
 </resources>
