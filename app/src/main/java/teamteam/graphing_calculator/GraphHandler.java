@@ -28,17 +28,25 @@ public class GraphHandler {
     private GraphView graph;
     private ExpressionEvaluation parser;
     private Map functions;
+    private Map offset;
+    //position of the touched point in terms of graph coordinates
     private double[] touchedpt = new double[]{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
+    //the series containing the touched point
     private String touchedse = "";
+    //how closely you have to touch a point for it to be recognized
     private double sens = 50;
+    //step size for calculating points
     private int inc = 90;
 
+    //min and max bounds of the graph
     public int min_x = -30;
     public int max_x = 30;
     public int min_y = -45;
     public int max_y = 45;
+    //Graph type: Cartesian or Polar
     private String gtype = "Cartesian";
 
+    //pixel coordinates of the graph's boundaries
     private int lbound = 80;
     private int rbound = 1055;
     private int tbound = 20;
@@ -115,6 +123,7 @@ public class GraphHandler {
         mainact = act;
         graph = mainact.findViewById(R.id.graph);
         functions = new HashMap();
+        offset = new HashMap();
         parser = new ExpressionEvaluation();
 
         // set manual X bounds
@@ -166,7 +175,6 @@ public class GraphHandler {
                                 double[] ptpx = getpixelpos(ptgr);
                                 //if touched point is within sensitivity range of datapoint
                                 if(distance(ptpx,touchpx) < sens){
-                                    //System.out.println("Point touched");
                                     //turn off scrolling
                                     graph.getViewport().setScrollable(false);
                                     graph.getViewport().setScrollableY(false);
@@ -183,24 +191,13 @@ public class GraphHandler {
                         graph.getViewport().setScrollableY(true);
                         //if a datapoint was touched previously
                         if(touchedpt[0] != Double.POSITIVE_INFINITY) {
-                            //change in x
-                            double deltax = touchgr[0] - touchedpt[0];
-                            //change in y
-                            double deltay = touchgr[1] - touchedpt[1];
-                            //updated datapoints
-                            DataPoint[] newdata = new DataPoint[inc];
-                            //iterate through touched series
-                            int i = 0;
-                            LineGraphSeries s = (LineGraphSeries) functions.get(touchedse);
-                            Iterator it = s.getValues(s.getLowestValueX(),s.getHighestValueX());
-                            while(it.hasNext()){
-                                DataPoint dp = (DataPoint)it.next();
-                                //create updated datapoints
-                                newdata[i] = new DataPoint(dp.getX()+deltax,dp.getY()+deltay);
-                                i++;
-                            }
-                            //apply new datapoints
-                            ((LineGraphSeries) functions.get(touchedse)).resetData(newdata);
+                            //update line offset
+                            double[] off = (double[]) offset.get(touchedse);
+                            off[0] = off[0] + (touchgr[0] - touchedpt[0]);
+                            off[1] = off[1] + (touchgr[1] - touchedpt[1]);
+                            offset.replace(touchedse,off);
+                            //regenerate data
+                            ((LineGraphSeries) functions.get(touchedse)).resetData(gen_data(touchedse));
                             touchedpt = new double[]{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
                             touchedse = "";
                         }
@@ -229,14 +226,15 @@ public class GraphHandler {
         func = func.replaceAll("e",Double.toString(Math.E));
 
         if(gtype.equals("Cartesian")) {
+            double[] off = (double[]) offset.get(func);
             double step = (double) Math.abs(max_x - min_x) / inc;
             points = new DataPoint[inc];
             for (int i = 0; i < inc; i++) {
                 double x_val = min_x + (i * step);
-                String finalfunc = func.replaceAll("x", Double.toString(x_val));
+                String finalfunc = func.replaceAll("x", Double.toString(x_val - off[0]));
                 Double[] y_val = new Double[]{0.0};
                 parser.Prefix_Evaluation(finalfunc, y_val);
-                points[i] = new DataPoint(x_val, y_val[0]);
+                points[i] = new DataPoint(x_val, y_val[0] + off[1]);
             }
         }
         else{
@@ -267,6 +265,7 @@ public class GraphHandler {
     //gets back array of DataPoint, stores points as LineGraphSeries, graphs line
     public void add_line(String func){
         if(gtype.equals("Cartesian")){
+            offset.put(func, new double[]{0,0});
             //creates a series form the points
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
             //Assigns random color to series
@@ -277,6 +276,7 @@ public class GraphHandler {
             series.setCustomPaint(p);
             //puts series into the list
             functions.put(func, series);
+
             //adds the series to the graph
             graph.addSeries((LineGraphSeries<DataPoint>)functions.get(func));
         }
@@ -296,6 +296,7 @@ public class GraphHandler {
             graph.removeSeries((LineGraphSeries<DataPoint>)functions.get(func));
             //removes series from the list
             functions.remove(func);
+            offset.remove(func);
         }
         else{
             PolarFunc function = (PolarFunc)functions.get(func);
