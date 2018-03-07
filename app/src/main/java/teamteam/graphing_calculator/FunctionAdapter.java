@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
@@ -34,6 +35,11 @@ public class FunctionAdapter extends BaseAdapter {
     private class Input {
         String display = "";
         String complete = "";
+        Input() {}
+        Input(String function) { display = function; complete = function; }
+        Input(String display, String complete) {
+            this.display = display; this.complete = complete;
+        }
     }
     // Pair<Input, Complete>
     private ArrayList<Input> mFunctionList; // Holds User Input Strings
@@ -150,11 +156,6 @@ public class FunctionAdapter extends BaseAdapter {
                                 super.onAnimationEnd(animation);
                                 functionView.setVisibility(View.GONE);
 
-                                /** FIXME: Most of the time, if you delete the first function
-                                 *  FIXME: with multiple functions graphed, the first function
-                                 *  FIXME: will remain on the graph despite being correctly
-                                 *  FIXME: removed from both mFunctionList and graph.functions
-                                 */
                                 mContext.graph.remove_line(mFunctionList.get(position).complete);
                                 mFunctionList.remove(position);
 
@@ -183,6 +184,15 @@ public class FunctionAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public void setFunctions(ArrayList<String> functions) {
+        mFunctionList.clear();
+        for (int i = 0; i < functions.size(); ++i) {
+            mFunctionList.add(new Input(functions.get(i)));
+        }
+        while (mFunctionList.size() < 2) mFunctionList.add(new Input());
+        notifyDataSetChanged();
+    }
+
     public ArrayList<String> getFunctions() {
         ArrayList<String> completeFunctions = new ArrayList<>();
         for (int i = 0; i < mFunctionList.size(); ++i) {
@@ -190,4 +200,5 @@ public class FunctionAdapter extends BaseAdapter {
         }
         return completeFunctions;
     }
+
 }

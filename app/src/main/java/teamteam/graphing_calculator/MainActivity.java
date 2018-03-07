@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationView.OnNavigationItemSelectedListener nav_listener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
                 onNavigationItemSelectedListener(menuItem);
                 mDrawerLayout.closeDrawers();
                 return true;
@@ -98,7 +99,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ListView functionListView = findViewById(R.id.function_list_view);
         functionListView.setAdapter(mFunctionAdapter);
 
-        // TODO: Add continuity for graph settings
+        if (mFunctionAdapter.mRegexInterpreter.mGraphType == RegexInterpreter.GraphType.POLAR) {
+            onClick(findViewById(R.id.switch_to_polar));
+        }
+        initFields();
     }
 
     @Override
@@ -192,6 +196,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void setFunctions(int resId) {
+        // Will probably kill run-time a bit
+        ArrayList<String> functions = new ArrayList<>();
+        switch (resId) {
+            case R.id.example_point_slope_form:
+                functions.add("3*x+2");
+                break;
+            case R.id.example_parabolic_curve:
+                functions.add("x^2");
+                break;
+            default:
+                return;
+        }
+        mFunctionAdapter.setFunctions(functions);
+        graph.setFunctions(functions);
+    }
+
     public void dynamicButtonAction(Intent data)  {
 
         boolean loginStatus;
@@ -265,18 +286,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(userStatusChangeIntent);
                 changeFlag = true;
                 return true;
-            case R.id.drawer_calculate_old:
+            /*case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
-                return true;
+                return true;*/
             case R.id.drawer_calculate:
                 startActivity(new Intent(MainActivity.this, BasicCalculator.class));
                 return true;
-            case R.id.drawer_customize_expression:
-                return true;
-            case R.id.drawer_function_template:
-                return true;
             default:
+                setFunctions(item.getItemId());
         }
 
         return false;

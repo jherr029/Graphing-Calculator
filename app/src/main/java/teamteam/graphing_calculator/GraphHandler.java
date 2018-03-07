@@ -8,6 +8,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -181,6 +182,15 @@ public class GraphHandler {
                 it.remove();
             }
             gtype = type;
+        }
+    }
+
+    public void setFunctions(ArrayList<String> new_functions) {
+        graph.removeAllSeries();
+        functions.clear();
+        while (!new_functions.isEmpty()) {
+            add_line(new_functions.get(0));
+            new_functions.remove(0);
         }
     }
 }
