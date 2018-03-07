@@ -1,6 +1,7 @@
 package teamteam.graphing_calculator;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.renderscript.ScriptGroup;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.lang.Math.*;
+import java.util.Random;
 
 
 public class GraphHandler {
@@ -131,6 +133,9 @@ public class GraphHandler {
         graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
+                if(!gtype.equals("Cartesian")){
+                    return false;
+                }
                 //position of touched point in terms of pixels
                 double[] touchpx = new double[]{ev.getX(),ev.getY()};
                 //if point is not on the graph, it is ignored
@@ -219,13 +224,13 @@ public class GraphHandler {
     private DataPoint[] gen_data (String func){
 
         //generates points from the function
-        DataPoint[] points = new DataPoint[inc];
-        func = func.replaceAll("pi",Double.toString(Math.PI));
+        DataPoint[] points;
+        func = func.replaceAll("π",Double.toString(Math.PI));
         func = func.replaceAll("e",Double.toString(Math.E));
 
         if(gtype.equals("Cartesian")) {
             double step = (double) Math.abs(max_x - min_x) / inc;
-
+            points = new DataPoint[inc];
             for (int i = 0; i < inc; i++) {
                 double x_val = min_x + (i * step);
                 String finalfunc = func.replaceAll("x", Double.toString(x_val));
@@ -235,15 +240,16 @@ public class GraphHandler {
             }
         }
         else{
-            //int inc = 50
-            String theta = "Θ";
-            double step = (2 * Math.PI) / inc;
+            int rot = 2;
+            points = new DataPoint[rot * inc];
+            String theta = "θ";
+            double step = (2 * rot * Math.PI) / (inc * rot);
             //x = r * cos(theta)
             String xfunc = "(" + func + ") * cos(" + theta + ")";
             //y = r * sin(theta)
             String yfunc = "(" + func + ") * sin(" + theta + ")";
 
-            for(int i = 0; i < inc; i++){
+            for(int i = 0; i < (inc * rot); i++){
                 Double[] x_val = new Double[]{0.0};
                 Double[] y_val = new Double[]{0.0};
                 parser.Prefix_Evaluation(xfunc.replaceAll(theta, Double.toString(i * step)),
@@ -263,6 +269,12 @@ public class GraphHandler {
         if(gtype.equals("Cartesian")){
             //creates a series form the points
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
+            //Assigns random color to series
+            Paint p = new Paint();
+            Random r = new Random();
+            p.setARGB(255,r.nextInt(255),r.nextInt(255),r.nextInt(255));
+            p.setStrokeWidth(5);
+            series.setCustomPaint(p);
             //puts series into the list
             functions.put(func, series);
             //adds the series to the graph
