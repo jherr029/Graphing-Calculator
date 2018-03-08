@@ -71,12 +71,15 @@ public class BasicCalculatorContents {
     }
 
     private void calculateResult() {
-        String fStr = usrInput.replaceAll("√", "sqrt")
-                              .replaceAll("π", Double.toString(Math.PI))
-                              .replaceAll("e", Double.toString(Math.E));
-        if (validator.isValidFunction(fStr) && (new ExpressionEvaluation()).Prefix_Evaluation(fStr, calcResult2)) {
-            calcResult = calcResult2[0];
-            dispResult = true;
+        String fStr = usrInput.replaceAll("√", "sqrt");
+
+        if (validator.isValidFunction(fStr)) {
+            fStr = fStr.replaceAll("π", Double.toString(Math.PI))
+                        .replaceAll("e", Double.toString(Math.E));
+            if ((new ExpressionEvaluation()).Prefix_Evaluation(fStr, calcResult2)) {
+                calcResult = calcResult2[0];
+                dispResult = true;
+            }
         }
         else {
             dispError = true;
@@ -187,6 +190,12 @@ public class BasicCalculatorContents {
     public String delete() {
         dispError = false;
         if (usrInputArray.size() > 0) {
+            if (usrInputArray.get(usrInputArray.size() - 1).contains(")")) {
+                unclosedParens += 1;
+            }
+            else if (usrInputArray.get(usrInputArray.size() - 1).contains("(")) {
+                unclosedParens -= 1;
+            }
             usrInputArray.remove(usrInputArray.size() - 1);
         }
 
@@ -199,6 +208,7 @@ public class BasicCalculatorContents {
         usrInputArray.clear();
 
         dispResult = false;
+        unclosedParens = 0;
 
         InputArrayToString();
     }
