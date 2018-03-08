@@ -456,6 +456,7 @@ class GraphHandler {
             p.setARGB(255,r.nextInt(255),r.nextInt(255),r.nextInt(255));
             p.setStrokeWidth(5);
             func.setCustomPaint(p);
+//            colors.put(function, p);
         }
         else {
             func.setCustomPaint(color);
