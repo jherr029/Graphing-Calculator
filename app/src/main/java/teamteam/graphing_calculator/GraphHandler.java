@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class GraphHandler {
+class GraphHandler {
 
     private Activity mainact;
     private GraphView graph;
@@ -33,10 +33,10 @@ public class GraphHandler {
     private int inc = 90;
 
     //min and max bounds of the graph
-    public int min_x = -30;
-    public int max_x = 30;
-    public int min_y = -45;
-    public int max_y = 45;
+    int min_x = -30;
+    int max_x = 30;
+    int min_y = -45;
+    int max_y = 45;
     //Graph type: Cartesian or Polar
     private String gtype = "Cartesian";
 
@@ -112,7 +112,7 @@ public class GraphHandler {
         return series;
     }
 
-    public GraphHandler (Activity act) {
+    GraphHandler (Activity act) {
 
         mainact = act;
         graph = mainact.findViewById(R.id.graph);
@@ -257,8 +257,9 @@ public class GraphHandler {
 
     //takes in a function in whatever format we're using, sends it to the point generator,
     //gets back array of DataPoint, stores points as LineGraphSeries, graphs line
-    public void add_line(String func){
+    void add_line(String func){
         if(gtype.equals("Cartesian")){
+            offset.put(func, new double[]{0,0});
             //creates a series form the points
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
             //Assigns random color to series
@@ -282,7 +283,24 @@ public class GraphHandler {
     }
 
     //takes in a function and removes it from the graph
-    public void remove_line(String func){
+    void remove_line(String func){
+        if (func.isEmpty() || functions.isEmpty()) return;
+        if(gtype.equals("Cartesian")){
+            //removes series from the graph and redraws it
+            graph.removeSeries((LineGraphSeries<DataPoint>)functions.get(func));
+            //removes series from the list
+            functions.remove(func);
+            offset.remove(func);
+        }
+        else{
+            PolarFunc function = (PolarFunc)functions.get(func);
+            if (function == null) return;
+            function.remove_from_graph(graph);
+            functions.remove(func);
+        }
+    }
+
+    void edit_line(String func) {
         if (func.isEmpty() || functions.isEmpty()) return;
         if(gtype.equals("Cartesian")){
             //removes series from the graph and redraws it
@@ -300,7 +318,7 @@ public class GraphHandler {
     }
 
     //updates the boundaries of the graph and regenerates the lines
-    public void update_bounds(int minx, int maxx, int miny, int maxy){
+    private void update_bounds(int minx, int maxx, int miny, int maxy){
         //updates variables
         min_x = minx;
         min_y = miny;
@@ -325,7 +343,7 @@ public class GraphHandler {
 
     }
 
-    public void reset(ArrayList<String> functions, int nmaxx, int nminx, int nmaxy, int nminy){
+    void reset(ArrayList<String> functions, int nmaxx, int nminx, int nmaxy, int nminy){
         /*Iterator it = functions.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
@@ -341,7 +359,7 @@ public class GraphHandler {
 
     }
 
-    public void change_type(String type){
+    void change_type(String type){
         if(!gtype.equals(type)){
             Iterator it = functions.entrySet().iterator();
             while(it.hasNext()){
@@ -358,7 +376,7 @@ public class GraphHandler {
         }
     }
 
-    public void setFunctions(ArrayList<String> new_functions) {
+    void setFunctions(ArrayList<String> new_functions) {
         graph.removeAllSeries();
         functions.clear();
         while (!new_functions.isEmpty()) {
