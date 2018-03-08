@@ -52,6 +52,19 @@ public class GraphHandler {
     private int tbound = 20;
     private int bbound = 1670;
 
+    private void set_scrolling(boolean on){
+        if(on){
+            graph.getViewport().setScalable(true);
+            graph.getViewport().setScalableY(true);
+            System.out.println("SCALING ENABLED");
+        }
+        else{
+            graph.getViewport().setScalable(false);
+            graph.getViewport().setScalableY(false);
+            System.out.println("SCALING DISABLED");
+        }
+    }
+
     //converts a pixel position to a position on the graph.
     //assumes position is within the bounds of the graph.
     private double[] getgraphpos (double[] loc){
@@ -135,9 +148,8 @@ public class GraphHandler {
         graph.getViewport().setMinX(min_x);
         graph.getViewport().setMaxX(max_x);
 
-        // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
+        //zoom and scroll disabled initially
+        set_scrolling(false);
 
         graph.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -149,8 +161,9 @@ public class GraphHandler {
                 double[] touchpx = new double[]{ev.getX(),ev.getY()};
                 //if point is not on the graph, it is ignored
                 if(touchpx[0] < lbound || touchpx[0] > rbound || touchpx[1] < tbound || touchpx[1] > bbound){
-                    graph.getViewport().setScrollable(true);
-                    graph.getViewport().setScrollableY(true);
+                    if(!functions.isEmpty()){
+                        set_scrolling(true);
+                    }
                     touchedpt = new double[]{Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
                     touchedse = "";
                     return false;
@@ -176,8 +189,7 @@ public class GraphHandler {
                                 //if touched point is within sensitivity range of datapoint
                                 if(distance(ptpx,touchpx) < sens){
                                     //turn off scrolling
-                                    graph.getViewport().setScrollable(false);
-                                    graph.getViewport().setScrollableY(false);
+                                    set_scrolling(false);
                                     touchedpt = ptgr;
                                 }
                             }
@@ -187,8 +199,10 @@ public class GraphHandler {
                     //user releases a touch
                     case MotionEvent.ACTION_UP: {
                         //turn scrolling back on
-                        graph.getViewport().setScrollable(true);
-                        graph.getViewport().setScrollableY(true);
+                        if(!functions.isEmpty()){
+                            set_scrolling(true);
+                        }
+
                         //if a datapoint was touched previously
                         if(touchedpt[0] != Double.POSITIVE_INFINITY) {
                             //update line offset
@@ -205,8 +219,10 @@ public class GraphHandler {
                     }
                     //touch fails
                     case MotionEvent.ACTION_CANCEL: {
-                        graph.getViewport().setScrollable(true);
-                        graph.getViewport().setScrollableY(true);
+                        if(!functions.isEmpty()){
+                            set_scrolling(true);
+                        }
+
                         touchedpt = new double[]{Double.POSITIVE_INFINITY,Double.POSITIVE_INFINITY};
                         touchedse = "";
                         break;
@@ -285,7 +301,7 @@ public class GraphHandler {
             functions.put(func, series);
             series.add_to_graph(graph);
         }
-
+        set_scrolling(true);
     }
 
     //takes in a function and removes it from the graph
@@ -303,6 +319,9 @@ public class GraphHandler {
             if (function == null) return;
             function.remove_from_graph(graph);
             functions.remove(func);
+        }
+        if(functions.isEmpty()){
+            set_scrolling(false);
         }
     }
 

@@ -16,23 +16,23 @@ public class ExpressionEvaluation extends AppCompatActivity {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Prefix expression:");
+        //System.out.println("Prefix expression:");
 
         String expression = sc.nextLine();
         sc.close();
 
         Double[] result = new Double[]{0.0};
         if (Prefix_Evaluation(expression, result)) {
-            System.out.println("Results: " + result[0]);
+            //System.out.println("Results: " + result[0]);
         }
         else {
-            System.out.println("ERROR");
+            //System.out.println("ERROR");
         }
     }
 
     public static boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
-        System.out.println(expression);
+        //System.out.println(expression);
 
         int posFRP = -1;
         while ((posFRP = expression.indexOf(')')) != -1) {
@@ -43,7 +43,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
             }
             expression = expression.substring(0, posLLP) + subResult[0] + expression.substring(posFRP+1, expression.length());
         }
-        System.out.println("After: " + expression);
+        //System.out.println("After: " + expression);
         boolean check = false;
         do {
             check = false;
@@ -66,7 +66,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
         } while (check);
 
         // Check the first char is + or not
-        System.out.println("After2: " + expression);
+        //System.out.println("After2: " + expression);
         // Split expression by +, -, *, /
         Stack<Character> ops = new Stack<Character>();
         Stack<String> values = new Stack<String>();
@@ -83,14 +83,14 @@ public class ExpressionEvaluation extends AppCompatActivity {
         values.push(expression.substring(a));
 
         /*
-        System.out.println(expression + ":");
+        //System.out.println(expression + ":");
         while (!ops.empty()) {
             Character c = ops.pop();
-            System.out.println(expression + " - ops - " + c);
+            //System.out.println(expression + " - ops - " + c);
         }
         while (!values.empty()) {
             String s = values.pop();
-            System.out.println(expression + " - values - " + s);
+            //System.out.println(expression + " - values - " + s);
         }
         */
 
@@ -209,7 +209,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
             return false;
         }
         result[0] = Double.valueOf(values.pop());
-        System.out.println(expression + " : " + result[0]);
+        //System.out.println(expression + " : " + result[0]);
         return true;
     }
 }
