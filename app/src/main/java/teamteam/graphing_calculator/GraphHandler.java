@@ -23,6 +23,7 @@ class GraphHandler {
     private ExpressionEvaluation parser;
     private Map functions;
     private Map offset;
+    private Map colors;
     //position of the touched point in terms of graph coordinates
     private double[] touchedpt = new double[]{Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY};
     //the series containing the touched point
@@ -131,6 +132,7 @@ class GraphHandler {
         graph = mainact.findViewById(R.id.graph);
         functions = new HashMap();
         offset = new HashMap();
+        colors = new HashMap();
         parser = new ExpressionEvaluation();
 
         // set manual X bounds
@@ -284,9 +286,33 @@ class GraphHandler {
             p.setARGB(255,r.nextInt(255),r.nextInt(255),r.nextInt(255));
             p.setStrokeWidth(5);
             series.setCustomPaint(p);
+            colors.put(func, p);
             //puts series into the list
             functions.put(func, series);
 
+            //adds the series to the graph
+            graph.addSeries((LineGraphSeries<DataPoint>)functions.get(func));
+        }
+        else{
+            PolarFunc series = new PolarFunc(gen_data(func));
+            functions.put(func, series);
+            series.add_to_graph(graph);
+        }
+        set_scrolling(true);
+    }
+
+    // Overloaded to keep paint consistency
+    void add_line(String func, Paint paint){
+        if (paint == null) { add_line(func); return; }
+        if(gtype.equals("Cartesian")){
+            offset.put(func, new double[]{0,0});
+            //creates a series form the points
+            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
+            //Assigns passed color to series
+            series.setCustomPaint(paint);
+            //puts series into the list
+            functions.put(func, series);
+            colors.put(func, paint);
             //adds the series to the graph
             graph.addSeries((LineGraphSeries<DataPoint>)functions.get(func));
         }
@@ -307,32 +333,13 @@ class GraphHandler {
             //removes series from the list
             functions.remove(func);
             offset.remove(func);
+            colors.remove(func);
         }
         else{
             PolarFunc function = (PolarFunc)functions.get(func);
             if (function == null) return;
             function.remove_from_graph(graph);
             functions.remove(func);
-        }
-    }
-
-    void edit_line(String func) {
-        if (func.isEmpty() || functions.isEmpty()) return;
-        if(gtype.equals("Cartesian")){
-            //removes series from the graph and redraws it
-            graph.removeSeries((LineGraphSeries<DataPoint>)functions.get(func));
-            //removes series from the list
-            functions.remove(func);
-            offset.remove(func);
-        }
-        else{
-            PolarFunc function = (PolarFunc)functions.get(func);
-            if (function == null) return;
-            function.remove_from_graph(graph);
-            functions.remove(func);
-        }
-        if(functions.isEmpty()){
-            set_scrolling(false);
         }
     }
 
@@ -393,6 +400,10 @@ class GraphHandler {
             }
             gtype = type;
         }
+    }
+
+    Paint getColor(String func) {
+        return (Paint)colors.get(func);
     }
 
     void setFunctions(ArrayList<String> new_functions) {

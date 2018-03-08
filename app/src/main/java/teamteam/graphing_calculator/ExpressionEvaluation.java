@@ -32,6 +32,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
 
     public static boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
+        expression = expression.replaceAll("\\s+", "");
         //System.out.println(expression);
 
         int posFRP = -1;

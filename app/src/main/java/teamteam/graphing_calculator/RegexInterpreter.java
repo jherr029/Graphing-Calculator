@@ -44,10 +44,10 @@ public class RegexInterpreter {
 
     public boolean isValidFunction(String function) {
 
-        Log.d(TAG, "*** New Function : " + function + " ***");
-
         // Remove all whitespace in function
         mFunction = function.replaceAll("\\s+", "");
+
+        Log.d(TAG, "@@@ New Function : " + mFunction + " @@@");
 
         switch (mGraphType) {
             case CARTESIAN: term_regex = cartesian_regex; break;

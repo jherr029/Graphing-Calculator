@@ -3,9 +3,11 @@ package teamteam.graphing_calculator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,10 +70,14 @@ public class FunctionAdapter extends BaseAdapter {
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
+                Paint prevPaint = null;
                 // graph the function, remove any error icons
-                if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
+                if (!prevFunction.isEmpty()) {
+                    prevPaint = mContext.graph.getColor(prevFunction);
+                    mContext.graph.remove_line(prevFunction);
+                }
                 mFunctionList.get(mIndex).complete = s.toString();
-                mContext.graph.add_line(s.toString());
+                mContext.graph.add_line(s.toString(), prevPaint);
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else mErrorIcon.setVisibility(View.VISIBLE);
@@ -177,14 +183,14 @@ public class FunctionAdapter extends BaseAdapter {
         return functionView;
     }
 
-    public void changeGraphType(RegexInterpreter.GraphType graphType) {
+    void changeGraphType(RegexInterpreter.GraphType graphType) {
         mRegexInterpreter.changeGraphType(graphType);
         mFunctionList.clear();
         while (mFunctionList.size() < 2) mFunctionList.add(new Input());
         notifyDataSetChanged();
     }
 
-    public void setFunctions(ArrayList<String> functions) {
+    void setFunctions(ArrayList<String> functions) {
         mFunctionList.clear();
         for (int i = 0; i < functions.size(); ++i) {
             mFunctionList.add(new Input(functions.get(i)));
@@ -193,7 +199,7 @@ public class FunctionAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public ArrayList<String> getFunctions() {
+    ArrayList<String> getFunctions() {
         ArrayList<String> completeFunctions = new ArrayList<>();
         for (int i = 0; i < mFunctionList.size(); ++i) {
             completeFunctions.add(mFunctionList.get(i).complete);
