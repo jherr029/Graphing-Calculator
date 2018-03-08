@@ -110,6 +110,34 @@ public class FunctionAdapter extends BaseAdapter {
         mRegexInterpreter = new RegexInterpreter(this);
     }
 
+    public ArrayList<MemoryFunction> getmFunctionList() {
+        ArrayList<MemoryFunction> ret = new ArrayList<>();
+
+        for (Input i : mFunctionList) {
+            ret.add(new MemoryFunction(i.display, i.complete));
+        }
+
+        return ret;
+    }
+
+    public void setmFunctionList(ArrayList<MemoryFunction> funcList) {
+        Log.d("FunctionAdapter", "setmFunctionList: " + funcList.size());
+        mFunctionList.clear();
+
+        for (MemoryFunction func : funcList) {
+            Input i = new Input();
+
+            i.display = func.getDisplay();
+            i.complete = func.getComplete();
+
+            mFunctionList.add(i);
+        }
+
+        mFunctionList.add(new Input());
+
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
         return mFunctionList.size();

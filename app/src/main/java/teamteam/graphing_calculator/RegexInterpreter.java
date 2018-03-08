@@ -137,7 +137,7 @@ public class RegexInterpreter {
                     break;
                 case TERM:
                     removeTerminal();
-                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]?")) {
+                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+([.][0-9]*)?")) {
                         if (top.buffer.matches(term_regex)) {
                             parser.pop(); // pop term
                             parser.push(new Production(Rule.OP));
