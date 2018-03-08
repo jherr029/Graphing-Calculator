@@ -34,10 +34,10 @@ class GraphHandler {
     private int inc = 90;
 
     //min and max bounds of the graph
-    int min_x = -10;
-    int max_x = 10;
-    int min_y = -15;
-    int max_y = 15;
+    float min_x = -10;
+    float max_x = 10;
+    float min_y = -15;
+    float max_y = 15;
     //Graph type: Cartesian or Polar
     private String gtype = "Cartesian";
 
@@ -346,7 +346,7 @@ class GraphHandler {
     }
 
     //updates the boundaries of the graph and regenerates the lines
-    private void update_bounds(int minx, int maxx, int miny, int maxy){
+    void update_bounds(float minx, float maxx, float miny, float maxy){
         //updates variables
         min_x = minx;
         min_y = miny;
@@ -371,22 +371,6 @@ class GraphHandler {
 
     }
 
-    void reset(){
-        /*Iterator it = functions.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            if(gtype.equals("Cartesian")){
-                graph.removeSeries((LineGraphSeries<DataPoint>)pair.getValue());
-            }
-            else{
-                ((PolarFunc)pair.getValue()).remove_from_graph(graph);
-            }
-            it.remove();
-        }*/
-        update_bounds(min_x, max_x, min_y, max_y);
-
-    }
-
     void change_type(String type){
         if(!gtype.equals(type)){
             Iterator it = functions.entrySet().iterator();
@@ -408,6 +392,10 @@ class GraphHandler {
         return (Paint)colors.get(func);
     }
 
+    GraphView getGraph() {
+        return graph;
+    }
+
     void setMode(boolean radians) { parser.setMode(radians); }
 
     void setFunctions(ArrayList<String> new_functions) {
@@ -417,5 +405,9 @@ class GraphHandler {
             add_line(new_functions.get(0));
             new_functions.remove(0);
         }
+    }
+
+    void redrawFunctions() {
+        update_bounds(min_x, max_x, min_y, max_y);
     }
 }

@@ -148,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.snap_to_origin:
                 // Non-functional
+                graph.update_bounds(-10, 10, -15, 15);
+                initFields();
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
@@ -175,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_selected);
                 graph.setMode(false);
-                graph.reset();
+                graph.redrawFunctions();
                 break;
             case R.id.use_radians:
                 // Switch to reading radians
@@ -184,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_flat);
                 graph.setMode(true);
-                graph.reset();
+                graph.redrawFunctions();
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -327,14 +329,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* Graph Stuff */
 
     /** Use this function to get Strings from user input fields
-     * @param id (e.g. R.id.func)
-     * @valid_ids func : top function field
-     *            func_2 : middle function field
-     *            func_3 : bottom function field
-     *            min_X
-     *            max_X
-     *            min_Y
-     *            max_Y
+     * @param resId (e.g. R.id.func)
      * @return string of what is in the edit text field, you
      *         may want to cast the min_X ... max_Y fields to
      *         int/double to use them properly.
@@ -357,8 +352,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        Float minx = Float.valueOf(nminx);
+        Float maxx = Float.valueOf(nmaxx);
+        Float miny = Float.valueOf(nminy);
+        Float maxy = Float.valueOf(nmaxy);
 
-        graph.reset();
+        if (minx >= maxx || miny >= maxy) return;
+
+        String xTitle = extractValue(R.id.x_axis_label);
+        String yTitle = extractValue(R.id.y_axis_label);
+        graph.getGraph().getGridLabelRenderer().setHorizontalAxisTitle(xTitle);
+        graph.getGraph().getGridLabelRenderer().setVerticalAxisTitle(yTitle);
+        graph.update_bounds(minx,maxx,miny,maxy);
 
         onClick(findViewById(R.id.open_settings));
     }

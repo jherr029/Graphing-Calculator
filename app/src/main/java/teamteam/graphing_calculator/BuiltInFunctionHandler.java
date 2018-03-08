@@ -200,7 +200,7 @@ class BuiltInFunctionHandler {
         }
     }
 
-    void changeGraph() {
+    private void changeGraph() {
         if (mFunctionBuffer.get(0).indexOf('x') == -1) {
             mContext.onClick(mContext.findViewById(R.id.switch_to_polar));
         }

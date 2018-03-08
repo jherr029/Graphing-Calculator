@@ -15,7 +15,9 @@
     <string name="expand_function_list">Expands Function List</string>
     <string name="collapse_function_list">Collapses Function List</string>
 
-    <string name="projector_mode">Projector Mode</string>
+    <string name="projector_mode">Graph Settings</string>
+    <string name="x_axis_label">X-Axis Label</string>
+    <string name="y_axis_label">Y-Axis Label</string>
     <string name="radians">Radians</string>
     <string name="degrees">Degrees</string>
 
