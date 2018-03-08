@@ -46,7 +46,11 @@ public class RegexInterpreter {
         }
     }
 
-    public RegexInterpreter(FunctionAdapter context) {
+    RegexInterpreter() {
+        mContext = null;
+    }
+
+    RegexInterpreter(FunctionAdapter context) {
         mContext = context;
     }
 
@@ -64,7 +68,7 @@ public class RegexInterpreter {
             default: return false;
         }
 
-        if (mContext.getFunctions().contains(function)) return false;
+        if (mContext != null && mContext.getFunctions().contains(function)) return false;
 
         // All we really have to check is if it passes an FSM
         return DFA();
