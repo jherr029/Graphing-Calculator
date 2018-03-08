@@ -2,6 +2,7 @@ package teamteam.graphing_calculator;
 
 import android.app.Activity;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
+
+import static android.content.ContentValues.TAG;
 
 
 class GraphHandler {
@@ -280,7 +283,7 @@ class GraphHandler {
     //gets back array of DataPoint, stores points as LineGraphSeries, graphs line
     void add_line(String func){
         if(gtype.equals("Cartesian")){
-            offset.put(func, new double[]{0,0});
+            if (offset.get(func) == null) offset.put(func, new double[]{0,0});
             //creates a series form the points
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
             //Assigns random color to series
@@ -308,7 +311,7 @@ class GraphHandler {
     void add_line(String func, Paint paint){
         if (paint == null) { add_line(func); return; }
         if(gtype.equals("Cartesian")){
-            offset.put(func, new double[]{0,0});
+            if (offset.get(func) == null) offset.put(func, new double[]{0,0});
             //creates a series form the points
             LineGraphSeries<DataPoint> series = new LineGraphSeries<>(gen_data(func));
             //Assigns passed color to series
@@ -329,6 +332,7 @@ class GraphHandler {
 
     //takes in a function and removes it from the graph
     void remove_line(String func){
+        Log.d(TAG, "Removing function: " + func);
         if (func.isEmpty() || functions.isEmpty()) return;
         if(gtype.equals("Cartesian")){
             //removes series from the graph and redraws it

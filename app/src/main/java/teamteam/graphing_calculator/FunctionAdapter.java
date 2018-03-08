@@ -46,7 +46,7 @@ public class FunctionAdapter extends BaseAdapter {
     // Pair<Input, Complete>
     private ArrayList<Input> mFunctionList; // Holds User Input Strings
 
-    public RegexInterpreter mRegexInterpreter;
+    RegexInterpreter mRegexInterpreter;
 
     // To listen for text input and graph updating.
     private class FunctionWatcher implements TextWatcher {
@@ -67,10 +67,20 @@ public class FunctionAdapter extends BaseAdapter {
         @Override
         public void afterTextChanged(Editable s) {
             String prevFunction = mFunctionList.get(mIndex).complete;
+            /* Log.d(TAG, "------------");
+            Log.d(TAG, "prevFunction: " + prevFunction);
+            Log.d(TAG, "newFunction: " + s.toString()); */
             if (s.toString().isEmpty()) {
                 mContext.graph.remove_line(prevFunction);
                 mErrorIcon.setVisibility(View.INVISIBLE);
                 mGraphIcon.setVisibility(View.INVISIBLE);
+            }
+            else if (prevFunction.equals(s.toString())) {
+                mContext.graph.highlight(s.toString());
+
+                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                mGraphIcon.setVisibility(View.VISIBLE);
+                mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
                 Paint prevPaint = mContext.graph.getColor(prevFunction);
@@ -97,7 +107,7 @@ public class FunctionAdapter extends BaseAdapter {
         mFunctionList = new ArrayList<>();
         mFunctionList.add(new Input()); mFunctionList.add(new Input());
         mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mRegexInterpreter = new RegexInterpreter();
+        mRegexInterpreter = new RegexInterpreter(this);
     }
 
     @Override

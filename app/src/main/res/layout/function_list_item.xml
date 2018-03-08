@@ -22,7 +22,7 @@
         android:padding="12dp"
         android:background="@android:color/transparent"
         android:fontFamily="@string/settings_math_font"
-        android:inputType="text"
+        android:inputType="textNoSuggestions"
         android:text="Function" />
     <ImageView
         android:id="@+id/error"
