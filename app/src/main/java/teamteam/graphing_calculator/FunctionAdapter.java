@@ -85,6 +85,7 @@ public class FunctionAdapter extends BaseAdapter {
                 if (paint != null) mGraphIcon.setBackgroundColor(paint.getColor());
                 else {
                     mContext.graph.setColor(s.toString(), null);
+                    mGraphIcon.setBackgroundColor(paint.getColor());
                 }
                 mGraphIcon.setVisibility(View.VISIBLE);
                 mErrorIcon.setVisibility(View.INVISIBLE);

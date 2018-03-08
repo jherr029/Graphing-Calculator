@@ -445,4 +445,20 @@ class GraphHandler {
     void redrawFunctions() {
         update_bounds(min_x, max_x, min_y, max_y);
     }
+
+    void setColor(String function, Paint color) {
+        LineGraphSeries<DataPoint> func = (LineGraphSeries<DataPoint>)functions.get(function);
+        if (func == null) return;
+        if (color == null) {
+            //Assigns random color to series
+            Paint p = new Paint();
+            Random r = new Random();
+            p.setARGB(255,r.nextInt(255),r.nextInt(255),r.nextInt(255));
+            p.setStrokeWidth(5);
+            func.setCustomPaint(p);
+        }
+        else {
+            func.setCustomPaint(color);
+        }
+    }
 }
