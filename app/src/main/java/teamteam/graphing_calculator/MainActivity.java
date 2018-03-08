@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private FunctionAdapter mFunctionAdapter;
 
+    private FirebaseController ctrl = FirebaseController.getInst();
+
     boolean changeFlag = false;
 
     public GraphHandler graph;
@@ -258,12 +260,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("DRAWER",  "Sign in pressed");
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
+                ctrl.connect();
                return true;
             case R.id.drawer_sign_out:
                 Log.d("DRAWER", "Sign out pressed");
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
                 changeFlag = true;
+                ctrl.disconnect();
                 return true;
             case R.id.drawer_calculate_old:
                 // Start Calculator Activity
@@ -275,6 +279,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.drawer_customize_expression:
                 return true;
             case R.id.drawer_function_template:
+                return true;
+            case R.id.drawer_upload:
+                if (!ctrl.Connected()) {
+                    ctrl.connect();
+                }
+                if (ctrl.Connected()) {
+                    ctrl.pushFunctions(mFunctionAdapter.getmFunctionList());
+                }
+                return true;
+            case R.id.drawer_fetch:
+                if (!ctrl.Connected()) {
+                    ctrl.connect();
+                }
+                if (ctrl.Connected()) {
+                    mFunctionAdapter.setmFunctionList(ctrl.getFuncs());
+                }
                 return true;
             default:
         }
@@ -290,6 +310,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkIfLoggedIn.putExtra("userStatusCheck", "checkUserStatus");
 
         startActivityForResult(checkIfLoggedIn, 100);
+
+        ctrl.connect();
 
         Log.d("MainActivity", "activity has already started");
 

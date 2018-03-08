@@ -1,14 +1,23 @@
 package teamteam.graphing_calculator;
 
+import android.annotation.TargetApi;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class BasicCalculator extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,14 +39,12 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
     private static final String COS = "cos(";
     private static final String TAN = "tan(";
 
-    private static final String ASIN = "asin(";
-    private static final String ACOS = "acos(";
-    private static final String ATAN = "atan(";
-
     private static final String DECIMAL = ".";
-    private static final String FACTORIAL = "!";
+    private static final String PI = "π";
 
     private static final String EQUALS = "=";
+
+    private static final String ERROR = "ERROR";
 
     private BasicCalculatorContents calculatorContents = BasicCalculatorContents.get();
 
@@ -45,6 +52,8 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
 
     private TextView txtEquation;
     private TextView txtResult;
+
+    private BottomSheetBehavior mBottomSheetBehavior;
 
     private void SetPortraitButtons() {
         Button btnClear = (Button) findViewById(R.id.btnClear);
@@ -91,7 +100,7 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
     }
 
     private void SetLandscapeButtons() {
-        Button btnFacotrial = (Button) findViewById(R.id.btnFactorial);
+        Button btnPI = (Button) findViewById(R.id.btnPI);
         Button btnSqrt = (Button) findViewById(R.id.btnSqrt);
         Button btnPow = (Button) findViewById(R.id.btnPow);
         Button btnClear = (Button) findViewById(R.id.btnClear);
@@ -105,9 +114,6 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
         Button btnEight = (Button) findViewById(R.id.btnEight);
         Button btnNine = (Button) findViewById(R.id.btnNine);
         Button btnMinus = (Button) findViewById(R.id.btnMinus);
-        Button btnArcsine = (Button) findViewById(R.id.btnArcsine);
-        Button btnArccosine = (Button) findViewById(R.id.btnArccosine);
-        Button btnArctangent = (Button) findViewById(R.id.btnArctangent);
         Button btnFour = (Button) findViewById(R.id.btnFour);
         Button btnFive = (Button) findViewById(R.id.btnFive);
         Button btnSix = (Button) findViewById(R.id.btnSix);
@@ -127,7 +133,7 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
         Button btnNegate = (Button) findViewById(R.id.btnNegate);
         Button btnEquals = (Button) findViewById(R.id.btnEquals);
 
-        btnFacotrial.setOnClickListener(this);
+        btnPI.setOnClickListener(this);
         btnSqrt.setOnClickListener(this);
         btnPow.setOnClickListener(this);
         btnClear.setOnClickListener(this);
@@ -141,9 +147,6 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
         btnEight.setOnClickListener(this);
         btnNine.setOnClickListener(this);
         btnMinus.setOnClickListener(this);
-        btnArcsine.setOnClickListener(this);
-        btnArccosine.setOnClickListener(this);
-        btnArctangent.setOnClickListener(this);
         btnFour.setOnClickListener(this);
         btnFive.setOnClickListener(this);
         btnSix.setOnClickListener(this);
@@ -172,6 +175,9 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
 
             case Configuration.ORIENTATION_LANDSCAPE:
                 SetLandscapeButtons();
+                mBottomSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.bottom_sheet));
+                mBottomSheetBehavior.setHideable(true);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                 break;
         }
     }
@@ -179,9 +185,8 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_basic_calculator);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         decimalFormat = new DecimalFormat("#.##########");
 
@@ -196,14 +201,85 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
             txtResult.setText("");
         }
 
+        if (!calculatorContents.Connected()) {
+            calculatorContents.connect();
+        }
+
         SetLayout(getResources().getConfiguration());
+    }
+
+    @TargetApi(24)
+    private void recallMemory() {
+        ArrayList<MemoryValue> memoryValues = calculatorContents.recallMemory();
+        memoryValues.sort(new Comparator<MemoryValue>() {
+            @Override
+            public int compare(MemoryValue o1, MemoryValue o2) {
+                return (int) (o1.getTimestamp() - o2.getTimestamp());
+            }
+        });
+        LinearLayout menu = (LinearLayout) findViewById(R.id.bottom_sheet_list);
+        menu.removeAllViews();
+
+        LinearLayout.LayoutParams btnParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Button btnClose = new Button(this);
+        btnClose.setLayoutParams(btnParams);
+        btnClose.setText("Close");
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
+
+        menu.addView(btnClose);
+
+        for (MemoryValue mv : memoryValues) {
+            LinearLayout.LayoutParams txtParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            txtParams.setMargins(12, 0, 12, 0);
+
+            TextView tvEquation = new TextView(this);
+            tvEquation.setText(mv.getEquation());
+            tvEquation.setTextSize(18);
+            tvEquation.setPadding(0, 10, 0, 0);
+            tvEquation.setLayoutParams(txtParams);
+
+            menu.addView(tvEquation);
+
+            TextView tvResult = new TextView(this);
+            tvResult.setText(decimalFormat.format(mv.getResult()));
+            tvResult.setTextSize(32);
+            tvResult.setPadding(0, 10, 0, 0);
+            tvResult.setGravity(Gravity.RIGHT);
+            tvResult.setClickable(true);
+            tvResult.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TextView me = (TextView) v;
+                    calculatorContents.addInput(me.getText().toString());
+                    txtEquation.setText(calculatorContents.getUsrInput());
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                }
+            });
+            tvResult.setLayoutParams(txtParams);
+
+            menu.addView(tvResult);
+
+            View divider = new View(this);
+            int dividerHeight = (int) getResources().getDisplayMetrics().density * 1;
+
+            divider.setBackgroundColor(Color.parseColor("#000000"));
+            divider.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dividerHeight));
+
+            menu.addView(divider);
+        }
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
-            case R.id.btnFactorial:
-                calculatorContents.addInput(FACTORIAL);
+            case R.id.btnPI:
+                calculatorContents.addInput(PI);
                 break;
             case R.id.btnSqrt:
                 calculatorContents.addInput(SQRT);
@@ -244,15 +320,6 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
             case R.id.btnMinus:
                 calculatorContents.addInput(SUB);
                 break;
-            case R.id.btnArcsine:
-                calculatorContents.addInput(ASIN);
-                break;
-            case R.id.btnArccosine:
-                calculatorContents.addInput(ACOS);
-                break;
-            case R.id.btnArctangent:
-                calculatorContents.addInput(ATAN);
-                break;
             case R.id.btnFour:
                 calculatorContents.addInput("4");
                 break;
@@ -287,9 +354,14 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
                 calculatorContents.addParens();
                 break;
             case R.id.btnMS:
+                calculatorContents.storeResult();
+                break;
             case R.id.btnMC:
+                calculatorContents.clearMemory();
+                break;
             case R.id.btnMR:
                 /* TODO add memory features */
+                recallMemory();
                 break;
             case R.id.btnZero:
                 calculatorContents.addInput("0");
@@ -313,6 +385,9 @@ public class BasicCalculator extends AppCompatActivity implements View.OnClickLi
         txtEquation.setText(calculatorContents.getUsrInput());
         if (calculatorContents.bDispResult()) {
             txtResult.setText(EQUALS + decimalFormat.format(calculatorContents.getCalcResult()));
+        }
+        else if (calculatorContents.bDispError()) {
+            txtResult.setText(ERROR);
         }
         else {
             txtResult.setText("");

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/calc_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -204,14 +211,14 @@
         android:text="√" />
 
     <Button
-        android:id="@+id/btnFactorial"
+        android:id="@+id/btnPI"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_column="0"
         android:layout_columnWeight="1"
         android:layout_row="3"
         android:layout_rowWeight="1"
-        android:text="!" />
+        android:text="π" />
 
     <Button
         android:id="@+id/btnMC"
@@ -389,33 +396,32 @@
         android:text="=" />
 
     <Button
-        android:id="@+id/btnArcsine"
+        android:id="@+id/btnFiller"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_column="0"
         android:layout_columnWeight="1"
+        android:layout_columnSpan="3"
         android:layout_row="5"
         android:layout_rowWeight="1"
-        android:text="arcsin" />
-
-    <Button
-        android:id="@+id/btnArccosine"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_column="1"
-        android:layout_columnWeight="1"
-        android:layout_row="5"
-        android:layout_rowWeight="1"
-        android:text="arccos" />
-
-    <Button
-        android:id="@+id/btnArctangent"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_column="2"
-        android:layout_columnWeight="1"
-        android:layout_row="5"
-        android:layout_rowWeight="1"
-        android:text="arctan" />
-
+        android:clickable="false"
+        android:text="" />
 </GridLayout>
+
+<android.support.v4.widget.NestedScrollView
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:background="@android:color/white"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        >
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="24dp"></LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>
