@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,13 +100,18 @@ public class FunctionAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
+
+        Log.d("Keyboard000", "parent: " + parent.getClass());
+
         // Get view for row item
         final View functionView = mInflater.inflate(R.layout.function_list_item, parent, false);
 
         // Get Refs
         TextView functionIndex = functionView.findViewById(R.id.function_index);
-        final EditText functionText = functionView.findViewById(R.id.func);
+        final EditText functionText = functionView.findViewById(R.id.func);;
         ImageButton functionDelete = functionView.findViewById(R.id.function_delete);
+
+        Log.d("keyboard000", "EditText: " + functionText.getClass());
 
         // Set function label
         functionIndex.setText(String.valueOf(position+1));

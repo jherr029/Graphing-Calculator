@@ -1,5 +1,6 @@
 package teamteam.graphing_calculator;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -9,17 +10,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -85,11 +89,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFunctionAdapter = new FunctionAdapter(this);
 
 //      MathKeyboard
-//      TODO MAYBE MODIFY
         mMathKeyboard = new MathKeyboard(this, R.id.keyboard_view, R.xml.keyboard_layout);
-        mMathKeyboard.registerEditText(R.id.func_1);
-        mMathKeyboard.registerEditText(R.id.func_2);
-        mMathKeyboard.registerEditText(R.id.func_3);
+//        mMathKeyboard.registerEditText(getCurrentFocus());
+        // TODO add a regular e
+
+//        View functionViewer = findViewById(R.id.function_list_item);
+
+        View testing = findViewById(R.id.function_list_view);
+        ViewGroup mViewGroup = (ViewGroup) findViewById(R.id.function_list_view);
+        FrameLayout mFrameLayout = (FrameLayout) mViewGroup.getChildAt(0);
+//        EditText xEditText = (EditText) mFrameLayout.getChildAt(1);
+//        mMathKeyboard.registerEditText(xEditText.findFocus());
+
+        LayoutInflater mInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View functionView = mInflater.inflate(R.layout.function_list_item, mViewGroup, false);
+        EditText mEditText = functionView.findViewById(R.id.func);
+
+        Log.d("keyboard", "ListView: " + testing.getClass());
+        Log.d("keyboard", "ViewGroup " + mViewGroup);
+        Log.d("keyboard", "FrameLayout: " + mFrameLayout);
+        Log.d("keyboard", "EditText: " + mEditText);
+
+
+        mMathKeyboard.registerEditText(mEditText);
 //      End of keyboard
 
         //Initialize graph handler
@@ -145,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+
+        Log.d("keyboard", "is keyboard visible: " + mMathKeyboard.isKeyboardVisible());
+
         switch (view.getId()) {
             case R.id.open_nav:
                 if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {

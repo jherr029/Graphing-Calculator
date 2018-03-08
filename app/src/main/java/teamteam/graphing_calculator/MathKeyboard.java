@@ -266,15 +266,26 @@ public class MathKeyboard {
         mKeyboardView.setEnabled(false);
     }
 
-    public void registerEditText(int resid) {
+    public void registerEditText(View resid) {
 
-        Log.d(tagKeyboard,"registerEditText");
+        Log.d(tagKeyboard,"registerEditText() function");
 
-        final EditText editText = (EditText) mHostActivity.findViewById(resid);
+        Log.d(tagKeyboard, "registerEditText-resid: " + resid);
+
+//        final EditText editText = (EditText) mHostActivity.findViewById(resid);
+        final EditText editText = (EditText) resid;
+
+        if (editText == null)
+            Log.d(tagKeyboard, "editText is null");
+        else
+            Log.d(tagKeyboard,"editText--> " + editText );
 
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+
+                Log.d(tagKeyboard, "onFocusChange");
+
                if (hasFocus)
                    showKeyboard(v);
                else
