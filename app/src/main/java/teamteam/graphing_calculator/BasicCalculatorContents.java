@@ -71,7 +71,9 @@ public class BasicCalculatorContents {
     }
 
     private void calculateResult() {
-        String fStr = usrInput.replaceAll("√", "sqrt");
+        String fStr = usrInput.replaceAll("√", "sqrt")
+                              .replaceAll("π", Double.toString(Math.PI))
+                              .replaceAll("e", Double.toString(Math.E));
         if (validator.isValidFunction(fStr) && (new ExpressionEvaluation()).Prefix_Evaluation(fStr, calcResult2)) {
             calcResult = calcResult2[0];
             dispResult = true;
