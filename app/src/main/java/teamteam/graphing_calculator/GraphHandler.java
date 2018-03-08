@@ -234,11 +234,13 @@ class GraphHandler {
 
         //generates points from the function
         DataPoint[] points;
+        String funcStr = func;
+        func = func.replaceAll("\\s+", "");
         func = func.replaceAll("π",Double.toString(Math.PI));
         func = func.replaceAll("e",Double.toString(Math.E));
 
         if(gtype.equals("Cartesian")) {
-            double[] off = (double[]) offset.get(func);
+            double[] off = (double[]) offset.get(funcStr);
             double step = (double) Math.abs(max_x - min_x) / inc;
             points = new DataPoint[inc];
             for (int i = 0; i < inc; i++) {
@@ -369,7 +371,7 @@ class GraphHandler {
 
     }
 
-    void reset(ArrayList<String> functions, int nmaxx, int nminx, int nmaxy, int nminy){
+    void reset(){
         /*Iterator it = functions.entrySet().iterator();
         while(it.hasNext()){
             Map.Entry pair = (Map.Entry)it.next();
@@ -381,7 +383,7 @@ class GraphHandler {
             }
             it.remove();
         }*/
-        update_bounds(nminx, nmaxx, nminy, nmaxy);
+        update_bounds(min_x, max_x, min_y, max_y);
 
     }
 
@@ -405,6 +407,8 @@ class GraphHandler {
     Paint getColor(String func) {
         return (Paint)colors.get(func);
     }
+
+    void setMode(boolean radians) { parser.setMode(radians); }
 
     void setFunctions(ArrayList<String> new_functions) {
         graph.removeAllSeries();

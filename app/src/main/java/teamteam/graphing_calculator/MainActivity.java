@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         R.drawable.soft_rectangle_background_button_flat);
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_selected);
+                graph.setMode(false);
+                graph.reset();
                 break;
             case R.id.use_radians:
                 // Switch to reading radians
@@ -181,6 +183,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         R.drawable.soft_rectangle_background_button_selected);
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_flat);
+                graph.setMode(true);
+                graph.reset();
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -354,12 +358,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        graph.reset(mFunctionAdapter.getFunctions(),
-                    Integer.parseInt(nmaxx),
-                    Integer.parseInt(nminx),
-                    Integer.parseInt(nmaxy),
-                    Integer.parseInt(nminy)
-        );
+        graph.reset();
 
         onClick(findViewById(R.id.open_settings));
     }

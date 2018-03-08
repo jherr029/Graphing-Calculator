@@ -8,13 +8,15 @@ import java.util.Stack;
 
 public class ExpressionEvaluation extends AppCompatActivity {
 
+    private boolean radians = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expression_evaluation);
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         //System.out.println("Prefix expression:");
 
@@ -30,9 +32,8 @@ public class ExpressionEvaluation extends AppCompatActivity {
         }
     }
 
-    public static boolean Prefix_Evaluation(String expression, Double[] result) {
+    public boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
-        expression = expression.replaceAll("\\s+", "");
         //System.out.println(expression);
 
         int posFRP = -1;
@@ -103,17 +104,17 @@ public class ExpressionEvaluation extends AppCompatActivity {
             int b = -1;
             // Radian
             if ((b = temp_value.indexOf("sin")) != -1) {
-                temp_values.push(""+Math.sin(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.sin(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("cos")) != -1) {
-                temp_values.push(""+Math.cos(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.cos(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("tan")) != -1) {
-                temp_values.push(""+Math.tan(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.tan(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("cot")) != -1) {
                 // 1 / tan
-                temp_values.push(""+(1/Math.tan(Double.valueOf(temp_value.substring(b+3)))));
+                temp_values.push(""+(1/Math.tan(convertValue(Double.valueOf(temp_value.substring(b+3))))));
             }
             else if ((b = temp_value.indexOf('^')) != -1) {
                 temp_values.push(""+Math.pow(Double.valueOf(temp_value.substring(0, b)), Double.valueOf(temp_value.substring(b+1))));
@@ -212,5 +213,15 @@ public class ExpressionEvaluation extends AppCompatActivity {
         result[0] = Double.valueOf(values.pop());
         //System.out.println(expression + " : " + result[0]);
         return true;
+    }
+
+    public void setMode(boolean radians) {
+        this.radians = radians;
+    }
+
+    private double convertValue(double x) {
+        if (radians) return x;
+        // else x is in degrees, convert to radians
+        return x/(Math.PI*180);
     }
 }
