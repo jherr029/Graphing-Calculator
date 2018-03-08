@@ -111,8 +111,12 @@ public class FunctionAdapter extends BaseAdapter {
     }
 
     public void setmFunctionList(ArrayList<MemoryFunction> funcList) {
-        Log.d("FunctionAdapter", "setmFunctionList: " + funcList.size());
+        for (Input i : mFunctionList) {
+            mContext.graph.remove_line(i.complete);
+        }
         mFunctionList.clear();
+
+        notifyDataSetChanged();
 
         for (MemoryFunction func : funcList) {
             Input i = new Input();
