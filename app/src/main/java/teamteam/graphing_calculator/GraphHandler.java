@@ -252,7 +252,8 @@ class GraphHandler {
             }
         }
         else{
-            int rot = 2;
+            Double d = (Math.ceil((double)(Math.max(Math.abs(min_x),Math.abs(max_x)))/(2*Math.PI)));
+            int rot = d.intValue();
             points = new DataPoint[rot * inc];
             String theta = "θ";
             double step = (2 * rot * Math.PI) / (inc * rot);
@@ -343,6 +344,9 @@ class GraphHandler {
             function.remove_from_graph(graph);
             functions.remove(func);
         }
+        if(functions.isEmpty()){
+            set_scrolling(false);
+        }
     }
 
     //updates the boundaries of the graph and regenerates the lines
@@ -369,9 +373,19 @@ class GraphHandler {
             }
         }
 
+        else{
+            Iterator it = functions.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry pair = (Map.Entry)it.next();
+                ((PolarFunc)pair.getValue()).remove_from_graph(graph);
+                PolarFunc p = new PolarFunc(gen_data((String)pair.getKey()));
+                functions.replace(pair.getKey(),p);
+                ((PolarFunc)functions.get(pair.getKey())).add_to_graph(graph);
+            }
+        }
     }
 
-    void change_type(String type){
+    public void change_type(String type){
         if(!gtype.equals(type)){
             Iterator it = functions.entrySet().iterator();
             while(it.hasNext()){
