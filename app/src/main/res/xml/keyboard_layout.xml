@@ -38,10 +38,11 @@
     </Row>
 
     <Row android:keyWidth="9%p">
-        <Key android:codes="60004" android:keyLabel="√" android:keyEdgeFlags="left" />
+        <Key android:codes="60004" android:keyLabel="√" android:keyEdgeFlags="left"
+            android:keyOutputText="sqrt( "/>
         <Key android:codes="60005" android:keyLabel=","/>
         <Key android:codes="600020" android:keyLabel="e"/>
-        <Key android:codes="600021" android:keyLabel="𝜋"/>
+        <Key android:codes="600021" android:keyLabel="π"/>
 
         <Key android:codes="49" android:keyLabel="1" android:horizontalGap="5%p"/>
         <Key android:codes="50" android:keyLabel="2" />
@@ -65,7 +66,7 @@
         <Key android:codes="61" android:keyLabel="=" />
         <Key android:codes="43" android:keyLabel="+" />
 
-        <Key android:codes="55006" android:keyIcon="@drawable/sym_keyboard_return"
+        <Key android:codes="-3" android:keyLabel="hide kb"
             android:keyEdgeFlags="right" android:keyWidth="18%p"
             android:horizontalGap="5%p"/>
     </Row>

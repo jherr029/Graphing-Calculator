@@ -15,15 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "946245378625-hjhad70q9sp4kk4vpk7td5434n4canp7.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "teamteam.graphing_calculator",
-            "certificate_hash": "d3d88def2a3b0b72265abe056db26c0b006bb804"
-          }
+          "client_id": "946245378625-f8o7o6eihvsnbcev7vujis60bdte4r9a.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
-          "client_id": "946245378625-bhsg6mtcg8efd024ocq0qu1fjomihbej.apps.googleusercontent.com",
+          "client_id": "946245378625-5d7r4resab8ib8sj5dnbg02j3jv1v6re.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "teamteam.graphing_calculator",
@@ -31,8 +27,12 @@
           }
         },
         {
-          "client_id": "946245378625-3h53bro4c2av9pnftif8r275t4hblb6r.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "946245378625-m1ds24v3bc33fdg0l47b97215numormo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "teamteam.graphing_calculator",
+            "certificate_hash": "d3d88def2a3b0b72265abe056db26c0b006bb804"
+          }
         }
       ],
       "api_key": [
@@ -48,7 +48,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "946245378625-3h53bro4c2av9pnftif8r275t4hblb6r.apps.googleusercontent.com",
+              "client_id": "946245378625-f8o7o6eihvsnbcev7vujis60bdte4r9a.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -131,7 +131,7 @@ public class MathKeyboard {
 //                    functionStack.push('^');
 //                }
             } else if (primaryCode == CodeSquareRt) {
-                editable.insert(start, "√");
+                //editable.insert(start, "√");
             } else if (primaryCode == CodeEu) {
                 editable.insert(start,"e" );
             } else if (primaryCode == CodePi) {

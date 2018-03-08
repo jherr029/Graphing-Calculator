@@ -81,7 +81,11 @@ public class FunctionAdapter extends BaseAdapter {
             else if (prevFunction.equals(s.toString())) {
                 mContext.graph.highlight(s.toString());
 
-                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                Paint paint = mContext.graph.getColor(s.toString());
+                if (paint != null) mGraphIcon.setBackgroundColor(paint.getColor());
+                else {
+                    mContext.graph.setColor(s.toString(), null);
+                }
                 mGraphIcon.setVisibility(View.VISIBLE);
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }

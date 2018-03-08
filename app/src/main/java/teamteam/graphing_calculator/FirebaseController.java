@@ -219,9 +219,7 @@ public class FirebaseController {
         funcCel = funcRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("FirebaseController", "connect: funcCel: onChildAdded: new data...");
                 if (!funcs.containsKey(dataSnapshot.getKey())) {
-                    Log.d("FirebaseController", "connect: funcCel: onChildAdded: " + dataSnapshot.toString());
                     funcs.put(dataSnapshot.getKey(), dataSnapshot.getValue(MemoryFunction.class));
                 }
             }
@@ -233,7 +231,7 @@ public class FirebaseController {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                funcs.remove(dataSnapshot.getKey());
             }
 
             @Override
