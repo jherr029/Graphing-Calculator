@@ -3,6 +3,7 @@ package teamteam.graphing_calculator;
 import android.app.Activity;
 import android.inputmethodservice.KeyboardView;
 import android.inputmethodservice.KeyboardView.OnKeyboardActionListener;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.util.Log;
@@ -226,6 +227,11 @@ public class MathKeyboard {
     }
 
     public void showKeyboard(View v) {
+        View screen = mHostActivity.findViewById(R.id.main_screen);
+        screen.animate()
+                .translationY(-mKeyboardView.getHeight())
+                .setDuration(500);
+
         mKeyboardView.setVisibility(View.VISIBLE);
         mKeyboardView.setEnabled(true);
 
@@ -236,6 +242,11 @@ public class MathKeyboard {
     }
 
     public void hideKeyboard() {
+        View screen = mHostActivity.findViewById(R.id.main_screen);
+        screen.animate()
+                .translationY(mKeyboardView.getHeight())
+                .setDuration(500);
+
         mKeyboardView.setVisibility(View.GONE);
         mKeyboardView.setEnabled(false);
     }
