@@ -1,8 +1,17 @@
 package teamteam.graphing_calculator;
 
+import android.util.Log;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -12,17 +21,34 @@ import java.util.Random;
 public class BasicCalculatorContents {
     private static BasicCalculatorContents inst = new BasicCalculatorContents();
 
-    private List<String> usrInputArray = new ArrayList<>();
+    private ArrayList<String> usrInputArray = new ArrayList<>();
 
     private String usrInput = "";
     private double calcResult;
     private Boolean dispResult = false;
+    private Boolean dispError = false;
     private Boolean newInput = true;
+    private Double[] calcResult2 = new Double[1];
+
+    private ArrayList<MemoryValue> memoryValues = new ArrayList<>();
+    private Map<String, MemoryValue> userMemoryValues = new HashMap<>();
 
     private int unclosedParens = 0;
 
+    private RegexInterpreter validator = new RegexInterpreter();
+
+    private FirebaseController ctrl = FirebaseController.getInst();
+
     public static synchronized BasicCalculatorContents get() {
         return inst;
+    }
+
+    public boolean Connected() {
+        return ctrl.Connected();
+    }
+
+    public void connect() {
+        ctrl.connect();
     }
 
     private void InputArrayToString() {
@@ -35,12 +61,52 @@ public class BasicCalculatorContents {
         }
     }
 
+    private void addToMemory(String equation, double result) {
+        if (Connected()) {
+            ctrl.pushMemoryValue(new MemoryValue(equation, result));
+        }
+        else {
+            memoryValues.add(new MemoryValue(equation, result));
+        }
+    }
+
     private void calculateResult() {
-        Random r = new Random();
+        String fStr = usrInput.replaceAll("√", "sqrt")
+                              .replaceAll("π", Double.toString(Math.PI))
+                              .replaceAll("e", Double.toString(Math.E));
+        if (validator.isValidFunction(fStr) && (new ExpressionEvaluation()).Prefix_Evaluation(fStr, calcResult2)) {
+            calcResult = calcResult2[0];
+            dispResult = true;
+        }
+        else {
+            dispError = true;
+        }
+    }
 
-        calcResult = r.nextDouble();
+    public void storeResult() {
+        if (!bDispResult()) {
+            return;
+        }
 
-        dispResult = true;
+        addToMemory(usrInput, calcResult);
+    }
+
+    public ArrayList<MemoryValue> recallMemory() {
+        if (Connected()) {
+            userMemoryValues = ctrl.getVals();
+
+            for (MemoryValue mv : userMemoryValues.values()) {
+                Log.d("BasicCalculatorContents", "recallMemory: " + mv.stringify());
+            }
+
+            return new ArrayList<>(ctrl.getVals().values());
+        }
+
+        return memoryValues;
+    }
+
+    public void clearMemory() {
+        ctrl.clearMemoryValues();
     }
 
     public String getUsrInput() {
@@ -55,11 +121,16 @@ public class BasicCalculatorContents {
         return dispResult;
     }
 
+    public Boolean bDispError() {
+        return dispError;
+    }
+
     public String addInput(String input) {
         if (newInput) {
             clear();
             newInput = false;
         }
+        dispError = false;
 
         if (input.charAt(input.length() - 1) == '(') {
             unclosedParens += 1;
@@ -75,6 +146,11 @@ public class BasicCalculatorContents {
     }
 
     public void addParens() {
+        if (usrInput.length() == 0) {
+            addInput("(");
+            return;
+        }
+
         char lastChar = usrInput.charAt(usrInput.length() - 1);
 
         switch (lastChar) {
@@ -88,7 +164,7 @@ public class BasicCalculatorContents {
             case '7':
             case '8':
             case '9':
-            case '!':
+            case 'π':
                 if (unclosedParens > 0) {
                     addInput(")");
                 }
@@ -109,7 +185,10 @@ public class BasicCalculatorContents {
     }
 
     public String delete() {
-        usrInputArray.remove(usrInputArray.size() - 1);
+        dispError = false;
+        if (usrInputArray.size() > 0) {
+            usrInputArray.remove(usrInputArray.size() - 1);
+        }
 
         InputArrayToString();
 
@@ -127,6 +206,6 @@ public class BasicCalculatorContents {
     public void equals() {
         calculateResult();
 
-        newInput = true;
+        newInput = dispResult;
     }
 }

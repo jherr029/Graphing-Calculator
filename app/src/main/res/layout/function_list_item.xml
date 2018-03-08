@@ -11,7 +11,7 @@
         android:padding="2dp"
         android:layout_width="48dp"
         android:layout_height="match_parent"
-        android:background="@drawable/rectangle_background"
+        android:background="@drawable/rectangle_background_flat"
         android:text="#" />
     <EditText
         android:id="@+id/func"
@@ -21,7 +21,8 @@
         android:layout_marginStart="32dp"
         android:padding="12dp"
         android:background="@android:color/transparent"
-        android:inputType="text"
+        android:fontFamily="@string/settings_math_font"
+        android:inputType="textNoSuggestions"
         android:text="Function" />
     <ImageView
         android:id="@+id/error"
@@ -31,6 +32,15 @@
         android:layout_gravity="center_vertical|start"
         android:visibility="invisible"
         android:src="@drawable/ic_error_black_24dp" />
+    <ImageView
+        android:id="@+id/graph_color"
+        android:layout_marginStart="12dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/rectangle_background_flat"
+        android:visibility="invisible"
+        android:src="@drawable/ic_multiline_chart_black_24dp" />
     <ImageButton
         android:id="@+id/function_delete"
         android:layout_width="wrap_content"

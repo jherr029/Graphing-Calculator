@@ -21,29 +21,49 @@
             android:title="@string/fetch_graph" />
     </group>
 
-    <group android:id="@+id/graph_operations">
-        <item
-            android:id="@+id/drawer_scale_graph"
-            android:icon="@drawable/ic_aspect_ratio_black_24dp"
-            android:title="@string/scale_graph" />
-        <item
-            android:id="@+id/drawer_function_template"
-            android:icon="@drawable/ic_aspect_ratio_black_24dp"
-            android:title="@string/built_in_function" />
-        <item
-            android:id="@+id/drawer_customize_expression"
-            android:icon="@drawable/ic_aspect_ratio_black_24dp"
-            android:title="@string/customize_expression" />
-    </group>
-
     <group android:id="@+id/graph_tools">
-        <item
+        <!--<item
             android:id="@+id/drawer_calculate_old"
             android:icon="@drawable/ic_multiline_chart_black_24dp"
-            android:title="@string/calculate" />
+            android:title="@string/calculate" />-->
         <item
             android:id="@+id/drawer_calculate"
-            android:icon="@drawable/ic_multiline_chart_black_24dp"
+            android:icon="@drawable/ic_dialpad_black_24dp"
             android:title="@string/sci_calculate" />
     </group>
+
+    <item android:title="Examples" >
+        <menu>
+            <item
+                android:id="@+id/example_point_slope_form"
+                android:title="Lines: Slope Intercept Form" />
+            <item
+                android:id="@+id/example_parabolic_curve"
+                android:title="Polynomial: Parabolic Curve" />
+            <item
+                android:id="@+id/example_cubic_curve"
+                android:title="Polynomial: Cubic Curve" />
+            <item
+                android:id="@+id/example_sin_wave"
+                android:title="Trigonometry: Sine Wave" />
+            <item
+                android:id="@+id/example_cos_wave"
+                android:title="Trigonometry: Cosine Wave" />
+            <item
+                android:id="@+id/example_sin_function"
+                android:title="Polar: Sine Function" />
+            <item
+                android:id="@+id/example_cos_function"
+                android:title="Polar: Cosine Function" />
+            <item
+                android:id="@+id/example_logarithmic_curve"
+                android:title="Logarithm: Logarithmic Curve" />
+            <item
+                android:id="@+id/example_natural_log"
+                android:title="Logarithm: Natural Log" />
+            <item
+                android:id="@+id/example_exponential"
+                android:title="Exponential: Exponential" />
+        </menu>
+    </item>
 </menu>

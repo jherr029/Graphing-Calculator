@@ -1,7 +1,10 @@
 package teamteam.graphing_calculator;
 
 import android.icu.text.LocaleDisplayNames;
+import android.renderscript.ScriptGroup;
 import android.util.Log;
+
+import java.util.ArrayList;
 import java.util.Stack;
 
 /** Created by makloooo on 2/16/18 */
@@ -10,15 +13,16 @@ public class RegexInterpreter {
 
     private static final String TAG = "RegexInterpreter";
 
-    // abs, e, π
     private static final String func_regex = "((sin)|(cos)|(tan)|(cot)|(abs)|(log)|(ln)|(sqrt))[(]";
-    private static final String op_regex = "[-+*/^]";
+    static final String op_regex = "[-+*/^]";
     private static final String cartesian_regex = "-?(([0-9]+([.][0-9]+)?)|[x]|[e]|[π])";
     private static final String polar_regex = "-?(([0-9]+([.][0-9]+)?)|[Θ]|[e]|[π])";
 
     enum GraphType {CARTESIAN, PARAMETRIC, POLAR}
     public GraphType mGraphType = GraphType.CARTESIAN;
     private String term_regex;
+
+    private FunctionAdapter mContext;
 
     /**
      * CFG for functions **
@@ -42,12 +46,20 @@ public class RegexInterpreter {
         }
     }
 
-    public boolean isValidFunction(String function) {
+    RegexInterpreter() {
+        mContext = null;
+    }
 
-        Log.d(TAG, "*** New Function : " + function + " ***");
+    RegexInterpreter(FunctionAdapter context) {
+        mContext = context;
+    }
+
+    public boolean isValidFunction(String function) {
 
         // Remove all whitespace in function
         mFunction = function.replaceAll("\\s+", "");
+
+        Log.d(TAG, "@@@ New Function : " + mFunction + " @@@");
 
         switch (mGraphType) {
             case CARTESIAN: term_regex = cartesian_regex; break;
@@ -55,6 +67,8 @@ public class RegexInterpreter {
             case POLAR: term_regex = polar_regex; break;
             default: return false;
         }
+
+        if (mContext != null && mContext.getFunctions().contains(function)) return false;
 
         // All we really have to check is if it passes an FSM
         return DFA();
@@ -127,7 +141,7 @@ public class RegexInterpreter {
                     break;
                 case TERM:
                     removeTerminal();
-                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+[.]?[0-9]?")) {
+                    if (!mFunction.isEmpty() && !(top.buffer + mFunction.charAt(0)).matches("[0-9]+([.][0-9]*)?")) {
                         if (top.buffer.matches(term_regex)) {
                             parser.pop(); // pop term
                             parser.push(new Production(Rule.OP));
@@ -164,4 +178,5 @@ public class RegexInterpreter {
         mGraphType = newGraphType;
         Log.d(TAG, "GraphType is now " + mGraphType.toString());
     }
+
 }

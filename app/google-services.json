@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "946245378625-hjhad70q9sp4kk4vpk7td5434n4canp7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "teamteam.graphing_calculator",
+            "certificate_hash": "d3d88def2a3b0b72265abe056db26c0b006bb804"
+          }
+        },
+        {
           "client_id": "946245378625-bhsg6mtcg8efd024ocq0qu1fjomihbej.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

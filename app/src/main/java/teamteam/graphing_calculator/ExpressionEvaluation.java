@@ -8,31 +8,33 @@ import java.util.Stack;
 
 public class ExpressionEvaluation extends AppCompatActivity {
 
+    private boolean radians = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expression_evaluation);
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Prefix expression:");
+        //System.out.println("Prefix expression:");
 
         String expression = sc.nextLine();
         sc.close();
 
         Double[] result = new Double[]{0.0};
         if (Prefix_Evaluation(expression, result)) {
-            System.out.println("Results: " + result[0]);
+            //System.out.println("Results: " + result[0]);
         }
         else {
-            System.out.println("ERROR");
+            //System.out.println("ERROR");
         }
     }
 
-    public static boolean Prefix_Evaluation(String expression, Double[] result) {
+    public boolean Prefix_Evaluation(String expression, Double[] result) {
         expression = expression.toLowerCase();
-        System.out.println(expression);
+        //System.out.println(expression);
 
         int posFRP = -1;
         while ((posFRP = expression.indexOf(')')) != -1) {
@@ -43,7 +45,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
             }
             expression = expression.substring(0, posLLP) + subResult[0] + expression.substring(posFRP+1, expression.length());
         }
-        System.out.println("After: " + expression);
+        //System.out.println("After: " + expression);
         boolean check = false;
         do {
             check = false;
@@ -66,7 +68,7 @@ public class ExpressionEvaluation extends AppCompatActivity {
         } while (check);
 
         // Check the first char is + or not
-        System.out.println("After2: " + expression);
+        //System.out.println("After2: " + expression);
         // Split expression by +, -, *, /
         Stack<Character> ops = new Stack<Character>();
         Stack<String> values = new Stack<String>();
@@ -83,14 +85,14 @@ public class ExpressionEvaluation extends AppCompatActivity {
         values.push(expression.substring(a));
 
         /*
-        System.out.println(expression + ":");
+        //System.out.println(expression + ":");
         while (!ops.empty()) {
             Character c = ops.pop();
-            System.out.println(expression + " - ops - " + c);
+            //System.out.println(expression + " - ops - " + c);
         }
         while (!values.empty()) {
             String s = values.pop();
-            System.out.println(expression + " - values - " + s);
+            //System.out.println(expression + " - values - " + s);
         }
         */
 
@@ -102,17 +104,17 @@ public class ExpressionEvaluation extends AppCompatActivity {
             int b = -1;
             // Radian
             if ((b = temp_value.indexOf("sin")) != -1) {
-                temp_values.push(""+Math.sin(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.sin(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("cos")) != -1) {
-                temp_values.push(""+Math.cos(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.cos(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("tan")) != -1) {
-                temp_values.push(""+Math.tan(Double.valueOf(temp_value.substring(b+3))));
+                temp_values.push(""+Math.tan(convertValue(Double.valueOf(temp_value.substring(b+3)))));
             }
             else if ((b = temp_value.indexOf("cot")) != -1) {
                 // 1 / tan
-                temp_values.push(""+(1/Math.tan(Double.valueOf(temp_value.substring(b+3)))));
+                temp_values.push(""+(1/Math.tan(convertValue(Double.valueOf(temp_value.substring(b+3))))));
             }
             else if ((b = temp_value.indexOf('^')) != -1) {
                 temp_values.push(""+Math.pow(Double.valueOf(temp_value.substring(0, b)), Double.valueOf(temp_value.substring(b+1))));
@@ -124,21 +126,9 @@ public class ExpressionEvaluation extends AppCompatActivity {
                 }
                 temp_values.push(""+Math.sqrt(temp));
             }
-            else if ((b = temp_value.indexOf("log_")) != -1) {
-                // log_a_b
-                a = temp_value.indexOf('_', b+4);
-                //System.out.println("a - " + temp_value.substring(b+4, a));
-                //System.out.println("b - " + temp_value.substring(a+1));
-                Double base = Double.valueOf(temp_value.substring(b+4, a));
-                Double temp = Double.valueOf(temp_value.substring(a+1));
-                if (base < 0 || temp <= 0) {
-                    return false;
-                }
-                temp_values.push(""+(Math.log(temp) / Math.log(base)));
-            }
-            else if ((b = temp_value.indexOf("lg")) != -1) {
-                // lg = log_10
-                temp_values.push(""+(Math.log(Double.valueOf(temp_value.substring(b+2))) / Math.log(10)));
+            else if ((b = temp_value.indexOf("log")) != -1) {
+                // log = log_10
+                temp_values.push(""+(Math.log(Double.valueOf(temp_value.substring(b+3))) / Math.log(10)));
             }
             else if ((b = temp_value.indexOf("ln")) != -1) {
                 // ln = log_e
@@ -209,7 +199,17 @@ public class ExpressionEvaluation extends AppCompatActivity {
             return false;
         }
         result[0] = Double.valueOf(values.pop());
-        System.out.println(expression + " : " + result[0]);
+        //System.out.println(expression + " : " + result[0]);
         return true;
+    }
+
+    public void setMode(boolean radians) {
+        this.radians = radians;
+    }
+
+    private double convertValue(double x) {
+        if (radians) return x;
+        // else x is in degrees, convert to radians
+        return x/(Math.PI*180);
     }
 }

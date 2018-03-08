@@ -34,7 +34,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:button="@drawable/settings_checkbox"
+                    android:button="@drawable/ic_grid_on_black_24dp"
                     android:checked="true"
                     android:text="Grid" /> <!-- Grid -->
             <LinearLayout
@@ -155,14 +155,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        <CheckBox
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <CheckBox
                 android:id="@+id/enable_x_axis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
                 android:layout_gravity="center_vertical"
-                android:button="@drawable/settings_checkbox"
+                android:button="@drawable/ic_swap_horiz_black_24dp"
                 android:checked="true"
-                android:text="X-Axis" /> <!-- X-Axis Checkbox -->
+                android:text="X-Axis" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/x_axis_label"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/settings_large_button_height"
+                android:layout_weight="2"
+                android:padding="2dp"
+                android:paddingStart="10dp"
+                android:hint="@string/x_axis_label"
+                android:background="@drawable/soft_rectangle_background_flat" />
+        </LinearLayout> <!-- X-Axis Title and Label -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -187,38 +205,38 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberSigned|numberDecimal" />
             </LinearLayout> <!-- min_x <= x <= max_x -->
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@string/settings_descriptor_font"
-                    android:text="Step: " />
-                <EditText
-                    android:id="@+id/x_step_size"
-                    android:layout_width="@dimen/bound_input_length"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-            </LinearLayout> <!-- X-Axis Step Size -->
         </LinearLayout> <!-- X-Axis Bound Inputs -->
 
         <Space
             android:layout_width="0dp"
             android:layout_height="12dp" />
 
-        <CheckBox
-            android:id="@+id/enable_y_axis"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:button="@drawable/settings_checkbox"
-            android:checked="true"
-            android:text="Y-Axis" /> <!-- Y-Axis Checkbox -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:id="@+id/enable_y_axis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:button="@drawable/ic_swap_vert_black_24dp"
+                android:checked="true"
+                android:text="Y-Axis" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/y_axis_label"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/settings_large_button_height"
+                android:layout_weight="2"
+                android:padding="2dp"
+                android:paddingStart="10dp"
+                android:hint="@string/y_axis_label"
+                android:background="@drawable/soft_rectangle_background_flat" />
+        </LinearLayout> <!-- Y-Axis Title and Label -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -243,24 +261,6 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberSigned|numberDecimal" />
             </LinearLayout> <!-- min_y <= y <= max_y -->
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@string/settings_descriptor_font"
-                    android:text="Step: " />
-                <EditText
-                    android:id="@+id/y_step_size"
-                    android:layout_width="@dimen/bound_input_length"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-            </LinearLayout> <!-- Y-Axis Step Size -->
         </LinearLayout> <!-- Y-Axis Bound Inputs -->
 
         <Button

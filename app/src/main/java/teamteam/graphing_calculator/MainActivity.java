@@ -19,8 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,9 +34,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private BottomSheetBehavior sheetController;
-    private LinearLayout mGraphToolView;
+    protected LinearLayout mGraphToolView;
 
-    private FunctionAdapter mFunctionAdapter;
+    protected BuiltInFunctionHandler mBuiltInFunctionHandler;
+    protected FunctionAdapter mFunctionAdapter;
+
+    private FirebaseController ctrl = FirebaseController.getInst();
 
     boolean changeFlag = false;
 
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        setContentView(R.layout.keyboard_view);
 
         /* Initialize Navigation Drawer */
         mDrawerLayout = findViewById(R.id.drawer_layout);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationView.OnNavigationItemSelectedListener nav_listener = new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(findViewById(R.id.main_content), menuItem.getTitle() + " pressed", Snackbar.LENGTH_LONG).show();
                 onNavigationItemSelectedListener(menuItem);
                 mDrawerLayout.closeDrawers();
                 return true;
@@ -81,13 +81,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        /* Initialize Graph Tool Menu */
+        /* Initialize Dropdown Menus */
         mGraphToolView = findViewById(R.id.graph_tool_menu);
         mGraphToolView.setVisibility(View.GONE);
 
         initListeners();
 
         mFunctionAdapter = new FunctionAdapter(this);
+        mBuiltInFunctionHandler = new BuiltInFunctionHandler(this);
 
 //        mMathKeyboard = new MathKeyboard(this, R.id.keyboard_view, R.xml.keyboard_layout);
         // TODO add a regular e
@@ -128,7 +129,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ListView functionListView = findViewById(R.id.function_list_view);
         functionListView.setAdapter(mFunctionAdapter);
 
-        // TODO: Add continuity for graph settings
+        if (mFunctionAdapter.mRegexInterpreter.mGraphType == RegexInterpreter.GraphType.POLAR) {
+            onClick(findViewById(R.id.switch_to_polar));
+        }
+        initFields();
     }
 
     @Override
@@ -139,12 +143,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             checkUserStatus(); // this one not good
             changeFlag = false;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-       if (mMathKeyboard.isKeyboardVisible())
-           mMathKeyboard.hideKeyboard();
     }
 
     @Override
@@ -166,9 +164,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
-//        Log.d("keyboard", "is keyboard visible: " + mMathKeyboard.isKeyboardVisible());
-
         switch (view.getId()) {
             case R.id.open_nav:
                 if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -178,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mNavigationView.bringToFront();
                 break;
             case R.id.open_settings:
+                mBuiltInFunctionHandler.closeWindow();
                 if (mGraphToolView.getVisibility() == View.VISIBLE) {
                     mGraphToolView.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_anim));
                     mGraphToolView.setVisibility(View.GONE);
@@ -188,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.snap_to_origin:
                 // Non-functional
+                graph.update_bounds(-10, 10, -15, 15);
+                initFields();
                 DebugSnackbar("Snapped to Origin");
                 break;
             case R.id.switch_to_cartesian:
@@ -214,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         R.drawable.soft_rectangle_background_button_flat);
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_selected);
+                graph.setMode(false);
+                graph.redrawFunctions();
                 break;
             case R.id.use_radians:
                 // Switch to reading radians
@@ -221,12 +221,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         R.drawable.soft_rectangle_background_button_selected);
                 findViewById(R.id.use_degrees).setBackgroundResource(
                         R.drawable.soft_rectangle_background_button_flat);
+                graph.setMode(true);
+                graph.redrawFunctions();
                 break;
             case R.id.expand_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_EXPANDED);
                 break;
             case R.id.collapse_function_list:
                 sheetController.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                break;
+            case R.id.plot_built_in:
+                mBuiltInFunctionHandler.plotFunctions();
                 break;
         }
     }
@@ -297,28 +302,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d("DRAWER",  "Sign in pressed");
                 userStatusChangeIntent.putExtra("userStatus", "signIn");
                 startActivity(userStatusChangeIntent);
+                ctrl.connect();
                return true;
             case R.id.drawer_sign_out:
                 Log.d("DRAWER", "Sign out pressed");
                 userStatusChangeIntent.putExtra("userStatus", "signOut");
                 startActivity(userStatusChangeIntent);
                 changeFlag = true;
+                ctrl.disconnect();
                 return true;
-            case R.id.drawer_calculate_old:
+            /*case R.id.drawer_calculate_old:
                 // Start Calculator Activity
                 startActivity(new Intent(MainActivity.this, CalculateActivity.class));
-                return true;
+                return true;*/
             case R.id.drawer_calculate:
                 startActivity(new Intent(MainActivity.this, BasicCalculator.class));
                 return true;
-            case R.id.drawer_customize_expression:
+            case R.id.drawer_upload:
+                if (!ctrl.Connected()) {
+                    ctrl.connect();
+                }
+                if (ctrl.Connected()) {
+                    ctrl.pushFunctions(mFunctionAdapter.getmFunctionList());
+                }
                 return true;
-            case R.id.drawer_function_template:
+            case R.id.drawer_fetch:
+                if (!ctrl.Connected()) {
+                    ctrl.connect();
+                }
+                if (ctrl.Connected()) {
+                    mFunctionAdapter.setmFunctionList(ctrl.getFuncs());
+                }
                 return true;
             default:
+                return mBuiltInFunctionHandler.setFunctions(item.getItemId());
         }
-
-        return false;
     }
 
     private void checkUserStatus() {
@@ -330,11 +348,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         startActivityForResult(checkIfLoggedIn, 100);
 
+        ctrl.connect();
+
         Log.d("MainActivity", "activity has already started");
 
     }
 
-    private void DebugSnackbar(String text) {
+    protected void DebugSnackbar(String text) {
         Snackbar.make(findViewById(R.id.main_content), text, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -351,6 +371,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         findViewById(R.id.use_radians).setOnClickListener(this);
         findViewById(R.id.use_degrees).setOnClickListener(this);
+
+        findViewById(R.id.plot_built_in).setOnClickListener(this);
     }
 
     private void initFields() {
@@ -360,15 +382,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         field = findViewById(R.id.maxY); field.setText(String.valueOf(graph.max_y));
     }
 
+    /* Graph Stuff */
+
     /** Use this function to get Strings from user input fields
-     * @param id (e.g. R.id.func)
-     * @valid_ids func : top function field
-     *            func_2 : middle function field
-     *            func_3 : bottom function field
-     *            min_X
-     *            max_X
-     *            min_Y
-     *            max_Y
+     * @param resId (e.g. R.id.func)
      * @return string of what is in the edit text field, you
      *         may want to cast the min_X ... max_Y fields to
      *         int/double to use them properly.
@@ -391,13 +408,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        Float minx = Float.valueOf(nminx);
+        Float maxx = Float.valueOf(nmaxx);
+        Float miny = Float.valueOf(nminy);
+        Float maxy = Float.valueOf(nmaxy);
 
-        graph.reset(mFunctionAdapter.getFunctions(),
-                    Integer.parseInt(nmaxx),
-                    Integer.parseInt(nminx),
-                    Integer.parseInt(nmaxy),
-                    Integer.parseInt(nminy)
-        );
+        if (minx >= maxx || miny >= maxy) return;
+
+        String xTitle = extractValue(R.id.x_axis_label);
+        String yTitle = extractValue(R.id.y_axis_label);
+        graph.getGraph().getGridLabelRenderer().setHorizontalAxisTitle(xTitle);
+        graph.getGraph().getGridLabelRenderer().setVerticalAxisTitle(yTitle);
+        graph.update_bounds(minx,maxx,miny,maxy);
 
         onClick(findViewById(R.id.open_settings));
     }

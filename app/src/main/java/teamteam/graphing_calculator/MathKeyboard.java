@@ -90,7 +90,7 @@ public class MathKeyboard {
                 hideKeyboard();
             } else if (primaryCode == CodeDelete) {
 
-                if (functionStack.empty())
+                if (start != 0)
                    editable.delete(start - 1, start);
 
             } else if (primaryCode == CodeClear) {

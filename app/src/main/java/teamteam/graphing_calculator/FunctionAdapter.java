@@ -3,6 +3,7 @@ package teamteam.graphing_calculator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
@@ -38,19 +40,26 @@ public class FunctionAdapter extends BaseAdapter {
     private class Input {
         String display = "";
         String complete = "";
+        Input() {}
+        Input(String function) { display = function; complete = function; }
+        Input(String display, String complete) {
+            this.display = display; this.complete = complete;
+        }
     }
     // Pair<Input, Complete>
     private ArrayList<Input> mFunctionList; // Holds User Input Strings
 
-    public RegexInterpreter mRegexInterpreter;
+    RegexInterpreter mRegexInterpreter;
 
     // To listen for text input and graph updating.
     private class FunctionWatcher implements TextWatcher {
         private ImageView mErrorIcon;
+        private ImageView mGraphIcon;
         private int mIndex;
 
         public FunctionWatcher(FrameLayout layout, int index) {
             this.mErrorIcon = (ImageView)layout.getChildAt(2);
+            this.mGraphIcon = (ImageView)layout.getChildAt(3);
             this.mIndex = index;
         }
         @Override
@@ -61,18 +70,37 @@ public class FunctionAdapter extends BaseAdapter {
         @Override
         public void afterTextChanged(Editable s) {
             String prevFunction = mFunctionList.get(mIndex).complete;
+            /* Log.d(TAG, "------------");
+            Log.d(TAG, "prevFunction: " + prevFunction);
+            Log.d(TAG, "newFunction: " + s.toString()); */
             if (s.toString().isEmpty()) {
                 mContext.graph.remove_line(prevFunction);
                 mErrorIcon.setVisibility(View.INVISIBLE);
+                mGraphIcon.setVisibility(View.INVISIBLE);
+            }
+            else if (prevFunction.equals(s.toString())) {
+                mContext.graph.highlight(s.toString());
+
+                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                mGraphIcon.setVisibility(View.VISIBLE);
+                mErrorIcon.setVisibility(View.INVISIBLE);
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
+                Paint prevPaint = mContext.graph.getColor(prevFunction);
                 // graph the function, remove any error icons
                 if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
                 mFunctionList.get(mIndex).complete = s.toString();
-                mContext.graph.add_line(s.toString());
+                mContext.graph.add_line(s.toString(), prevPaint);
+                mContext.graph.highlight(s.toString());
+
+                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                mGraphIcon.setVisibility(View.VISIBLE);
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
-            else mErrorIcon.setVisibility(View.VISIBLE);
+            else {
+                mGraphIcon.setVisibility(View.INVISIBLE);
+                mErrorIcon.setVisibility(View.VISIBLE);
+            }
             mFunctionList.get(mIndex).display = s.toString(); // Update Input List
         }
     }
@@ -84,6 +112,39 @@ public class FunctionAdapter extends BaseAdapter {
         mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRegexInterpreter = new RegexInterpreter();
         mMathKeyboard = new MathKeyboard(activity, R.id.keyboard_view, R.xml.keyboard_layout);
+        mRegexInterpreter = new RegexInterpreter(this);
+    }
+
+    public ArrayList<MemoryFunction> getmFunctionList() {
+        ArrayList<MemoryFunction> ret = new ArrayList<>();
+
+        for (Input i : mFunctionList) {
+            ret.add(new MemoryFunction(i.display, i.complete));
+        }
+
+        return ret;
+    }
+
+    public void setmFunctionList(ArrayList<MemoryFunction> funcList) {
+        for (Input i : mFunctionList) {
+            mContext.graph.remove_line(i.complete);
+        }
+        mFunctionList.clear();
+
+        notifyDataSetChanged();
+
+        for (MemoryFunction func : funcList) {
+            Input i = new Input();
+
+            i.display = func.getDisplay();
+            i.complete = func.getComplete();
+
+            mFunctionList.add(i);
+        }
+
+        mFunctionList.add(new Input());
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -130,6 +191,8 @@ public class FunctionAdapter extends BaseAdapter {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    Log.d(TAG,"Currently focused function: " + functionText.getText().toString());
+                    mContext.graph.highlight(functionText.getText().toString());
                     if (position == mFunctionList.size()-1) {
                         functionView.setForeground(null); // Unfade this panel
                         mFunctionList.add(new Input()); // Add layout input
@@ -163,11 +226,6 @@ public class FunctionAdapter extends BaseAdapter {
                                 super.onAnimationEnd(animation);
                                 functionView.setVisibility(View.GONE);
 
-                                /** FIXME: Most of the time, if you delete the first function
-                                 *  FIXME: with multiple functions graphed, the first function
-                                 *  FIXME: will remain on the graph despite being correctly
-                                 *  FIXME: removed from both mFunctionList and graph.functions
-                                 */
                                 mContext.graph.remove_line(mFunctionList.get(position).complete);
                                 mFunctionList.remove(position);
 
@@ -189,18 +247,28 @@ public class FunctionAdapter extends BaseAdapter {
         return functionView;
     }
 
-    public void changeGraphType(RegexInterpreter.GraphType graphType) {
+    void changeGraphType(RegexInterpreter.GraphType graphType) {
         mRegexInterpreter.changeGraphType(graphType);
         mFunctionList.clear();
         while (mFunctionList.size() < 2) mFunctionList.add(new Input());
         notifyDataSetChanged();
     }
 
-    public ArrayList<String> getFunctions() {
+    void setFunctions(ArrayList<String> functions) {
+        mFunctionList.clear();
+        for (int i = 0; i < functions.size(); ++i) {
+            mFunctionList.add(new Input(functions.get(i)));
+        }
+        while (mFunctionList.size() < 2) mFunctionList.add(new Input());
+        notifyDataSetChanged();
+    }
+
+    ArrayList<String> getFunctions() {
         ArrayList<String> completeFunctions = new ArrayList<>();
         for (int i = 0; i < mFunctionList.size(); ++i) {
             completeFunctions.add(mFunctionList.get(i).complete);
         }
         return completeFunctions;
     }
+
 }
