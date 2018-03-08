@@ -28,7 +28,7 @@
             android:title="@string/calculate" />-->
         <item
             android:id="@+id/drawer_calculate"
-            android:icon="@drawable/ic_multiline_chart_black_24dp"
+            android:icon="@drawable/ic_dialpad_black_24dp"
             android:title="@string/sci_calculate" />
     </group>
 
@@ -45,10 +45,16 @@
                 android:title="Polynomial: Cubic Curve" />
             <item
                 android:id="@+id/example_sin_wave"
-                android:title="Polar: Sine Wave" />
+                android:title="Trigonometry: Sine Wave" />
             <item
                 android:id="@+id/example_cos_wave"
-                android:title="Polar: Cosine Wave" />
+                android:title="Trigonometry: Cosine Wave" />
+            <item
+                android:id="@+id/example_sin_function"
+                android:title="Polar: Sine Function" />
+            <item
+                android:id="@+id/example_cos_function"
+                android:title="Polar: Cosine Function" />
             <item
                 android:id="@+id/example_logarithmic_curve"
                 android:title="Logarithm: Logarithmic Curve" />

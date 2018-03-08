@@ -51,10 +51,12 @@ public class FunctionAdapter extends BaseAdapter {
     // To listen for text input and graph updating.
     private class FunctionWatcher implements TextWatcher {
         private ImageView mErrorIcon;
+        private ImageView mGraphIcon;
         private int mIndex;
 
         public FunctionWatcher(FrameLayout layout, int index) {
             this.mErrorIcon = (ImageView)layout.getChildAt(2);
+            this.mGraphIcon = (ImageView)layout.getChildAt(3);
             this.mIndex = index;
         }
         @Override
@@ -68,19 +70,23 @@ public class FunctionAdapter extends BaseAdapter {
             if (s.toString().isEmpty()) {
                 mContext.graph.remove_line(prevFunction);
                 mErrorIcon.setVisibility(View.INVISIBLE);
+                mGraphIcon.setVisibility(View.INVISIBLE);
             }
             else if (mRegexInterpreter.isValidFunction(s.toString())) {
-                Paint prevPaint = null;
+                Paint prevPaint = mContext.graph.getColor(prevFunction);
                 // graph the function, remove any error icons
-                if (!prevFunction.isEmpty()) {
-                    prevPaint = mContext.graph.getColor(prevFunction);
-                    mContext.graph.remove_line(prevFunction);
-                }
+                if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
                 mFunctionList.get(mIndex).complete = s.toString();
                 mContext.graph.add_line(s.toString(), prevPaint);
+
+                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                mGraphIcon.setVisibility(View.VISIBLE);
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
-            else mErrorIcon.setVisibility(View.VISIBLE);
+            else {
+                mGraphIcon.setVisibility(View.INVISIBLE);
+                mErrorIcon.setVisibility(View.VISIBLE);
+            }
             mFunctionList.get(mIndex).display = s.toString(); // Update Input List
         }
     }

@@ -34,10 +34,10 @@ class GraphHandler {
     private int inc = 90;
 
     //min and max bounds of the graph
-    int min_x = -30;
-    int max_x = 30;
-    int min_y = -45;
-    int max_y = 45;
+    int min_x = -10;
+    int max_x = 10;
+    int min_y = -15;
+    int max_y = 15;
     //Graph type: Cartesian or Polar
     private String gtype = "Cartesian";
 

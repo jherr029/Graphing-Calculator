@@ -150,10 +150,16 @@ class BuiltInFunctionHandler {
                 mFunctionBuffer.add("a*x^3 + b*x^2 + c*x + d");
                 break;
             case R.id.example_sin_wave:
-                mFunctionBuffer.add("a*sin(b*Θ+c)");
+                mFunctionBuffer.add("a*sin(b*x+c)");
                 break;
             case R.id.example_cos_wave:
-                mFunctionBuffer.add("a*cos(b*Θ+c)");
+                mFunctionBuffer.add("a*cos(b*x+c)");
+                break;
+            case R.id.example_sin_function:
+                mFunctionBuffer.add("a*sin(b*θ+c)");
+                break;
+            case R.id.example_cos_function:
+                mFunctionBuffer.add("a*cos(b*θ+c)");
                 break;
             case R.id.example_logarithmic_curve:
                 mFunctionBuffer.add("log(a*x)");
