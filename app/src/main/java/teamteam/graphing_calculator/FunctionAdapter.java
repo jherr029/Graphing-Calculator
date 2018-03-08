@@ -29,6 +29,9 @@ public class FunctionAdapter extends BaseAdapter {
 
     private static final String TAG = "FunctionAdapter";
 
+
+    public MathKeyboard mMathKeyboard;
+
     private MainActivity mContext;
     private LayoutInflater mInflater;
 
@@ -80,6 +83,7 @@ public class FunctionAdapter extends BaseAdapter {
         mFunctionList.add(new Input()); mFunctionList.add(new Input());
         mInflater = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mRegexInterpreter = new RegexInterpreter();
+        mMathKeyboard = new MathKeyboard(activity, R.id.keyboard_view, R.xml.keyboard_layout);
     }
 
     @Override
@@ -101,6 +105,7 @@ public class FunctionAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, final ViewGroup parent) {
 
 
+        Log.d("Keyboard000", "parent child count: "+ parent.getChildCount() );
         Log.d("Keyboard000", "parent: " + parent.getClass());
 
         // Get view for row item
@@ -111,7 +116,9 @@ public class FunctionAdapter extends BaseAdapter {
         final EditText functionText = functionView.findViewById(R.id.func);;
         ImageButton functionDelete = functionView.findViewById(R.id.function_delete);
 
+        mMathKeyboard.registerEditText(functionText);
         Log.d("keyboard000", "EditText: " + functionText.getClass());
+        Log.d("keyboard000", "visible: " + mMathKeyboard.isKeyboardVisible());
 
         // Set function label
         functionIndex.setText(String.valueOf(position+1));

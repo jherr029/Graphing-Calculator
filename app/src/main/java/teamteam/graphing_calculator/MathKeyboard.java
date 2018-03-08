@@ -42,12 +42,12 @@ public class MathKeyboard {
         public final static int CodeClear       = 55006;
         public final static int CodePowerOf2    = 60001;
         public final static int CodePowerOfX    = 60002;
-        public final static int CodeFunctions   = 60003;
+        public final static int CodeTheta   = 60003;
         public final static int CodeSquareRt    = 60004;
-        public final static int CodeComma       = 60005;
-        public final static int CodeLTE         = 60006;
-        public final static int CodeGTE         = 60007;
-        public final static int CodePi          = 60009;
+        public final static int CodeEu          = 600020;
+        public final static int CodeLn         = 77001;
+        public final static int CodeLog         = 77002;
+        public final static int CodePi          = 600021;
         public final static int CodeABC         = 60007;
 
 
@@ -90,29 +90,8 @@ public class MathKeyboard {
                 hideKeyboard();
             } else if (primaryCode == CodeDelete) {
 
-                if (functionStack.empty()) {
+                if (functionStack.empty())
                    editable.delete(start - 1, start);
-                } else {
-
-                    Log.d("keyboard stack", " " + functionStack.peek());
-
-                    if (editable != null && start > 0 && trigUsedFlag
-                            && functionStack.peek() != '(') {
-                        editable.delete(start - 1, start);
-
-                    } else if (editable != null && start > 0 && trigUsedFlag
-                            && functionStack.peek() == '(') {
-
-                        start = start + 1;
-
-                        editable.delete(start - 6, start);
-
-                        trigUsedFlag = false;
-                    }
-
-                    functionStack.pop();
-
-                }
 
             } else if (primaryCode == CodeClear) {
                 if ( editable != null)
@@ -136,38 +115,34 @@ public class MathKeyboard {
                 if (focusNew != null)
                     focusCurrent.requestFocus();
             } else if (primaryCode == CodePowerOf2) {
-                editable.insert(start, "x²");
+                editable.insert(start, "^2");
 
-                if (trigUsedFlag) {
-                    functionStack.push('x');
-                    functionStack.push('^');
-                }
+//                if (trigUsedFlag) {
+//                    functionStack.push('x');
+//                    functionStack.push('^');
+//                }
 
             } else if (primaryCode == CodePowerOfX) {
-                editable.insert(start, "xⁿ");
+                editable.insert(start, "^");
 
-                if (trigUsedFlag) {
-                    functionStack.push('x');
-                    functionStack.push('^');
-                }
+//                if (trigUsedFlag) {
+//                    functionStack.push('x');
+//                    functionStack.push('^');
+//                }
             } else if (primaryCode == CodeSquareRt) {
                 editable.insert(start, "√");
-            } else if (primaryCode == CodeComma) {
-                editable.insert(start, ",");
-            } else if (primaryCode == CodeLTE) {
-                editable.insert(start,"≤" );
-            } else if (primaryCode == CodeGTE) {
-                editable.insert(start, "≥");
+            } else if (primaryCode == CodeEu) {
+                editable.insert(start,"e" );
             } else if (primaryCode == CodePi) {
                 editable.insert(start,"𝜋");
-            } else if (primaryCode == CodeFunctions) {
-
+            } else if (primaryCode == CodeTheta) {
+                editable.insert(start, "Θ");
             } else {
                 editable.insert(start, Character.toString((char) primaryCode));
 
-                if (trigUsedFlag) {
-                    functionStack.push((char)primaryCode);
-                }
+//                if (trigUsedFlag) {
+//                    functionStack.push((char)primaryCode);
+//                }
             }
         }
         @Override
@@ -198,7 +173,6 @@ public class MathKeyboard {
 
             trigUsedFlag = true;
 
-            functionStack.push('(');
         }
 
         @Override
@@ -298,6 +272,7 @@ public class MathKeyboard {
             public boolean onTouch(View v, MotionEvent event) {
 
                 Log.d(tagKeyboard, "setOnTouchListener");
+                showKeyboard(v);
 
                 EditText editText = (EditText) v;
 
