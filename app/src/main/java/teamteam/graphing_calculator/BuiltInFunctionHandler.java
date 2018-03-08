@@ -191,6 +191,7 @@ class BuiltInFunctionHandler {
         mContext.graph.setFunctions(mFunctionBuffer);
         mCoefficientEditView.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_out_anim));
         mCoefficientEditView.setVisibility(View.GONE);
+
     }
 
     void closeWindow() {

@@ -3,6 +3,7 @@ package teamteam.graphing_calculator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
@@ -81,7 +82,12 @@ public class FunctionAdapter extends BaseAdapter {
             else if (prevFunction.equals(s.toString())) {
                 mContext.graph.highlight(s.toString());
 
-                mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
+                Paint paint = mContext.graph.getColor(s.toString());
+                if (paint != null) mGraphIcon.setBackgroundColor(paint.getColor());
+                else {
+                    mContext.graph.setColor(s.toString(), null);
+                    mGraphIcon.setBackgroundColor(paint.getColor());
+                }
                 mGraphIcon.setVisibility(View.VISIBLE);
                 mErrorIcon.setVisibility(View.INVISIBLE);
             }
