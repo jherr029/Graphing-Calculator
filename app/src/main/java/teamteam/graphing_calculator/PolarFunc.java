@@ -1,5 +1,7 @@
 package teamteam.graphing_calculator;
 
+import android.graphics.Paint;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -7,6 +9,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -80,6 +83,10 @@ public class PolarFunc {
             }
         }
 
+        Paint p = new Paint();
+        Random r = new Random();
+        p.setARGB(255,r.nextInt(255),r.nextInt(255),r.nextInt(255));
+        p.setStrokeWidth(5);
 
         //iterate through lines
         for(int i = 0; i < lines.size(); i++){
@@ -92,6 +99,7 @@ public class PolarFunc {
                 sorted[j] = (DataPoint) line.get(j);
             }
             LineGraphSeries<DataPoint> s = new LineGraphSeries<>(sorted);
+            s.setCustomPaint(p);
             series.add(s);
         }
     }
