@@ -421,6 +421,19 @@ class GraphHandler {
         }
     }
 
+    void highlight(String funcStr) {
+        resetLineThickness();
+        Paint paint = getColor(funcStr);
+        if (paint != null) paint.setStrokeWidth(15);
+    }
+
+    private void resetLineThickness() {
+        for (Object value : colors.values()) {
+            Paint paint = (Paint)value;
+            paint.setStrokeWidth(5);
+        }
+    }
+
     void redrawFunctions() {
         update_bounds(min_x, max_x, min_y, max_y);
     }

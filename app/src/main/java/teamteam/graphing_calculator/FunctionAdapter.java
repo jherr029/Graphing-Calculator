@@ -78,6 +78,7 @@ public class FunctionAdapter extends BaseAdapter {
                 if (!prevFunction.isEmpty()) mContext.graph.remove_line(prevFunction);
                 mFunctionList.get(mIndex).complete = s.toString();
                 mContext.graph.add_line(s.toString(), prevPaint);
+                mContext.graph.highlight(s.toString());
 
                 mGraphIcon.setBackgroundColor(mContext.graph.getColor(s.toString()).getColor());
                 mGraphIcon.setVisibility(View.VISIBLE);
@@ -135,6 +136,8 @@ public class FunctionAdapter extends BaseAdapter {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    Log.d(TAG,"Currently focused function: " + functionText.getText().toString());
+                    mContext.graph.highlight(functionText.getText().toString());
                     if (position == mFunctionList.size()-1) {
                         functionView.setForeground(null); // Unfade this panel
                         mFunctionList.add(new Input()); // Add layout input
