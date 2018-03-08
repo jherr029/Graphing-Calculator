@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
+        mFunctionAdapter.mMathKeyboard.hideKeyboard();
         switch (view.getId()) {
             case R.id.open_nav:
                 if (sheetController.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -294,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean onNavigationItemSelectedListener(MenuItem item) {
-
+        mFunctionAdapter.mMathKeyboard.hideKeyboard();
         Intent userStatusChangeIntent = new Intent(this, LoginModule.class);
 
         switch (item.getItemId()) {

@@ -227,7 +227,7 @@ public class MathKeyboard {
     }
 
     public void showKeyboard(View v) {
-        View screen = mHostActivity.findViewById(R.id.main_screen);
+        View screen = mHostActivity.findViewById(R.id.function_bottom_sheet);
         screen.animate()
                 .translationY(-mKeyboardView.getHeight())
                 .setDuration(500);
@@ -242,9 +242,10 @@ public class MathKeyboard {
     }
 
     public void hideKeyboard() {
-        View screen = mHostActivity.findViewById(R.id.main_screen);
+        if (mKeyboardView.getVisibility() != View.VISIBLE) return;
+        View screen = mHostActivity.findViewById(R.id.function_bottom_sheet);
         screen.animate()
-                .translationY(mKeyboardView.getHeight())
+                .translationY(0)
                 .setDuration(500);
 
         mKeyboardView.setVisibility(View.GONE);
