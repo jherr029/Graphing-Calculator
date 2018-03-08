@@ -111,6 +111,7 @@ public class FunctionAdapter extends BaseAdapter {
     }
 
     public void setmFunctionList(ArrayList<MemoryFunction> funcList) {
+        Log.d("FunctionAdapter", "setmFunctionList: " + funcList.size());
         mFunctionList.clear();
 
         for (MemoryFunction func : funcList) {
@@ -121,6 +122,10 @@ public class FunctionAdapter extends BaseAdapter {
 
             mFunctionList.add(i);
         }
+
+        mFunctionList.add(new Input());
+
+        notifyDataSetChanged();
     }
 
     @Override
