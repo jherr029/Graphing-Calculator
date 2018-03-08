@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-/**
- * Created by Atticus on 2/26/18.
- */
-
 public class PolarFunc {
 
     private List series;
+
+    private double distance(double[] a, double[] b){
+        return Math.sqrt(Math.pow(b[0]-a[0],2) + Math.pow(b[1]-a[1],2));
+    }
 
     public PolarFunc(DataPoint[] points){
         series = new Vector();
@@ -38,7 +38,12 @@ public class PolarFunc {
                     pos++;
                     //if at end
                     if(pos + 1 == points.length){
-                        currline.add(points[0]);
+                        double[] cpoint = new double[]{points[pos].getX(),points[pos].getY()};
+                        double[] fpoint = new double[]{points[0].getX(),points[0].getY()};
+                        double[] lpoint = new double[]{points[pos-1].getX(),points[pos-1].getY()};
+                        if(distance(cpoint,fpoint) < 2*distance(cpoint,lpoint)){
+                            currline.add(points[0]);
+                        }
                         done = true;
                         break;
                     }
@@ -56,7 +61,12 @@ public class PolarFunc {
                     pos++;
                     //if at end
                     if(pos + 1 == points.length){
-                        currline.add(points[0]);
+                        double[] cpoint = new double[]{points[pos].getX(),points[pos].getY()};
+                        double[] fpoint = new double[]{points[0].getX(),points[0].getY()};
+                        double[] lpoint = new double[]{points[pos-1].getX(),points[pos-1].getY()};
+                        if(distance(cpoint,fpoint) < 2*distance(cpoint,lpoint)){
+                            currline.add(points[0]);
+                        }
                         done = true;
                         break;
                     }
@@ -95,7 +105,6 @@ public class PolarFunc {
             Collections.sort(line, new SortPoint());
             //iterate through DataPoints
             for(int j = 0; j < line.size(); j++){
-                //DataPoint temp1 = (DataPoint) line.get(j);
                 sorted[j] = (DataPoint) line.get(j);
             }
             LineGraphSeries<DataPoint> s = new LineGraphSeries<>(sorted);

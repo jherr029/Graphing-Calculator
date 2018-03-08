@@ -254,7 +254,8 @@ public class GraphHandler {
             }
         }
         else{
-            int rot = 2;
+            Double d = (Math.ceil((double)(Math.max(Math.abs(min_x),Math.abs(max_x)))/(2*Math.PI)));
+            int rot = d.intValue();
             points = new DataPoint[rot * inc];
             String theta = "θ";
             double step = (2 * rot * Math.PI) / (inc * rot);
@@ -348,23 +349,20 @@ public class GraphHandler {
                 ((LineGraphSeries<DataPoint>)pair.getValue()).resetData(gen_data((String)pair.getKey()));
             }
         }
-
+        else{
+            Iterator it = functions.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry pair = (Map.Entry)it.next();
+                ((PolarFunc)pair.getValue()).remove_from_graph(graph);
+                PolarFunc p = new PolarFunc(gen_data((String)pair.getKey()));
+                functions.replace(pair.getKey(),p);
+                ((PolarFunc)functions.get(pair.getKey())).add_to_graph(graph);
+            }
+        }
     }
 
     public void reset(ArrayList<String> functions, int nmaxx, int nminx, int nmaxy, int nminy){
-        /*Iterator it = functions.entrySet().iterator();
-        while(it.hasNext()){
-            Map.Entry pair = (Map.Entry)it.next();
-            if(gtype.equals("Cartesian")){
-                graph.removeSeries((LineGraphSeries<DataPoint>)pair.getValue());
-            }
-            else{
-                ((PolarFunc)pair.getValue()).remove_from_graph(graph);
-            }
-            it.remove();
-        }*/
         update_bounds(nminx, nmaxx, nminy, nmaxy);
-
     }
 
     public void change_type(String type){
